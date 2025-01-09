@@ -99,4 +99,7 @@ int				ft_strchr_find(const char *s, int c);
 char			*ft_lstclear_item(t_line_list **lst, int fd);
 char			*get_next_line(int fd);
 
+int				pipex(int argc, char *argv[], char **envp);
+char			*get_path(char **cmd, char **envp, int fd[2]);
+
 #endif

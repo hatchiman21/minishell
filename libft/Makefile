@@ -11,7 +11,8 @@ SRCS		=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
       			ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
 				ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 				ft_putnbr_hex_fd.c ft_printf.c ft_printf_utils.c ft_printf_special.c \
-				get_next_line.c get_next_line_utils.c
+				get_next_line.c get_next_line_utils.c find_path.c pipex_helper_functions.c \
+				pipex_here_doc.c pipex_main.c
 
 SRCS := $(addprefix $(SRCS_DIR)/, $(SRCS))
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)

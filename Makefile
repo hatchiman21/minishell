@@ -18,7 +18,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) inc/minishell.h
-	$(CC) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft
+	$(CC) $(OBJS) -o $(NAME) -lreadline -L$(LIBFT_DIR) -lft
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJS_DIR)
 			$(CC) $(CFLAGS) -c $< -o $@
