@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 03:59:10 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/24 21:18:51 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/10 20:11:40 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }	t_list;
-
-typedef struct s_line_list
-{
-	int					fd;
-	char				*buff;
-	struct s_line_list	*next;
-}	t_line_list;
 
 int				ft_isascii(int c);
 int				ft_isprint(int c);
@@ -57,7 +50,6 @@ unsigned int	ft_atoi_base(const char *str, int base);
 void			*ft_memset(void *b, int c, size_t len);
 void			ft_bzero(void *s, size_t n);
 void			*ft_memcpy(void *dst, const void *src, size_t n);
-void			*ft_memccpy(void *dst, const void *src, int c, size_t n);
 void			*ft_memmove(void *dst, const void *src, size_t len);
 
 void			*ft_memchr(const void *s, int c, size_t n);
@@ -96,7 +88,6 @@ int				ft_printf(const char *string, ...);
 int				ft_dprintf(int fd, const char *string, ...);
 
 int				ft_strchr_find(const char *s, int c);
-char			*ft_lstclear_item(t_line_list **lst, int fd);
 char			*get_next_line(int fd);
 
 int				pipex(int argc, char *argv[], char **envp);

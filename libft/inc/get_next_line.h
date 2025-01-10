@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/10 20:02:56 by aatieh           ###   ########.fr       */
+/*   Created: 2024/09/16 16:43:18 by aatieh            #+#    #+#             */
+/*   Updated: 2025/01/10 20:11:29 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include "../libft/inc/libft.h"
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 64
+# endif
+
+# include <unistd.h>
+# include <stdlib.h>
 # include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 
-typedef struct s_minishell
+typedef struct s_line_list
 {
-	int		argc;
-	char	*argv;
-}			t_minishell;
+	int					fd;
+	char				*buff;
+	struct s_line_list	*next;
+}	t_line_list;
+
+
+char	*ft_lstclear_item(t_line_list **lst, int fd);
 
 #endif
