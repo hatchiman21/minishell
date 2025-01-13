@@ -1,24 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   tokanizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 14:37:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/13 05:28:24 by aatieh           ###   ########.fr       */
+/*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
+/*   Updated: 2025/01/13 03:19:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/libft.h"
+#include "../inc/minishell.h"
 
-int	ft_putstr_fd(char *s, int fd)
-{
-	int	len;
 
-	if (!s)
-		return (0);
-	len = ft_strlen(s);
-	write(fd, s, len);
-	return (len);
-}
