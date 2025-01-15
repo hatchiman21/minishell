@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/13 05:50:46 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/15 21:05:25 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,28 @@ char	*rev_strdup(const char *s, int j)
 	return (res);
 }
 
-char	*get_variable(char **env, char *line, int *j, char *full_line)
+char	*get_variable(char **env, char *line, int *j)
 {
 	int		var_len;
 	int		m;
-	char	*var_value;
+	char	*variable;
 
 	var_len = 0;
-	while (line[var_len] && line[var_len] != ' ' && line[var_len] != '\'' && line[var_len] != '"')
+	(*j)++;
+	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len + *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|')
 		var_len++;
 	m = 0;
-	while (env[m] && ft_strncmp(env[m], line + *j, var_len) && env[m][var_len + 1] != '=')
+	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0 || env[m][var_len] != '='))
 		m++;
 	if (!env[m])
-		return (NULL);
-	var_value = ft_strdup(env[m] + var_len + 1);
-	var_value = ft_strjoin(var_value, line + var_len);
-	full_line = rev_strdup(full_line, *j);
-	var_value = ft_strjoin(full_line, var_value);
+		return (line);
+	variable = ft_strdup(env[m] + var_len + 1);
+	variable = ft_strjoin(variable, line + var_len + *j);
+	line = rev_strdup(line, *j - 1);
+	variable = ft_strjoin(line, variable);
 	while (env[m][var_len++ + 1])
-		*j++;
-	return (var_value);
+		(*j)++;
+	return (variable);
 }
 
 void	expand(char **argv, t_vars vars)
@@ -74,16 +75,17 @@ void	expand(char **argv, t_vars vars)
 	while (argv[i])
 	{
 		j = 0;
-		q_flag = 1;
+		q_flag = -1;
+		//printf("%s\n", argv[i]);
 		while (argv[i][j])
 		{
-			if (argv[i][j] == '"')
+			if (argv[i][j] == '\'')
 			{
 				q_flag *= -1;
 				j++;
 			}
-			if (argv[i][j] == '$' && (argv[i][j] == '\'' && !q_flag))
-				argv[i] = get_variable(vars.env, argv[i] + j, &j, argv[i]);
+			if (argv[i][j] == '$' && q_flag == -1)
+				argv[i] = get_variable(vars.env, argv[i], &j);
 			j++;
 		}
 		i++;
@@ -95,8 +97,8 @@ int	main(int argc, char **argv, char **env)
 	t_vars	vars;
 
 	vars.env = env;
-	vars.argv = argv;
-	expand(vars.argv + 1, vars);
+	vars.argv = ++argv;
+	expand(vars.argv, vars);
 	int i = 0;
 	while (vars.argv[i])
 		printf("%s\n", vars.argv[i++]);
