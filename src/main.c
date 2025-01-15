@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/15 20:28:38 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/15 21:08:44 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,7 +339,8 @@ int	main(int argc, char **argv, char **env)
 		vars.redirections = get_redirections(line, &vars);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, vars.argc);
-		// expand(vars.argv + 1, vars);
+		expand(vars.argv, vars);
+		
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n", i, vars.argv[i]);
 		// my_echo(vars.argv);

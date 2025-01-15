@@ -3,7 +3,7 @@ SRC_DIR = src
 OBJS_DIR = obj
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = main.c
+SRCS = main.c expander.c
 SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJS_DIR)/%.o)
 

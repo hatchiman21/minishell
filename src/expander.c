@@ -6,21 +6,11 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/15 21:05:25 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/15 21:07:51 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../libft/inc/libft.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-
-typedef struct s_vars
-{
-	int		argc;
-	char	**argv;
-	char	**env;
-}			t_vars;
+#include "../inc/minishell.h"
 
 
 char	*rev_strdup(const char *s, int j)
@@ -65,7 +55,7 @@ char	*get_variable(char **env, char *line, int *j)
 	return (variable);
 }
 
-void	expand(char **argv, t_vars vars)
+void	expand(char **argv, t_minishell vars)
 {
 	int	i;
 	int	j;
@@ -92,15 +82,15 @@ void	expand(char **argv, t_vars vars)
 	}
 }
 
-int	main(int argc, char **argv, char **env)
-{
-	t_vars	vars;
+// int	main(int argc, char **argv, char **env)
+// {
+// 	t_minishell	vars;
 
-	vars.env = env;
-	vars.argv = ++argv;
-	expand(vars.argv, vars);
-	int i = 0;
-	while (vars.argv[i])
-		printf("%s\n", vars.argv[i++]);
-	return 0;
-}
+// 	vars.env = env;
+// 	vars.argv = ++argv;
+// 	expand(vars.argv, vars);
+// 	int i = 0;
+// 	while (vars.argv[i])
+// 		printf("%s\n", vars.argv[i++]);
+// 	return 0;
+// }
