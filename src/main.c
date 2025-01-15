@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/15 18:45:50 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/15 20:28:38 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	word_check(char *line, int i)
 			exit(1);
 		j += 2;
 	}
-	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i + j] != ' ')
+	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i + j] != ' ' && line[i + j] != '|')
 		j++;
 	return (j);
 }
@@ -162,8 +162,10 @@ int	words_count_sh(char *line)
 			m = i + j;
 			j += word_check(line, i + j);
 		}
-		if (j != 0)
+		if (j != 0 || line[i] == '|')
 			word++;
+		if (line[i] == '|')
+			i++;
 		i += j;
 	}
 	return (word);
@@ -177,6 +179,8 @@ char	*get_token_sh(char *line, int *j)
 		return (NULL);
 	flag_q = 0;
 	i = *j;
+	if (line[*j] == '|')
+		return (ft_substr(line, (*j)++, 1));
 	while (line[*j] && !(line[*j] == ' ' && !flag_q))
 	{
 		if ((line[*j] == '\'' && flag_q == 1)
@@ -187,26 +191,30 @@ char	*get_token_sh(char *line, int *j)
 		else if (line[*j] == '"' && !flag_q)
 			flag_q = 2;
 		(*j)++;
+		if (line[*j] == '|')
+			break ;
 	}
-	return(ft_substr(line, i, *j - i));
+	return (ft_substr(line, i, *j - i));
 }
 
-void	get_argv(char *line, t_minishell *vars)
+char	**get_argv(char *line, int argc)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	**argv;
 
-	vars->argv = malloc(sizeof(char *) * (vars->argc + 1));
+	argv = malloc(sizeof(char *) * (argc + 1));
 	i = 0;
 	j = 0;
-	while (i < vars->argc)
+	while (i < argc)
 	{
 		while (line[j] && line[j] == ' ')
 			j++;
-		vars->argv[i] = get_token_sh(line, &j);
+		argv[i] = get_token_sh(line, &j);
 		i++;
 	}
-	vars->argv[i] = NULL;
+	argv[i] = NULL;
+	return (argv);
 }
 
 char	*ft_merge(char *s1, char *s2, int free_s1, int free_s2)
@@ -237,40 +245,56 @@ void	remove_from_line(char **line, int i, int j)
 void	add_redirection(char *line, int *i, char **redirections)
 {
 	int		j;
+	int		start;
 	char	*tmp;
 	char	op[3];
 
 	j = 0;
-	while(line[*i] && (line[*i] == '<' || line[*i] == '>'))
-		op[j++] = line[(*i)++];
+	start = *i;
+	while(line[start] && (line[start] == '<' || line[start] == '>'))
+		op[j++] = line[start++];
 	op[j] = '\0';
-	while(line[*i] && line[*i] == ' ')
-		(*i)++;
+	while(line[start] && line[start] == ' ')
+		start++;
 	j = 0;
-	while (line[*i + j] && line[*i + j] != ' ')
+	while (line[start + j] && line[start + j] != ' ')
 		j++;
-	if (!*redirections)
-		*redirections = ft_strdup("");
-	tmp = ft_substr(line, *i, j);
+	tmp = ft_substr(line, start, j);
 	tmp = ft_merge(op, tmp, 0, 1);
 	*redirections = ft_merge(*redirections, tmp, 1, 1);
-	remove_from_line(&line, *i, j);
-	*i += j;
+	remove_from_line(&line, *i, start + j - *i);
 }
 
-char	**get_redirections(char *line, int argc)
+int	count_char(char *line, char c)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (line[i])
+	{
+		if (line[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+char	**get_redirections(char *line, t_minishell *vars)
 {
 	int		i;
 	int		k;
 	char	**redirections;
 
-	i = 0;
-	k = 0;
-	if (!line || argc == 0)
+	if (!line )
 		return (NULL);
-	redirections = malloc(sizeof(char *) * argc);
-	while (i < argc)
-		redirections[i++] = NULL;
+	vars->op_num = count_char(line, '|') + 1;
+	redirections = malloc(sizeof(char *) * vars->op_num);
+	i = 0;
+	while (i < vars->op_num)
+		redirections[i++] = ft_strdup("");
+	k = 0;
 	i = 0;
 	while (line[i])
 	{
@@ -280,9 +304,22 @@ char	**get_redirections(char *line, int argc)
 			k++;
 		i++;
 	}
+	for(int m = 0; m < k + 1; m++)
+		ft_printf("redirection[%d] = %s\n", m, redirections[m]);
 	return (redirections);
 }
 
+void	free_split(char **split, int num)
+{
+	int	i;
+
+	i = 0;
+	if (!split)
+		return ;
+	while (i < num)
+		free(split[i++]);
+	free(split);
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -297,13 +334,17 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		line = readline(NULL);
+		if (!line)
+			break ;
+		vars.redirections = get_redirections(line, &vars);
 		vars.argc = words_count_sh(line);
-		get_redirections(line, vars.argc);
-		get_argv(line, &vars);
+		vars.argv = get_argv(line, vars.argc);
 		// expand(vars.argv + 1, vars);
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n", i, vars.argv[i]);
 		// my_echo(vars.argv);
+		free_split(vars.argv, vars.argc);
+		free_split(vars.redirections, vars.op_num);
 		free(line);
 	}
 	return 0;
