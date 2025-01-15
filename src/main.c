@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/14 20:47:35 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/15 18:45:50 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,17 +221,17 @@ char	*ft_merge(char *s1, char *s2, int free_s1, int free_s2)
 	return (tmp);
 }
 
-void	remove_from_line(char **line, int *i, int j)
+void	remove_from_line(char **line, int i, int j)
 {
 	int	m;
 
 	m = 0;
-	while (line[0][*i + m] && line[0][*i + m + j])
+	while (line[0][i + m] && line[0][i + m + j])
 	{
-		line[0][*i + m] = line[0][*i + m + j];
+		line[0][i + m] = line[0][i + m + j];
 		m++;
 	}
-	line[0][*i + m] = '\0';
+	line[0][i + m] = '\0';
 }
 
 void	add_redirection(char *line, int *i, char **redirections)
@@ -254,7 +254,7 @@ void	add_redirection(char *line, int *i, char **redirections)
 	tmp = ft_substr(line, *i, j);
 	tmp = ft_merge(op, tmp, 0, 1);
 	*redirections = ft_merge(*redirections, tmp, 1, 1);
-	remove_from_line(&line, i, j);
+	remove_from_line(&line, *i, j);
 	*i += j;
 }
 
