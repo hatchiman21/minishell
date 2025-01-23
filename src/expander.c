@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/17 23:54:05 by yousef           ###   ########.fr       */
+/*   Updated: 2025/01/23 22:23:48 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,18 @@ void	expand(char **argv, t_minishell vars)
 	}
 }
 
+void get_pwd(char **env)
+{
+	int i = 0;
+	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
+		i++;
+	if (env[i])
+		printf("%s\n", env[i] + 4);
+}
+
 int	main(int argc, char **argv, char **env)
 {
+	get_pwd(env);
 	t_minishell	vars;
 
 	vars.env = env;
