@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/24 19:29:31 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/24 19:40:31 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ void	ft_free_lst(t_redirect *lst);
 void	free_split(char **split, int num);
 t_redirect	*get_redirections(char *line);
 void	redirectionadd_back(t_redirect **lst, t_redirect *new);
+int		test_expander(int argc, char **argv, char **env);
 
 #endif
