@@ -3,8 +3,9 @@ SRC_DIR = src
 OBJS_DIR = obj
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = main.c expander.c
+SRCS = main expander change_line ft_echo ft_free redirection tokanizer
 SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
+SRCS := $(addsuffix .c, $(SRCS))
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 CC = cc
