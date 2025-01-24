@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/24 19:33:53 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/24 21:24:26 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,25 @@ int	count_char(char *line, char c)
 	return (count);
 }
 
+void	expand_all(t_minishell *vars)
+{
+	t_redirect *red;
+	int			i;
+
+	i = 0;
+	red = vars->redirections;
+	while (vars->argv[i])
+	{
+		vars->argv[i] = expand(vars->argv[i], *vars);
+		i++;
+	}
+	while (red)
+	{
+		red->redirection = expand(red->redirection, *vars);
+		red = red->next;
+	}
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
@@ -79,12 +98,15 @@ int	main(int argc, char **argv, char **env)
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, vars.argc);
-		expand(vars.argv, vars);
+		expand_all(&vars);
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		for (t_redirect *red = vars.redirections; red; red = red->next)
+			ft_printf("op num: %d, redirection: %s\n", red->op, red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
 	}
+	printf("exit\n");
 	return 0;
 }

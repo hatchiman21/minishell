@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/24 19:40:18 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/24 20:51:34 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	*dup_without_qoutes(char *s, int counter)
 		i++;
 	}
 	res[j] = '\0';
+	free(s);
 	return (res);
 }
 
@@ -70,7 +71,7 @@ char *rm_qoutes(char *line)
 	return (dup_without_qoutes(line, counter));
 }
 
-char	*rev_strdup(char const *s, int j)
+char	*rev_strdup(char *s, int j)
 {
 	char	*res;
 	int		i;
@@ -85,52 +86,48 @@ char	*rev_strdup(char const *s, int j)
 		i++;
 	}
 	res[i] = '\0';
+	free(s);
 	return (res);
 }
 
-void	expand(char **argv, t_minishell vars)
+char	*expand(char *argv, t_minishell vars)
 {
-	int	i;
 	int	j;
 	int	q_flag;
 
-	i = 0;
-	while (argv[i])
+	j = 0;
+	q_flag = -1;
+	while (argv[j])
 	{
-		j = 0;
-		q_flag = -1;
-		while (argv[i][j])
+		if (argv[j] == '\'')
 		{
-			if (argv[i][j] == '\'')
-			{
-				q_flag *= -1;
-				j++;
-			}
-			if (argv[i][j] == '$' && q_flag == -1)
-				argv[i] = get_variable(vars.env, argv[i], &j);
-			if (!argv[i][j])
-				break;
+			q_flag *= -1;
 			j++;
 		}
-		printf("%s\n", argv[i]);
-		argv[i] = rm_qoutes(argv[i]);
-		printf("%s\n", argv[i]);
-		i++;
+		if (argv[j] == '$' && q_flag == -1)
+			argv = get_variable(vars.env, argv, &j);
+		if (j >= (int)ft_strlen(argv))
+			break;
+		j++;
 	}
+	// printf("%s\n", argv);
+	argv = rm_qoutes(argv);
+	// printf("%s\n", argv);
+	return (argv);
 }
 
-int	test_expander(int argc, char **argv, char **env)
-{
-	get_pwd(env);
-	t_minishell	vars;
+// int	test_expander(int argc, char **argv, char **env)
+// {
+// 	get_pwd(env);
+// 	t_minishell	vars;
 
-	vars.env = env;
-	vars.argv = ++argv;
-	expand(vars.argv, vars);
-	int i = 0;
-	while (vars.argv[i])
-	i++;
-	while (i >= 0)
-	free(vars.argv[i--]);
-	return 0;
-}
+// 	vars.env = env;
+// 	vars.argv = ++argv;
+// 	expand(vars.argv, vars);
+// 	int i = 0;
+// 	while (vars.argv[i])
+// 	i++;
+// 	while (i >= 0)
+// 	free(vars.argv[i--]);
+// 	return 0;
+// }

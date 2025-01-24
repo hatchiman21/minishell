@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/24 19:31:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/24 19:46:33 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	words_count_sh(char *line)
 	}
 	return (word);
 }
+
 char	*get_token_sh(char *line, int *j)
 {
 	int	flag_q;

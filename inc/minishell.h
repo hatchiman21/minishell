@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/24 19:46:54 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:33:49 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,11 @@ typedef struct s_minishell
 	int			op_num;
 }				t_minishell;
 
-void		expand(char **argv, t_minishell vars);
+char		*expand(char *argv, t_minishell vars);
 void		get_env(char **env);
 void		get_pwd(char **env);
-void		expand(char **argv, t_minishell vars);
 char		*get_variable(char **env, char *line, int *j);
-char		*rev_strdup(char const *s, int j);
+char		*rev_strdup(char *s, int j);
 char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
 void		ft_free_lst(t_redirect *lst);
@@ -52,5 +51,8 @@ int			test_expander(int argc, char **argv, char **env);
 int			words_count_sh(char *line);
 char		*get_token_sh(char *line, int *j);
 char		**get_argv(char *line, int argc);
+char		*ft_merge(char *s1, char *s2, int free_s1, int free_s2);
+void		remove_from_line(char *line, int i, int j);
+int			word_check(char *line, int i);
 
 #endif

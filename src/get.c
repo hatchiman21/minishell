@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/24 19:37:51 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/24 21:46:47 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char	*get_variable(char **env, char *line, int *j)
 	int		var_len;
 	int		m;
 	char	*variable;
-	char 	*tmp;
 	char 	*tmp2;
 
 	var_len = 0;
@@ -27,17 +26,14 @@ char	*get_variable(char **env, char *line, int *j)
 	m = 0;
 	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0 || env[m][var_len] != '='))
 		m++;
+	remove_from_line(line, *j - 1, var_len + 1);
 	if (!env[m])
 		return (line);
-	tmp = ft_strdup(env[m] + var_len + 1);
-	tmp2 = ft_strjoin(tmp, line + var_len + *j);
-	line = rev_strdup(line, *j - 1);
-	variable = ft_strjoin(line, tmp2);
+	tmp2 = ft_merge(ft_strdup(env[m] + var_len + 1), line + *j, 1, 0);
+	// line = rev_strdup(line, *j - 1);
+	variable = ft_merge(line, tmp2, 1, 1);
 	while (env[m][var_len++ + 1])
 		(*j)++;
-	free(line);
-	free(tmp);
-	free(tmp2);
 	return (variable);
 }
 
