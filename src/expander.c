@@ -3,37 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/23 22:23:48 by yousef           ###   ########.fr       */
+/*   Updated: 2025/01/24 19:40:18 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-/*	int	flag_q;
-	int	i;
-
-	if (!line)
-		return (NULL);
-	flag_q = 0;
-	i = *j;
-	if (line[*j] == '|')
-		return (ft_substr(line, (*j)++, 1));
-	while (line[*j] && !(line[*j] == ' ' && !flag_q))
-	{
-		if ((line[*j] == '\'' && flag_q == 1)
-			|| (line[*j] == '"' && flag_q == 2))
-			flag_q = 0;
-		else if (line[*j] == '\'' && !flag_q)
-			flag_q = 1;
-		else if (line[*j] == '"' && !flag_q)
-			flag_q = 2;
-		(*j)++;
-		if (line[*j] == '|')
-			break ;
-	}*/
 
 char	*dup_without_qoutes(char *s, int counter)
 {
@@ -111,35 +88,6 @@ char	*rev_strdup(char const *s, int j)
 	return (res);
 }
 
-char	*get_variable(char **env, char *line, int *j)
-{
-	int		var_len;
-	int		m;
-	char	*variable;
-	char 	*tmp;
-	char 	*tmp2;
-
-	var_len = 0;
-	(*j)++;
-	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len + *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|')
-		var_len++;
-	m = 0;
-	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0 || env[m][var_len] != '='))
-		m++;
-	if (!env[m])
-		return (line);
-	tmp = ft_strdup(env[m] + var_len + 1);
-	tmp2 = ft_strjoin(tmp, line + var_len + *j);
-	line = rev_strdup(line, *j - 1);
-	variable = ft_strjoin(line, tmp2);
-	while (env[m][var_len++ + 1])
-		(*j)++;
-	free(line);
-	free(tmp);
-	free(tmp2);
-	return (variable);
-}
-
 void	expand(char **argv, t_minishell vars)
 {
 	int	i;
@@ -171,16 +119,7 @@ void	expand(char **argv, t_minishell vars)
 	}
 }
 
-void get_pwd(char **env)
-{
-	int i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
-		i++;
-	if (env[i])
-		printf("%s\n", env[i] + 4);
-}
-
-int	main(int argc, char **argv, char **env)
+int	test_expander(int argc, char **argv, char **env)
 {
 	get_pwd(env);
 	t_minishell	vars;
