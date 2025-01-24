@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/24 19:40:31 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/24 19:46:54 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,21 @@ typedef struct s_minishell
 	int			op_num;
 }				t_minishell;
 
-void	expand(char **argv, t_minishell vars);
-void	get_env(char **env);
-void	get_pwd(char **env);
-void	expand(char **argv, t_minishell vars);
-char	*get_variable(char **env, char *line, int *j);
-char	*rev_strdup(char const *s, int j);
-char	*rm_qoutes(char *line);
-char	*dup_without_qoutes(char *s, int counter);
-void	ft_free_lst(t_redirect *lst);
-void	free_split(char **split, int num);
+void		expand(char **argv, t_minishell vars);
+void		get_env(char **env);
+void		get_pwd(char **env);
+void		expand(char **argv, t_minishell vars);
+char		*get_variable(char **env, char *line, int *j);
+char		*rev_strdup(char const *s, int j);
+char		*rm_qoutes(char *line);
+char		*dup_without_qoutes(char *s, int counter);
+void		ft_free_lst(t_redirect *lst);
+void		free_split(char **split, int num);
 t_redirect	*get_redirections(char *line);
-void	redirectionadd_back(t_redirect **lst, t_redirect *new);
-int		test_expander(int argc, char **argv, char **env);
+void		redirectionadd_back(t_redirect **lst, t_redirect *new);
+int			test_expander(int argc, char **argv, char **env);
+int			words_count_sh(char *line);
+char		*get_token_sh(char *line, int *j);
+char		**get_argv(char *line, int argc);
 
 #endif
