@@ -3,37 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/23 22:23:48 by yousef           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:51:34 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-/*	int	flag_q;
-	int	i;
-
-	if (!line)
-		return (NULL);
-	flag_q = 0;
-	i = *j;
-	if (line[*j] == '|')
-		return (ft_substr(line, (*j)++, 1));
-	while (line[*j] && !(line[*j] == ' ' && !flag_q))
-	{
-		if ((line[*j] == '\'' && flag_q == 1)
-			|| (line[*j] == '"' && flag_q == 2))
-			flag_q = 0;
-		else if (line[*j] == '\'' && !flag_q)
-			flag_q = 1;
-		else if (line[*j] == '"' && !flag_q)
-			flag_q = 2;
-		(*j)++;
-		if (line[*j] == '|')
-			break ;
-	}*/
 
 char	*dup_without_qoutes(char *s, int counter)
 {
@@ -63,6 +40,7 @@ char	*dup_without_qoutes(char *s, int counter)
 		i++;
 	}
 	res[j] = '\0';
+	free(s);
 	return (res);
 }
 
@@ -93,7 +71,7 @@ char *rm_qoutes(char *line)
 	return (dup_without_qoutes(line, counter));
 }
 
-char	*rev_strdup(char const *s, int j)
+char	*rev_strdup(char *s, int j)
 {
 	char	*res;
 	int		i;
@@ -108,90 +86,48 @@ char	*rev_strdup(char const *s, int j)
 		i++;
 	}
 	res[i] = '\0';
+	free(s);
 	return (res);
 }
 
-char	*get_variable(char **env, char *line, int *j)
+char	*expand(char *argv, t_minishell vars)
 {
-	int		var_len;
-	int		m;
-	char	*variable;
-	char 	*tmp;
-	char 	*tmp2;
-
-	var_len = 0;
-	(*j)++;
-	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len + *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|')
-		var_len++;
-	m = 0;
-	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0 || env[m][var_len] != '='))
-		m++;
-	if (!env[m])
-		return (line);
-	tmp = ft_strdup(env[m] + var_len + 1);
-	tmp2 = ft_strjoin(tmp, line + var_len + *j);
-	line = rev_strdup(line, *j - 1);
-	variable = ft_strjoin(line, tmp2);
-	while (env[m][var_len++ + 1])
-		(*j)++;
-	free(line);
-	free(tmp);
-	free(tmp2);
-	return (variable);
-}
-
-void	expand(char **argv, t_minishell vars)
-{
-	int	i;
 	int	j;
 	int	q_flag;
 
-	i = 0;
-	while (argv[i])
+	j = 0;
+	q_flag = -1;
+	while (argv[j])
 	{
-		j = 0;
-		q_flag = -1;
-		while (argv[i][j])
+		if (argv[j] == '\'')
 		{
-			if (argv[i][j] == '\'')
-			{
-				q_flag *= -1;
-				j++;
-			}
-			if (argv[i][j] == '$' && q_flag == -1)
-				argv[i] = get_variable(vars.env, argv[i], &j);
-			if (!argv[i][j])
-				break;
+			q_flag *= -1;
 			j++;
 		}
-		printf("%s\n", argv[i]);
-		argv[i] = rm_qoutes(argv[i]);
-		printf("%s\n", argv[i]);
-		i++;
+		if (argv[j] == '$' && q_flag == -1)
+			argv = get_variable(vars.env, argv, &j);
+		if (j >= (int)ft_strlen(argv))
+			break;
+		j++;
 	}
+	// printf("%s\n", argv);
+	argv = rm_qoutes(argv);
+	// printf("%s\n", argv);
+	return (argv);
 }
 
-void get_pwd(char **env)
-{
-	int i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
-		i++;
-	if (env[i])
-		printf("%s\n", env[i] + 4);
-}
+// int	test_expander(int argc, char **argv, char **env)
+// {
+// 	get_pwd(env);
+// 	t_minishell	vars;
 
-int	main(int argc, char **argv, char **env)
-{
-	get_pwd(env);
-	t_minishell	vars;
-
-	vars.env = env;
-	vars.argv = ++argv;
-	expand(vars.argv, vars);
-	int i = 0;
-	while (vars.argv[i])
-	i++;
-	while (i >= 0)
-	free(vars.argv[i--]);
-	return 0;
-}
+// 	vars.env = env;
+// 	vars.argv = ++argv;
+// 	expand(vars.argv, vars);
+// 	int i = 0;
+// 	while (vars.argv[i])
+// 	i++;
+// 	while (i >= 0)
+// 	free(vars.argv[i--]);
+// 	return 0;
+// }
