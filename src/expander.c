@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/24 20:51:34 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/26 02:16:58 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,19 @@ char	*expand(char *argv, t_minishell vars)
 {
 	int	j;
 	int	q_flag;
+	int q2_flag;
 
 	j = 0;
 	q_flag = -1;
+	q2_flag = 1;
 	while (argv[j])
 	{
-		if (argv[j] == '\'')
+		if (argv[j] == '"' && q_flag == -1)
+		{
+			q2_flag *= -1;
+			j++;
+		}
+		if (argv[j] == '\'' && q2_flag == 1)
 		{
 			q_flag *= -1;
 			j++;
@@ -110,9 +117,7 @@ char	*expand(char *argv, t_minishell vars)
 			break;
 		j++;
 	}
-	// printf("%s\n", argv);
 	argv = rm_qoutes(argv);
-	// printf("%s\n", argv);
 	return (argv);
 }
 
