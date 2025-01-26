@@ -55,8 +55,8 @@ char	*get_token_sh(char *line, int *j)
 	}
 	while (line[*j] && !(line[*j] == ' ' && !flag_q))
 	{
-		if ((line[*j] == '\'' && flag_q == 1)
-			|| (line[*j] == '"' && flag_q == 2))
+		if ((line[*j] == '\'' && flag_q == 1) || (line[*j] == '"'
+				&& flag_q == 2))
 			flag_q = 0;
 		else if (line[*j] == '\'' && !flag_q)
 			flag_q = 1;
