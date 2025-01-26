@@ -36,7 +36,7 @@ void	remove_from_line(char *line, int i, int j)
 		line[i + m] = line[i + m + j];
 		m++;
 	}
-	while(line[i + m])
+	while (line[i + m])
 	{
 		line[i + m] = '\0';
 		m++;

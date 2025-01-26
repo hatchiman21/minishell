@@ -17,15 +17,17 @@ char	*get_variable(char **env, char *line, int *j)
 	int		var_len;
 	int		m;
 	char	*variable;
-	char 	*tmp2;
+	char	*tmp2;
 
 	var_len = 0;
 	(*j)++;
-	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len + *j] != '\'' 
-	&& line[var_len + *j] != '"' && line[var_len + *j] != '|' && line[var_len + *j] != '$')
+	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len
+		+ *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|'
+		&& line[var_len + *j] != '$')
 		var_len++;
 	m = 0;
-	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0 || env[m][var_len] != '='))
+	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0
+			|| env[m][var_len] != '='))
 		m++;
 	remove_from_line(line, *j - 1, var_len + 1);
 	if (!env[m])
@@ -40,7 +42,7 @@ char	*get_variable(char **env, char *line, int *j)
 
 void	get_pwd(char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
@@ -51,7 +53,7 @@ void	get_pwd(char **env)
 
 void	get_env(char **env)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (env[i])

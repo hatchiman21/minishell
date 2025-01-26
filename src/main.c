@@ -40,7 +40,8 @@ int	word_check(char *line, int i)
 			exit(1);
 		j += 2;
 	}
-	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i + j] != ' ' && line[i + j] != '|')
+	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i
+		+ j] != ' ' && line[i + j] != '|')
 		j++;
 	return (j);
 }
@@ -63,7 +64,7 @@ int	count_char(char *line, char c)
 
 void	expand_all(t_minishell *vars)
 {
-	t_redirect *red;
+	t_redirect	*red;
 	int			i;
 
 	i = 0;
@@ -102,11 +103,12 @@ int	main(int argc, char **argv, char **env)
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n", i, vars.argv[i]);
 		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op, red->redirection);
+			ft_printf("op num: %d, redirection: %s\n", red->op,
+				red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
 	}
 	printf("exit\n");
-	return 0;
+	return (0);
 }
