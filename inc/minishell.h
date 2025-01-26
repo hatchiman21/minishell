@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 01:30:35 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 01:58:08 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ void		remove_from_line(char *line, int i, int j);
 int			word_check(char *line, int i);
 void		gets(char *line, char **env, t_minishell vars);
 void		export(char **env, char *line);
-void		sig_exit(void);
+void		sig_stay(void);
+void		sig_nothing(void);
+void		handle_sigquit(int sig);
+void		handle_sigint(int sig);
 
 #endif

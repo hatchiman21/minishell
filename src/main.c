@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 01:30:21 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 02:00:01 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,18 @@ void	expand_all(t_minishell *vars)
 	}
 }
 
+void	handle_sigquit(int sig)
+{
+	sig++;
+	sig--;
+}
+
+void	handle_sigint(int sig)
+{
+	printf("\n~/minishell$ ");
+	sig++;
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
@@ -92,7 +104,8 @@ int	main(int argc, char **argv, char **env)
 	vars.env = env;
 	while (1)
 	{
-		
+		signal(SIGQUIT, &handle_sigquit);
+		signal(SIGINT, &handle_sigint);
 		line = readline(NULL);
 		if (!line)
 			break ;
@@ -102,9 +115,8 @@ int	main(int argc, char **argv, char **env)
 		vars.argv = get_argv(line, vars.argc);
 		expand_all(&vars);
 		gets(line, vars.env, vars);
-		sig_exit();
-		if (ft_strncmp(vars.argv[0], "export", 7))
-			export(vars.env, vars.argv[1]);
+		//if (ft_strncmp(vars.argv[0], "export", 7) == 0)
+		//	export(vars.env, vars.argv[1]);
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n", i, vars.argv[i]);
 		for (t_redirect *red = vars.redirections; red; red = red->next)
