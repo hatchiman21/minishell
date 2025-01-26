@@ -6,11 +6,33 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/26 23:01:42 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 00:10:11 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	gets(char *line, char **env, t_minishell vars)
+{
+	int i;
+
+	i = 0;
+	if (ft_strncmp(vars.argv[0], "env\0", 4) == 0)
+		while (env[i])
+			printf("%s\n", env[i++]);
+	i = 0;
+	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
+		i++;
+	if (env[i] && ft_strncmp(vars.argv[0], "pwd\0", 4) == 0)
+		printf("%s\n", env[i] + 4);
+	if (ft_strncmp(vars.argv[0], "exit", 5) == 0)
+	{
+		free_split(vars.argv, vars.argc);
+		ft_free_lst(vars.redirections);
+		free(line);
+		exit(1);
+	}
+}
 
 char	*get_variable(char **env, char *line, int *j)
 {
@@ -41,22 +63,20 @@ char	*get_variable(char **env, char *line, int *j)
 	return (variable);
 }
 
-void	get_pwd(char **env)
+void	export(char **env, char *line)
 {
-	int	i;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
+	j = 0;
+	while (line[j] != '=')
+		j++;
+	while (ft_strncmp(env[i], line, j) != 0)
 		i++;
 	if (env[i])
-		printf("%s\n", env[i] + 4);
-}
-
-void	get_env(char **env)
-{
-	int i;
-
-	i = 0;
-	while (env[i])
-		printf("%s\n", env[i]);
+	{
+		free(env[i]);
+		env[i] = ft_strdup(line);
+	}
 }

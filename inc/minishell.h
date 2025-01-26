@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/26 01:23:04 by yousef           ###   ########.fr       */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
+/*   Updated: 2025/01/27 01:30:35 by yhamdan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /*   Updated: 2025/01/24 20:33:49 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -22,6 +22,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
+# include <signal.h>
+# include <stdlib.h>
 
 typedef struct s_redirect 
 {
@@ -58,5 +60,8 @@ char		**get_argv(char *line, int argc);
 char		*ft_merge(char *s1, char *s2, int free_s1, int free_s2);
 void		remove_from_line(char *line, int i, int j);
 int			word_check(char *line, int i);
+void		gets(char *line, char **env, t_minishell vars);
+void		export(char **env, char *line);
+void		sig_exit(void);
 
 #endif
