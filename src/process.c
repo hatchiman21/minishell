@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 02:35:44 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 03:38:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,10 @@ void	process(t_minishell *vars)
 	while (cur_op < vars->op_num)
 	{
 		vars->last_id = fork();
+		apply_redirection(vars, cur_op);
 		if (!vars->last_id)
 		{
 			// printf("child\n");
-			apply_redirection(vars, cur_op);
 			// printf("re child\n");
 			child_process(vars->argv + i, vars->env);
 		}

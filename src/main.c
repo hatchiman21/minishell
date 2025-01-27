@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 02:24:22 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 03:10:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,18 @@ void	expand_all(t_minishell *vars)
 	}
 }
 
+void	handle_sigquit(int sig)
+{
+	sig++;
+	sig--;
+}
+
+void	handle_sigint(int sig)
+{
+	printf("\n~/minishell$ ");
+	sig++;
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
@@ -92,6 +104,8 @@ int	main(int argc, char **argv, char **env)
 	vars.env = env;
 	while (1)
 	{
+		signal(SIGQUIT, &handle_sigquit);
+		signal(SIGINT, &handle_sigint);
 		line = readline(NULL);
 		if (!line)
 			break ;
@@ -99,11 +113,14 @@ int	main(int argc, char **argv, char **env)
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
-		expand_all(&vars); 
+		expand_all(&vars);
+		gets(line, vars.env, vars);
 		process(&vars);
 		wait_for_all();
+		//if (ft_strncmp(vars.argv[0], "export", 7) == 0)
+		//	export(vars.env, vars.argv[1]);
 		// for (int i = 0; i < vars.argc; i++)
-		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		// 	ft_printf("argv %d is %s\n" , i, vars.argv[i]);
 		// for (t_redirect *red = vars.redirections; red; red = red->next)
 		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
 		// 		red->redirection);
