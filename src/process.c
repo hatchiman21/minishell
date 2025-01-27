@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 04:33:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:53:16 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,33 @@ void	here_doc(int fd, char *stop_sign)
 		free(line);
 }
 
-int	open_file(t_redirect *red, int fd)
+void	open_file(t_minishell *vars, t_redirect *red, int pipefd[2])
 {
 	int	tmp_fd;
+	int	out;
 
 	tmp_fd = 0;
+	if (red->redirection[0] == '>')
+	{
+		vars->redir = 0;
+		out = 1;
+	}
+	else
+		out = 0;
 	if (!ft_strncmp(red->redirection, ">>", 2))
 		tmp_fd = open(red->redirection + 2,  O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else if (red->redirection[0] == '>')
 		tmp_fd = open(red->redirection + 1,  O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (!ft_strncmp(red->redirection, "<<", 2))
-		here_doc(fd, red->redirection + 2);
+		here_doc(pipefd[0], red->redirection + 2);
 	else if (red->redirection[0] == '<')
 		tmp_fd = open(red->redirection + 1, O_RDONLY);
-	if (tmp_fd)
-		dup2(tmp_fd, fd);
+	if (tmp_fd && !out)
+		dup2(tmp_fd, pipefd[0]);
+	else if (tmp_fd && out)
+		dup2(tmp_fd, pipefd[1]);
 	if (tmp_fd && tmp_fd != -1)
 		close(tmp_fd);
-	return (tmp_fd);
 }
 
 void	apply_redirection(t_minishell *vars, int cur_op)
@@ -97,19 +106,19 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 		vars->redir = 1;
 	red = vars->redirections;
 	pipe(vars->pipefd);
+	dup2(vars->pipefd[0], STDIN_FILENO);
 	while (red && red->op < cur_op)
 		red = red->next;
 	// printf("1\n");
 	while(red && red->op == cur_op)
 	{
-		open_file(red, vars->pipefd[0]);
+		open_file(vars, red, vars->pipefd);
 		red = red->next;
 	}
 	// printf("2\n");
-	dup2(vars->pipefd[0], STDIN_FILENO);
 	// printf("3\n");
-	// if (vars->redir == 1)
-	// 	dup2(vars->pipefd[1], STDOUT_FILENO);
+	if (!vars->redir)
+		dup2(vars->pipefd[1], STDOUT_FILENO);
 	// printf("4\n");
 	// close(vars->pipefd[0]);
 	close(vars->pipefd[1]);
@@ -135,10 +144,10 @@ void	process(t_minishell *vars)
 		}
 		else
 		{
-			// while (vars->argv[i])
-			// 	i++;
-			// if (i < vars->argc)
-			// 	i++;
+			while (vars->argv[i])
+				i++;
+			if (i < vars->argc)
+				i++;
 			cur_op++;
 		}
 	}

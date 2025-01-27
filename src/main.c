@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:36:11 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:59:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,10 @@ int	main(int argc, char **argv, char **env)
 		vars.op_num = 1;
 		vars.std_in = dup(STDIN_FILENO);
 		vars.std_out = dup(STDOUT_FILENO);
+		vars.pipefd[0] = 0;
+		vars.pipefd[1] = 0;
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
-		vars.argv = get_argv(line, vars.argc);
 		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
 		expand_all(&vars);
