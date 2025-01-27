@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:13:05 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 04:52:01 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,35 @@ char	*get_variable(char **env, char *line, int *j)
 	return (variable);
 }
 
-void	export(char **env, char *line)
+char	**export(char **env, char *line)
 {
 	int		i;
 	int		j;
+	char 	**tmp;
 
 	i = 0;
 	j = 0;
-	while (line[j] != '=')
+	while (line[j] && line[j] != '=')
 		j++;
-	while (ft_strncmp(env[i], line, j) != 0)
+	while (line[j] && ft_strncmp(env[i], line, j) != 0)
 		i++;
-	if (env[i])
+	if (line[j] &&  env[i])
 	{
-		free(env[i]);
-		env[i] = ft_strdup(line);
+		j = 0;
+		while (env[j])
+			j++;
+		tmp = (char **)malloc(sizeof(char *) * (j + 1));
+		tmp = 0;
+		while (env[j])
+		{
+			if (j == i)
+				tmp[j] = ft_strdup(line);
+			else	
+				tmp[j] = ft_strdup(env[j]);
+		}
+		while (j > 0)
+			free(env[j--]);
+		return (tmp);
 	}
+	return (env);
 }
