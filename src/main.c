@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 05:00:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 05:50:58 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
+	vars.std_in = dup(STDIN_FILENO);
+	vars.std_out = dup(STDOUT_FILENO);
 	while (1)
 	{
 		printf("~/minishell$ ");
@@ -142,39 +144,31 @@ int	main(int argc, char **argv, char **env)
 		if (!line)
 			break ;
 		vars.op_num = 1;
-		vars.std_in = dup(STDIN_FILENO);
-		vars.std_out = dup(STDOUT_FILENO);
-		vars.pipefd[0] = 0;
-		vars.pipefd[1] = 0;
+		vars.tmp_fd = STDOUT_FILENO;
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
 		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
 		expand_all(&vars);
-		gets(line, vars.env, vars);
-		if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
-			vars.env = export(vars.env, vars.argv[1]);
-		for (int i = 0; i < vars.argc; i++)
-			ft_printf("argv %d is %s\n", i, vars.argv[i]);
-		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op,
-				red->redirection);
-		process(&vars);
-		gets(line, vars.env, vars);
+		// gets(line, vars.env, vars);
+		// if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
+		// 	vars.env = export(vars.env, vars.argv[1]);
+		// for (int i = 0; i < vars.argc; i++)
+		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		// for (t_redirect *red = vars.redirections; red; red = red->next)
+		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
+		// 		red->redirection);
 		if (vars.argc > 0)
 			process(&vars);
 		else
 			printf("\n");
 		wait_for_all();
-		for (int i = 0; i < vars.argc; i++)
-			ft_printf("argv %d is %s\n" , i, vars.argv[i]);
-		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op,
-				red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
 	}
+	close(vars.std_in);
+	close(vars.std_out);
 	free_split(vars.env, i);
 	printf("exit\n");
 	return (0);
