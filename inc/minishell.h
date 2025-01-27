@@ -6,9 +6,10 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 04:47:41 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 04:58:11 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -39,6 +40,8 @@ typedef struct s_minishell
 	int			redir;
 	int			op_num;
 	int			pipefd[2];
+	int			std_in;
+	int			std_out;
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);

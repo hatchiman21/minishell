@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/01/27 04:53:14 by yhamdan          ###   ########.fr       */
+=======
+/*   Updated: 2025/01/27 04:36:11 by aatieh           ###   ########.fr       */
+>>>>>>> 09909071d64233e368207a2d66460f66eb237a4d
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +146,8 @@ int	main(int argc, char **argv, char **env)
 		if (!line)
 			break ;
 		vars.op_num = 1;
+		vars.std_in = dup(STDIN_FILENO);
+		vars.std_out = dup(STDOUT_FILENO);
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
@@ -157,6 +163,11 @@ int	main(int argc, char **argv, char **env)
 			ft_printf("op num: %d, redirection: %s\n", red->op,
 				red->redirection);
 		process(&vars);
+		gets(line, vars.env, vars);
+		if (vars.argc > 0)
+			process(&vars);
+		else
+			printf("\n");
 		wait_for_all();
 		for (int i = 0; i < vars.argc; i++)
 			ft_printf("argv %d is %s\n" , i, vars.argv[i]);
