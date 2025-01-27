@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/24 21:24:26 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 02:24:22 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,18 @@ int	main(int argc, char **argv, char **env)
 		line = readline(NULL);
 		if (!line)
 			break ;
-		vars.op_num = count_char(line, '|') + 1;
+		vars.op_num = 1;
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
-		vars.argv = get_argv(line, vars.argc);
-		expand_all(&vars);
-		for (int i = 0; i < vars.argc; i++)
-			ft_printf("argv %d is %s\n", i, vars.argv[i]);
-		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op,
-				red->redirection);
+		vars.argv = get_argv(line, &vars);
+		expand_all(&vars); 
+		process(&vars);
+		wait_for_all();
+		// for (int i = 0; i < vars.argc; i++)
+		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		// for (t_redirect *red = vars.redirections; red; red = red->next)
+		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
+		// 		red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);

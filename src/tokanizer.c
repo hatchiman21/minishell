@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 01:10:26 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 02:19:10 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	words_count_sh(char *line)
 	return (word);
 }
 
-char	*get_token_sh(char *line, int *j)
+char	*get_token_sh(char *line, int *j, t_minishell *vars)
 {
 	int	flag_q;
 	int	i;
@@ -50,6 +50,7 @@ char	*get_token_sh(char *line, int *j)
 	i = *j;
 	if (line[*j] == '|')
 	{
+		vars->op_num++;
 		(*j)++;
 		return (NULL);
 	}
@@ -69,20 +70,20 @@ char	*get_token_sh(char *line, int *j)
 	return (ft_substr(line, i, *j - i));
 }
 
-char	**get_argv(char *line, int argc)
+char	**get_argv(char *line, t_minishell *vars)
 {
 	int		i;
 	int		j;
 	char	**argv;
 
-	argv = malloc(sizeof(char *) * (argc + 1));
+	argv = malloc(sizeof(char *) * (vars->argc + 1));
 	i = 0;
 	j = 0;
-	while (i < argc)
+	while (i < vars->argc)
 	{
 		while (line[j] && line[j] == ' ')
 			j++;
-		argv[i] = get_token_sh(line, &j);
+		argv[i] = get_token_sh(line, &j, vars);
 		i++;
 	}
 	argv[i] = NULL;
