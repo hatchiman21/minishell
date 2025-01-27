@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 01:58:08 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 03:52:51 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
+void		s_flag_ch(char *line);
 
 #endif
