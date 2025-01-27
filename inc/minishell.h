@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 05:23:35 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 21:27:44 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_minishell
 	char		**argv;
 	char		**env;
 	t_redirect	*redirections;
+	int			exit_status;
 	int			last_id;
 	int			redir;
 	int			op_num;
@@ -65,7 +66,7 @@ int			word_check(char *line, int i);
 void		free_all(char *str, char **split);
 char		*get_path(char **cmd, char **envp);
 void		process(t_minishell *vars);
-void		wait_for_all(void);
+void		wait_for_all(t_minishell *vars);
 void		gets(char *line, char **env, t_minishell vars);
 char		**export(char **env, char *line);
 void		sig_stay(void);
