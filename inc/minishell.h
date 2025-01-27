@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 04:36:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:58:11 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -65,7 +66,7 @@ char		*get_path(char **cmd, char **envp);
 void		process(t_minishell *vars);
 void		wait_for_all(void);
 void		gets(char *line, char **env, t_minishell vars);
-void		export(char **env, char *line);
+char		**export(char **env, char *line);
 void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);

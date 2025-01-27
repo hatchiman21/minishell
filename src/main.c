@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:59:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 05:00:31 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,19 +151,26 @@ int	main(int argc, char **argv, char **env)
 		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
 		expand_all(&vars);
-		// gets(line, vars.env, vars);
+		gets(line, vars.env, vars);
+		if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
+			vars.env = export(vars.env, vars.argv[1]);
+		for (int i = 0; i < vars.argc; i++)
+			ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		for (t_redirect *red = vars.redirections; red; red = red->next)
+			ft_printf("op num: %d, redirection: %s\n", red->op,
+				red->redirection);
+		process(&vars);
+		gets(line, vars.env, vars);
 		if (vars.argc > 0)
 			process(&vars);
 		else
 			printf("\n");
 		wait_for_all();
-		//if (ft_strncmp(vars.argv[0], "export", 7) == 0)
-		//	export(vars.env, vars.argv[1]);
-		// for (int i = 0; i < vars.argc; i++)
-		// 	ft_printf("argv %d is %s\n" , i, vars.argv[i]);
-		// for (t_redirect *red = vars.redirections; red; red = red->next)
-		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
-		// 		red->redirection);
+		for (int i = 0; i < vars.argc; i++)
+			ft_printf("argv %d is %s\n" , i, vars.argv[i]);
+		for (t_redirect *red = vars.redirections; red; red = red->next)
+			ft_printf("op num: %d, redirection: %s\n", red->op,
+				red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
