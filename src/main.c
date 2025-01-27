@@ -6,11 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:35:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:36:11 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int s_flag = 0;
 
 int	new_word_start(char c)
 {
@@ -85,25 +87,55 @@ void	handle_sigquit(int sig)
 {
 	sig++;
 	sig--;
+	s_flag = 1;
 }
 
 void	handle_sigint(int sig)
 {
-	printf("\n~/minishell$ ");
+	printf("\n/minishell$ ");
 	sig++;
+	s_flag = 2;
+}
+
+void	s_flag_ch(char *line)
+{
+	char	*tmp;
+	
+	if (s_flag == 1)
+	{
+		rl_replace_line(line, 1);
+		rl_redisplay();
+	}
+	if (s_flag == 2)
+	{
+		tmp = ft_merge("\n~/minishell$ ", line, 0, 0);
+		rl_replace_line(tmp, 1);
+		rl_redisplay();
+		free(tmp);
+	}
+	s_flag = 0;
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
 	char		*line;
+	int			i;
 
 	line = NULL;
+	i = 0;
 	(void)argc;
 	(void)argv;
-	vars.env = env;
+	while (env[i])
+		i++;
+	vars.env = (char **)malloc(sizeof(char *) * (i + 1));
+	i = -1;
+	while (env[++i])
+		vars.env[i] = ft_strdup(env[i]);
+	vars.env[i] = NULL;
 	while (1)
 	{
+		printf("~/minishell$ ");
 		signal(SIGQUIT, &handle_sigquit);
 		signal(SIGINT, &handle_sigint);
 		line = readline(NULL);
@@ -114,6 +146,8 @@ int	main(int argc, char **argv, char **env)
 		vars.std_out = dup(STDOUT_FILENO);
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
+		vars.argv = get_argv(line, vars.argc);
+		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
 		expand_all(&vars);
 		// gets(line, vars.env, vars);
@@ -133,6 +167,7 @@ int	main(int argc, char **argv, char **env)
 		ft_free_lst(vars.redirections);
 		free(line);
 	}
+	free_split(vars.env, i);
 	printf("exit\n");
 	return (0);
 }

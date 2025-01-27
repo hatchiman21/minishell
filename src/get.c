@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 00:10:11 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/27 04:13:05 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	gets(char *line, char **env, t_minishell vars)
 	int i;
 
 	i = 0;
-	if (ft_strncmp(vars.argv[0], "env\0", 4) == 0)
+	if (vars.argv[0] && ft_strncmp(vars.argv[0], "env\0", 4) == 0)
 		while (env[i])
 			printf("%s\n", env[i++]);
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
 		i++;
-	if (env[i] && ft_strncmp(vars.argv[0], "pwd\0", 4) == 0)
+	if (env[i] && vars.argv[0] && ft_strncmp(vars.argv[0], "pwd\0", 4) == 0)
 		printf("%s\n", env[i] + 4);
-	if (ft_strncmp(vars.argv[0], "exit", 5) == 0)
+	if (vars.argv[0] && ft_strncmp(vars.argv[0], "exit", 5) == 0)
 	{
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
