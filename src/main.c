@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 03:10:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:35:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,17 @@ int	main(int argc, char **argv, char **env)
 		if (!line)
 			break ;
 		vars.op_num = 1;
+		vars.std_in = dup(STDIN_FILENO);
+		vars.std_out = dup(STDOUT_FILENO);
 		vars.redirections = get_redirections(line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
 		expand_all(&vars);
-		gets(line, vars.env, vars);
-		process(&vars);
+		// gets(line, vars.env, vars);
+		if (vars.argc > 0)
+			process(&vars);
+		else
+			printf("\n");
 		wait_for_all();
 		//if (ft_strncmp(vars.argv[0], "export", 7) == 0)
 		//	export(vars.env, vars.argv[1]);

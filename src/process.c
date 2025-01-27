@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 03:38:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 04:33:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,9 @@ int	open_file(t_redirect *red, int fd)
 
 	tmp_fd = 0;
 	if (!ft_strncmp(red->redirection, ">>", 2))
-	{
 		tmp_fd = open(red->redirection + 2,  O_WRONLY | O_APPEND | O_CREAT, 0644);
-		dup2(tmp_fd, STDOUT_FILENO);
-	}
 	else if (red->redirection[0] == '>')
-	{
 		tmp_fd = open(red->redirection + 1,  O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		dup2(tmp_fd, STDOUT_FILENO);
-	}
 	else if (!ft_strncmp(red->redirection, "<<", 2))
 		here_doc(fd, red->redirection + 2);
 	else if (red->redirection[0] == '<')
@@ -117,7 +111,7 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 	// if (vars->redir == 1)
 	// 	dup2(vars->pipefd[1], STDOUT_FILENO);
 	// printf("4\n");
-	close(vars->pipefd[0]);
+	// close(vars->pipefd[0]);
 	close(vars->pipefd[1]);
 }
 
@@ -148,6 +142,8 @@ void	process(t_minishell *vars)
 			cur_op++;
 		}
 	}
+	dup2(vars->std_in, STDIN_FILENO);
+	dup2(vars->std_out, STDOUT_FILENO);
 }
 
 void	wait_for_all(void)
