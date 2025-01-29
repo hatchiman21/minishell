@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 21:27:44 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/29 21:51:38 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,8 @@ typedef struct s_minishell
 	t_redirect	*redirections;
 	int			exit_status;
 	int			last_id;
-	int			redir;
 	int			op_num;
 	int			pipefd[2];
-	int			std_in;
-	int			std_out;
 	int			tmp_fd;
 }				t_minishell;
 

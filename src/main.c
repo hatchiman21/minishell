@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 21:29:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/29 21:52:03 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	handle_sigint(int sig)
 void	s_flag_ch(char *line)
 {
 	char	*tmp;
-	
+
 	if (s_flag == 1)
 	{
 		rl_replace_line(line, 1);
@@ -126,6 +126,8 @@ int	main(int argc, char **argv, char **env)
 	i = 0;
 	(void)argc;
 	(void)argv;
+	if (!isatty(0))
+		return (EXIT_FAILURE);
 	while (env[i])
 		i++;
 	vars.env = (char **)malloc(sizeof(char *) * (i + 1));
@@ -133,8 +135,6 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
-	vars.std_in = dup(STDIN_FILENO);
-	vars.std_out = dup(STDOUT_FILENO);
 	while (1)
 	{
 		printf("~/minishell$ ");
@@ -166,8 +166,6 @@ int	main(int argc, char **argv, char **env)
 		ft_free_lst(vars.redirections);
 		free(line);
 	}
-	close(vars.std_in);
-	close(vars.std_out);
 	free_split(vars.env, i);
 	printf("exit\n");
 	return (0);

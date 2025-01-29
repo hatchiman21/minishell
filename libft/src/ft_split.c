@@ -6,13 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:20:16 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/25 21:08:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/15 21:14:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
 
-static void	free_all(char **res, int size)
+void	free_split(char **res, int size)
 {
 	int	i;
 
@@ -85,7 +85,7 @@ static int	assign_all(char const *s, char c, char ***res)
 			res[0][j] = assign_word(&s[i], c);
 			if (res[0][j] == NULL)
 			{
-				free_all (*res, j);
+				free_split (*res, j);
 				return (0);
 			}
 			trigger = 1;

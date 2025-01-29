@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:45:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 05:44:36 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/07 19:52:14 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	last_process(char *argv[], int argc, t_pipex *vars, char **envp)
 	{
 		close_all(fd, vars->pipefd[0]);
 		if (vars->last_id == -1)
-			ft_putstr_fd("last fork failed\n", 2);
+			ft_putstr_fd("middle fork failed\n", 2);
 	}
 }
 
