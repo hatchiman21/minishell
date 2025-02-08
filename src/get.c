@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:52:01 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/08 23:43:41 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ char	**export(char **env, char *line)
 		}
 		while (j > 0)
 			free(env[j--]);
+		free(env);
 		return (tmp);
 	}
 	return (env);

@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/27 04:58:48 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/09 01:46:06 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,56 +65,47 @@ int	count_char(char *line, char c)
 	return (count);
 }
 
-void	expand_all(t_minishell *vars)
+char	*expand_all(t_minishell *vars, char *line)
 {
 	t_redirect	*red;
-	int			i;
 
-	i = 0;
 	red = vars->redirections;
-	while (vars->argv[i])
-	{
-		vars->argv[i] = expand(vars->argv[i], *vars);
-		i++;
-	}
+	line = expand(line, *vars);
 	while (red)
 	{
 		red->redirection = expand(red->redirection, *vars);
 		red = red->next;
 	}
+	return (line);
 }
 
-void	handle_sigquit(int sig)
+void handle_sigint(int sig)
 {
-	sig++;
-	sig--;
-	s_flag = 1;
+    (void)sig;
+    s_flag = 2;
+    write(STDOUT_FILENO, "\n", 1);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
-void	handle_sigint(int sig)
+void	remove_all_qoutes(t_minishell *vars)
 {
-	printf("\n/minishell$ ");
-	sig++;
-	s_flag = 2;
-}
+	int			i;
+	t_redirect	*red;
 
-void	s_flag_ch(char *line)
-{
-	char	*tmp;
-	
-	if (s_flag == 1)
+	i = 0;
+	red = vars->redirections;
+	while (vars->argv[i])
 	{
-		rl_replace_line(line, 1);
-		rl_redisplay();
+		vars->argv[i] = rm_qoutes(vars->argv[i]);
+		i++;
 	}
-	if (s_flag == 2)
+	while (red)
 	{
-		tmp = ft_merge("\n~/minishell$ ", line, 0, 0);
-		rl_replace_line(tmp, 1);
-		rl_redisplay();
-		free(tmp);
+		red->redirection = rm_qoutes(vars->redirections->redirection);
+		red = red->next;
 	}
-	s_flag = 0;
 }
 
 int	main(int argc, char **argv, char **env)
@@ -127,6 +118,8 @@ int	main(int argc, char **argv, char **env)
 	i = 0;
 	(void)argc;
 	(void)argv;
+	if (!isatty(0))
+		return (EXIT_FAILURE);
 	while (env[i])
 		i++;
 	vars.env = (char **)malloc(sizeof(char *) * (i + 1));
@@ -134,46 +127,36 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &handle_sigint);
 	while (1)
-	{
-		printf("~/minishell$ ");
-		signal(SIGQUIT, &handle_sigquit);
-		signal(SIGINT, &handle_sigint);
-		line = readline(NULL);
+	{	
+		line = readline("~/minishell$ ");
+		add_history(line);
 		if (!line)
 			break ;
 		vars.op_num = 1;
-		vars.std_in = dup(STDIN_FILENO);
-		vars.std_out = dup(STDOUT_FILENO);
+		vars.tmp_fd = STDOUT_FILENO;
 		vars.redirections = get_redirections(line);
+		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
-		s_flag_ch(line);
-		vars.argv = get_argv(line, &vars);
-		expand_all(&vars);
-		gets(line, vars.env, vars);
-		if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
-			vars.env = export(vars.env, vars.argv[1]);
-		for (int i = 0; i < vars.argc; i++)
-			ft_printf("argv %d is %s\n", i, vars.argv[i]);
-		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op,
-				red->redirection);
-		process(&vars);
-		gets(line, vars.env, vars);
+		remove_all_qoutes(&vars);
+		// remove_all_qoutes(&vars);
+		// gets(line, vars.env, vars);
+		// if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
+		// 	vars.env = export(vars.env, vars.argv[1]);
+		// for (int i = 0; i < vars.argc; i++)
+		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
+		// for (t_redirect *red = vars.redirections; red; red = red->next)
+		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
+		// 		red->redirection);
 		if (vars.argc > 0)
 			process(&vars);
-		else
-			printf("\n");
-		wait_for_all();
-		for (int i = 0; i < vars.argc; i++)
-			ft_printf("argv %d is %s\n" , i, vars.argv[i]);
-		for (t_redirect *red = vars.redirections; red; red = red->next)
-			ft_printf("op num: %d, redirection: %s\n", red->op,
-				red->redirection);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
+		s_flag = 0;
 	}
 	free_split(vars.env, i);
 	printf("exit\n");

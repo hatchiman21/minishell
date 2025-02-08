@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/26 02:16:58 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/08 23:14:34 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ char	*expand(char *argv, t_minishell vars)
 			break ;
 		j++;
 	}
-	argv = rm_qoutes(argv);
 	return (argv);
 }
 

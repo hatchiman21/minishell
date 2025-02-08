@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 04:33:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/08 22:34:57 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,80 +39,120 @@ int	child_process(char **cmd, char **envp)
 	if (!cmd || !path)
 	{
 		free_all(path, NULL);
-		ft_dprintf(2, "pipex: dup2 failed\n");
+		ft_dprintf(2, "minishell: dup2 failed\n");
 		exit(2);
 	}
 	execve(path, cmd, envp);
-	ft_dprintf(2, "pipex : %s: Is a directory\n", cmd[0]);
+	ft_dprintf(2, "minishell: %s: premission denied\n", cmd[0]);
 	free_all(path, NULL);
 	exit(126);
 }
 
-void	here_doc(int fd, char *stop_sign)
+int	here_doc(t_minishell *vars, char *stop_sign)
 {
 	char	*line;
+	int		i;
+	int		fd[2];
 
-	line = get_next_line(STDIN_FILENO);
-	while (line)
+	line = readline("> ");
+	i = 0;
+	pipe(fd);
+	while (1)
 	{
-		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
-			&& ft_strlen(line) - 1 == ft_strlen(stop_sign)
-			&& line[ft_strlen(stop_sign)] == '\n')
+		if (!line)
+		{
+			ft_dprintf(2, "minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", i, stop_sign);
 			break ;
-		write(fd, line, ft_strlen(line));
+		}
+		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
+			&& ft_strlen(line) == ft_strlen(stop_sign))
+			break ;
+		write(vars->pipefd[1], line, ft_strlen(line));
+		write(vars->pipefd[1], "\n", 1);
 		free(line);
-		line = get_next_line(STDIN_FILENO);
+		rl_on_new_line();
+		line = readline("> ");
+		i++;
 	}
+	close(fd[1]);
 	if (line)
 		free(line);
+	return (fd[0]);
 }
 
-int	open_file(t_redirect *red, int fd)
+void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 {
-	int	tmp_fd;
+	if (out == 1)
+	{
+		if (cur_op != vars->op_num - 1)
+			dup2(fd, vars->pipefd[1]);
+		else
+			dup2(fd, STDOUT_FILENO);
+	}
+	else if (out == 0)
+	{
+		if (cur_op != 0)
+			dup2(fd, vars->tmp_fd);
+		else
+			dup2(fd, STDIN_FILENO);
+	}
+	else
+	{
+		if (cur_op != 0)
+			dup2(fd, vars->tmp_fd);
+		else
+			dup2(vars->tmp_fd, STDIN_FILENO);
+		close(vars->tmp_fd);
+	}
+}
 
-	tmp_fd = 0;
+void	open_file(t_minishell *vars, t_redirect *red)
+{
+	int	fd;
+	int	out;
+
+	fd = -1;
+	if (red->redirection[0] == '>')
+		out = 1;
+	else
+		out = 0;
 	if (!ft_strncmp(red->redirection, ">>", 2))
-		tmp_fd = open(red->redirection + 2,  O_WRONLY | O_APPEND | O_CREAT, 0644);
+		fd = open(red->redirection + 2, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else if (red->redirection[0] == '>')
-		tmp_fd = open(red->redirection + 1,  O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		fd = open(red->redirection + 1, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (!ft_strncmp(red->redirection, "<<", 2))
-		here_doc(fd, red->redirection + 2);
+	{
+		fd = here_doc(vars, red->redirection + 2);
+		out = 2;
+	}
 	else if (red->redirection[0] == '<')
-		tmp_fd = open(red->redirection + 1, O_RDONLY);
-	if (tmp_fd)
-		dup2(tmp_fd, fd);
-	if (tmp_fd && tmp_fd != -1)
-		close(tmp_fd);
-	return (tmp_fd);
+		fd = open(red->redirection + 1, O_RDONLY);
+	change_fds(vars, fd, red->op, out);
+	if (fd != -1)
+		close(fd);
 }
 
 void	apply_redirection(t_minishell *vars, int cur_op)
 {
-	t_redirect *red;
+	t_redirect	*red;
 
-	if (vars->op_num == cur_op)
-		vars->redir = 0;
-	else
-		vars->redir = 1;
 	red = vars->redirections;
-	pipe(vars->pipefd);
 	while (red && red->op < cur_op)
 		red = red->next;
-	// printf("1\n");
-	while(red && red->op == cur_op)
+	while (red && red->op == cur_op)
 	{
-		open_file(red, vars->pipefd[0]);
+		open_file(vars, red);
 		red = red->next;
 	}
-	// printf("2\n");
-	dup2(vars->pipefd[0], STDIN_FILENO);
-	// printf("3\n");
-	// if (vars->redir == 1)
-	// 	dup2(vars->pipefd[1], STDOUT_FILENO);
-	// printf("4\n");
-	// close(vars->pipefd[0]);
+	if (cur_op != vars->op_num - 1)
+		dup2(vars->pipefd[1], STDOUT_FILENO);
+	if (cur_op != 0)
+	{
+		dup2(vars->tmp_fd, STDIN_FILENO);
+		close(vars->tmp_fd);
+	}
 	close(vars->pipefd[1]);
+	close(vars->pipefd[0]);
 }
 
 void	process(t_minishell *vars)
@@ -122,35 +162,50 @@ void	process(t_minishell *vars)
 
 	cur_op = 0;
 	i = 0;
-	// printf("current opartion: %d and overall number of oprations: %d\n", cur_op, vars->op_num);
 	while (cur_op < vars->op_num)
 	{
+		if (cur_op != 0)
+			vars->tmp_fd = vars->pipefd[0];
+		pipe(vars->pipefd);
 		vars->last_id = fork();
-		apply_redirection(vars, cur_op);
 		if (!vars->last_id)
 		{
-			// printf("child\n");
-			// printf("re child\n");
+			apply_redirection(vars, cur_op);
 			child_process(vars->argv + i, vars->env);
 		}
 		else
 		{
-			// while (vars->argv[i])
-			// 	i++;
-			// if (i < vars->argc)
-			// 	i++;
+			if (cur_op != 0)
+				close(vars->tmp_fd);
+			close(vars->pipefd[1]);
+			while (vars->argv[i])
+				i++;
+			if (i < vars->argc)
+				i++;
 			cur_op++;
 		}
 	}
-	dup2(vars->std_in, STDIN_FILENO);
-	dup2(vars->std_out, STDOUT_FILENO);
+	close(vars->pipefd[0]);
+	wait_for_all(vars);
+	// if (vars->tmp_fd != -1)
+	// 	close(vars->tmp_fd);
 }
 
-void	wait_for_all(void)
+void	wait_for_all(t_minishell *vars)
 {
 	int	id;
+	int	status;
 
 	id = 1;
 	while (id != -1)
-		id = waitpid(-1, NULL, 0);
+	{
+		id = waitpid(-1, &status, 0);
+		if (id == vars->last_id)
+		{
+			if (WIFEXITED(status))
+				vars->exit_status = WEXITSTATUS(status);
+			else
+				vars->exit_status = 128 + WTERMSIG(status);
+		}
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 04:58:11 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/01/29 21:51:38 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,11 @@ typedef struct s_minishell
 	char		**argv;
 	char		**env;
 	t_redirect	*redirections;
+	int			exit_status;
 	int			last_id;
-	int			redir;
 	int			op_num;
 	int			pipefd[2];
-	int			std_in;
-	int			std_out;
+	int			tmp_fd;
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);
@@ -64,7 +63,7 @@ int			word_check(char *line, int i);
 void		free_all(char *str, char **split);
 char		*get_path(char **cmd, char **envp);
 void		process(t_minishell *vars);
-void		wait_for_all(void);
+void		wait_for_all(t_minishell *vars);
 void		gets(char *line, char **env, t_minishell vars);
 char		**export(char **env, char *line);
 void		sig_stay(void);

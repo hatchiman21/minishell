@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 01:20:15 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/27 19:19:58 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*check_status(char **cmd, char **paths, char *path)
 		return (path);
 	if (access(path, F_OK) == 0)
 	{
-		ft_dprintf(2, "pipex: %s: Permission denied\n", cmd[0]);
+		ft_dprintf(2, "minishell: %s: Permission denied\n", cmd[0]);
 		if (cmd[0] != path)
 			free(path);
 		free_all(NULL, paths);
@@ -84,7 +84,7 @@ char	*get_path(char **cmd, char **envp)
 	free_all(tmp, paths);
 	if (path == NULL)
 	{
-		ft_dprintf(2, "pipex: %s: command not found\n", cmd[0]);
+		ft_dprintf(2, "minishell: %s: command not found\n", cmd[0]);
 		// close_all(fd[0], fd[1]);
 		free_all(NULL, cmd);
 		exit(127);

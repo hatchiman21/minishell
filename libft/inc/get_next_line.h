@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:43:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/10 20:11:29 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/01/15 21:15:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ typedef struct s_line_list
 	char				*buff;
 	struct s_line_list	*next;
 }	t_line_list;
-
 
 char	*ft_lstclear_item(t_line_list **lst, int fd);
 
