@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/29 22:08:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/08 22:34:57 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	child_process(char **cmd, char **envp)
 		ft_dprintf(2, "minishell: dup2 failed\n");
 		exit(2);
 	}
-	ft_dprintf(2, "path: %s\n", path);
 	execve(path, cmd, envp);
 	ft_dprintf(2, "minishell: %s: premission denied\n", cmd[0]);
 	free_all(path, NULL);
@@ -52,22 +51,33 @@ int	child_process(char **cmd, char **envp)
 int	here_doc(t_minishell *vars, char *stop_sign)
 {
 	char	*line;
-	int		fd;
+	int		i;
+	int		fd[2];
 
-	fd = open("tmp", O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	line = readline(NULL);
-	while (line)
+	line = readline("> ");
+	i = 0;
+	pipe(fd);
+	while (1)
 	{
+		if (!line)
+		{
+			ft_dprintf(2, "minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", i, stop_sign);
+			break ;
+		}
 		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
 			&& ft_strlen(line) == ft_strlen(stop_sign))
 			break ;
-		write(fd, line, ft_strlen(line));
+		write(vars->pipefd[1], line, ft_strlen(line));
+		write(vars->pipefd[1], "\n", 1);
 		free(line);
-		line = readline(NULL);
+		rl_on_new_line();
+		line = readline("> ");
+		i++;
 	}
+	close(fd[1]);
 	if (line)
 		free(line);
-	return (2);
+	return (fd[0]);
 }
 
 void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
@@ -87,7 +97,13 @@ void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 			dup2(fd, STDIN_FILENO);
 	}
 	else
-		dup2(fd, STDIN_FILENO);
+	{
+		if (cur_op != 0)
+			dup2(fd, vars->tmp_fd);
+		else
+			dup2(vars->tmp_fd, STDIN_FILENO);
+		close(vars->tmp_fd);
+	}
 }
 
 void	open_file(t_minishell *vars, t_redirect *red)
@@ -105,7 +121,10 @@ void	open_file(t_minishell *vars, t_redirect *red)
 	else if (red->redirection[0] == '>')
 		fd = open(red->redirection + 1, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (!ft_strncmp(red->redirection, "<<", 2))
-		out = here_doc(vars , red->redirection + 2);
+	{
+		fd = here_doc(vars, red->redirection + 2);
+		out = 2;
+	}
 	else if (red->redirection[0] == '<')
 		fd = open(red->redirection + 1, O_RDONLY);
 	change_fds(vars, fd, red->op, out);

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/01/29 21:52:03 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/08 23:44:13 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,23 +64,18 @@ int	count_char(char *line, char c)
 	return (count);
 }
 
-void	expand_all(t_minishell *vars)
+char	*expand_all(t_minishell *vars, char *line)
 {
 	t_redirect	*red;
-	int			i;
 
-	i = 0;
 	red = vars->redirections;
-	while (vars->argv[i])
-	{
-		vars->argv[i] = expand(vars->argv[i], *vars);
-		i++;
-	}
+	line = expand(line, *vars);
 	while (red)
 	{
 		red->redirection = expand(red->redirection, *vars);
 		red = red->next;
 	}
+	return (line);
 }
 
 void	handle_sigquit(int sig)
@@ -92,7 +87,7 @@ void	handle_sigquit(int sig)
 
 void	handle_sigint(int sig)
 {
-	printf("\n/minishell$ ");
+	write(1, "\n~/minishell$ ", 14);
 	sig++;
 	s_flag = 2;
 }
@@ -116,6 +111,25 @@ void	s_flag_ch(char *line)
 	s_flag = 0;
 }
 
+void	remove_all_qoutes(t_minishell *vars)
+{
+	int			i;
+	t_redirect	*red;
+
+	i = 0;
+	red = vars->redirections;
+	while (vars->argv[i])
+	{
+		vars->argv[i] = rm_qoutes(vars->argv[i]);
+		i++;
+	}
+	while (red)
+	{
+		red->redirection = rm_qoutes(vars->redirections->redirection);
+		red = red->next;
+	}
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
@@ -135,21 +149,22 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
+	signal(SIGQUIT, &handle_sigquit);
+	signal(SIGINT, &handle_sigint);
 	while (1)
 	{
-		printf("~/minishell$ ");
-		signal(SIGQUIT, &handle_sigquit);
-		signal(SIGINT, &handle_sigint);
-		line = readline(NULL);
+		line = readline("~/minishell$ ");
 		if (!line)
 			break ;
 		vars.op_num = 1;
 		vars.tmp_fd = STDOUT_FILENO;
 		vars.redirections = get_redirections(line);
+		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
-		expand_all(&vars);
+		remove_all_qoutes(&vars);
+		// remove_all_qoutes(&vars);
 		// gets(line, vars.env, vars);
 		// if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
 		// 	vars.env = export(vars.env, vars.argv[1]);
