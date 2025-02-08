@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/29 21:51:38 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 00:30:12 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
-void		s_flag_ch(char *line);
+char		*s_flag_ch(char *line);
+void		free_split(char **res, int size);
 
 #endif
