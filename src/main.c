@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/08 23:44:13 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/08 23:49:41 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		line = readline("~/minishell$ ");
+		add_history(line);
 		if (!line)
 			break ;
 		vars.op_num = 1;
