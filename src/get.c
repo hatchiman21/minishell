@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/08 23:43:41 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 02:39:09 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
 
 void	gets(char *line, char **env, t_minishell vars)
 {
@@ -34,7 +35,19 @@ void	gets(char *line, char **env, t_minishell vars)
 	}
 }
 
-char	*get_variable(char **env, char *line, int *j)
+char	*exit_status1(char *line, int *j, int exit_status)
+{
+	char	*variable;
+	char	*tmp2;
+	
+	remove_from_line(line, *j - 1, 2);
+	tmp2 = ft_merge(ft_itoa(exit_status), line + *j - 1, 1, 0);
+	line = rev_strdup(line, *j - 1);
+	variable = ft_merge(line, tmp2, 1, 1);
+	return (variable);
+}
+
+char	*get_variable(char **env, char *line, int *j, int status)
 {
 	int		var_len;
 	int		m;
@@ -47,6 +60,8 @@ char	*get_variable(char **env, char *line, int *j)
 		+ *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|'
 		&& line[var_len + *j] != '$')
 		var_len++;
+	if (var_len == 1 && line[*j] == '?')
+		return(exit_status1(line, j, status));
 	m = 0;
 	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0
 			|| env[m][var_len] != '='))
