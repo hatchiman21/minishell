@@ -6,14 +6,12 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 01:46:06 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/09 03:42:10 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../inc/minishell.h"
-
-int s_flag = 0;
 
 int	new_word_start(char c)
 {
@@ -82,7 +80,6 @@ char	*expand_all(t_minishell *vars, char *line)
 void handle_sigint(int sig)
 {
     (void)sig;
-    s_flag = 2;
     write(STDOUT_FILENO, "\n", 1);
     rl_replace_line("", 0);
     rl_on_new_line();
@@ -127,6 +124,7 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
+	vars.exit_status = 0;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
 	while (1)
@@ -141,22 +139,15 @@ int	main(int argc, char **argv, char **env)
 		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
+		exit1(line, vars);
 		remove_all_qoutes(&vars);
-		// remove_all_qoutes(&vars);
-		// gets(line, vars.env, vars);
-		// if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
-		// 	vars.env = export(vars.env, vars.argv[1]);
-		// for (int i = 0; i < vars.argc; i++)
-		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
-		// for (t_redirect *red = vars.redirections; red; red = red->next)
-		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
-		// 		red->redirection);
 		if (vars.argc > 0)
 			process(&vars);
 		free_split(vars.argv, vars.argc);
 		ft_free_lst(vars.redirections);
 		free(line);
-		s_flag = 0;
+		if (i == -2)
+			exit(1);
 	}
 	free_split(vars.env, i);
 	printf("exit\n");

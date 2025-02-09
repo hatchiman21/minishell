@@ -6,26 +6,15 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 02:39:09 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/09 03:42:01 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 
-void	gets(char *line, char **env, t_minishell vars)
+void	exit1(char *line, t_minishell vars)
 {
-	int i;
-
-	i = 0;
-	if (vars.argv[0] && ft_strncmp(vars.argv[0], "env\0", 4) == 0)
-		while (env[i])
-			printf("%s\n", env[i++]);
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PWD=", 4) != 0)
-		i++;
-	if (env[i] && vars.argv[0] && ft_strncmp(vars.argv[0], "pwd\0", 4) == 0)
-		printf("%s\n", env[i] + 4);
 	if (vars.argv[0] && ft_strncmp(vars.argv[0], "exit", 5) == 0)
 	{
 		free_split(vars.argv, vars.argc);
