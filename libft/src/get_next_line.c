@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:43:03 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/29 20:06:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 06:52:02 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ t_line_list	*find_buffer(int fd, t_line_list **storage, t_line_list *tmp)
 
 int	first_step(t_line_list **storage, int fd, int *bytes_read, char **res)
 {
-	int		i;
-	char	*buff;
+	int			i;
+	char		*buff;
 	t_line_list	*current;
 
 	current = find_buffer(fd, storage, *storage);

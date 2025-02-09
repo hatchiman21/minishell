@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/08 22:34:57 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 06:15:38 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	child_process(char **cmd, char **envp)
 	exit(126);
 }
 
-int	here_doc(t_minishell *vars, char *stop_sign)
+int	here_doc(char *stop_sign)
 {
 	char	*line;
 	int		i;
@@ -67,10 +67,12 @@ int	here_doc(t_minishell *vars, char *stop_sign)
 		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
 			&& ft_strlen(line) == ft_strlen(stop_sign))
 			break ;
-		write(vars->pipefd[1], line, ft_strlen(line));
-		write(vars->pipefd[1], "\n", 1);
-		free(line);
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
+		rl_replace_line("", 0);	
 		rl_on_new_line();
+		// rl_redisplay();
+		free(line);
 		line = readline("> ");
 		i++;
 	}
@@ -89,20 +91,12 @@ void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 		else
 			dup2(fd, STDOUT_FILENO);
 	}
-	else if (out == 0)
-	{
-		if (cur_op != 0)
-			dup2(fd, vars->tmp_fd);
-		else
-			dup2(fd, STDIN_FILENO);
-	}
 	else
 	{
 		if (cur_op != 0)
 			dup2(fd, vars->tmp_fd);
 		else
-			dup2(vars->tmp_fd, STDIN_FILENO);
-		close(vars->tmp_fd);
+			dup2(fd, STDIN_FILENO);
 	}
 }
 
@@ -121,10 +115,7 @@ void	open_file(t_minishell *vars, t_redirect *red)
 	else if (red->redirection[0] == '>')
 		fd = open(red->redirection + 1, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (!ft_strncmp(red->redirection, "<<", 2))
-	{
-		fd = here_doc(vars, red->redirection + 2);
-		out = 2;
-	}
+		fd = here_doc(red->redirection + 2);
 	else if (red->redirection[0] == '<')
 		fd = open(red->redirection + 1, O_RDONLY);
 	change_fds(vars, fd, red->op, out);
@@ -187,8 +178,6 @@ void	process(t_minishell *vars)
 	}
 	close(vars->pipefd[0]);
 	wait_for_all(vars);
-	// if (vars->tmp_fd != -1)
-	// 	close(vars->tmp_fd);
 }
 
 void	wait_for_all(t_minishell *vars)
@@ -200,6 +189,7 @@ void	wait_for_all(t_minishell *vars)
 	while (id != -1)
 	{
 		id = waitpid(-1, &status, 0);
+		printf("id: %d\n", id);
 		if (id == vars->last_id)
 		{
 			if (WIFEXITED(status))

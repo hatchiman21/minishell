@@ -6,10 +6,9 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/29 21:51:38 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 06:52:33 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -23,7 +22,7 @@
 # include <signal.h>
 # include <stdlib.h>
 
-typedef struct s_redirect 
+typedef struct s_redirect
 {
 	char				*redirection;
 	int					op;
@@ -44,13 +43,11 @@ typedef struct s_minishell
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);
-void		get_env(char **env);
-void		get_pwd(char **env);
-char		*get_variable(char **env, char *line, int *j);
+char		*get_variable(char **env, char *line, int *j, int status);
 char		*rev_strdup(char *s, int j);
 char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
-void		ft_free_lst(t_redirect *lst);
+void		ft_free_red(t_redirect *lst);
 void		free_split(char **split, int num);
 t_redirect	*get_redirections(char *line);
 void		redirectionadd_back(t_redirect **lst, t_redirect *new);
@@ -64,12 +61,11 @@ void		free_all(char *str, char **split);
 char		*get_path(char **cmd, char **envp);
 void		process(t_minishell *vars);
 void		wait_for_all(t_minishell *vars);
-void		gets(char *line, char **env, t_minishell vars);
 char		**export(char **env, char *line);
 void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
-void		s_flag_ch(char *line);
+void		free_split(char **res, int size);
 
 #endif

@@ -6,13 +6,11 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/08 23:53:54 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 06:54:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int s_flag = 0;
 
 int	new_word_start(char c)
 {
@@ -43,7 +41,7 @@ int	word_check(char *line, int i)
 		j += 2;
 	}
 	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i
-		+ j] != ' ' && line[i + j] != '|')
+			+ j] != ' ' && line[i + j] != '|')
 		j++;
 	return (j);
 }
@@ -78,55 +76,52 @@ char	*expand_all(t_minishell *vars, char *line)
 	return (line);
 }
 
-void	handle_sigquit(int sig)
-{
-	sig++;
-	sig--;
-	s_flag = 1;
-}
-
 void	handle_sigint(int sig)
 {
-	write(1, "\n~/minishell$ ", 14);
-	sig++;
-	s_flag = 2;
-}
-
-void	s_flag_ch(char *line)
-{
-	char	*tmp;
-
-	if (s_flag == 1)
-	{
-		rl_replace_line(line, 1);
-		rl_redisplay();
-	}
-	if (s_flag == 2)
-	{
-		tmp = ft_merge("\n~/minishell$ ", line, 0, 0);
-		rl_replace_line(tmp, 1);
-		rl_redisplay();
-		free(tmp);
-	}
-	s_flag = 0;
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 void	remove_all_qoutes(t_minishell *vars)
 {
 	int			i;
 	t_redirect	*red;
+	char		*tmp;
 
 	i = 0;
 	red = vars->redirections;
 	while (vars->argv[i])
 	{
-		vars->argv[i] = rm_qoutes(vars->argv[i]);
+		tmp = rm_qoutes(vars->argv[i]);
+		free(vars->argv[i]);
+		vars->argv[i] = tmp;
 		i++;
 	}
 	while (red)
 	{
-		red->redirection = rm_qoutes(vars->redirections->redirection);
+		tmp = rm_qoutes(red->redirection);
+		free(red->redirection);
+		red->redirection = tmp;
 		red = red->next;
+	}
+}
+
+void	print_redirections(t_redirect *red)
+{
+	int	i;
+
+	i = 0;
+	while (red)
+	{
+		printf("redirection[%d]: %s\n", i, red->redirection);
+		printf("op: %d\n", red->op);
+		red = red->next;
+		i++;
+		if (red->op != red->next->op)
+			i = 0;
 	}
 }
 
@@ -149,11 +144,12 @@ int	main(int argc, char **argv, char **env)
 	while (env[++i])
 		vars.env[i] = ft_strdup(env[i]);
 	vars.env[i] = NULL;
-	signal(SIGQUIT, &handle_sigquit);
+	vars.exit_status = 0;
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
 	vars.exit_status = 0;
 	while (1)
-	{
+	{	
 		line = readline("~/minishell$ ");
 		add_history(line);
 		if (!line)
@@ -163,25 +159,16 @@ int	main(int argc, char **argv, char **env)
 		vars.redirections = get_redirections(line);
 		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
-		s_flag_ch(line);
 		vars.argv = get_argv(line, &vars);
+		// exit1(line, vars);
 		remove_all_qoutes(&vars);
-		// remove_all_qoutes(&vars);
-		// gets(line, vars.env, vars);
-		// if (vars.argv[0] && vars.argv[1] && ft_strncmp(vars.argv[0], "export", 6) == 0)
-		// 	vars.env = export(vars.env, vars.argv[1]);
-		// for (int i = 0; i < vars.argc; i++)
-		// 	ft_printf("argv %d is %s\n", i, vars.argv[i]);
-		// for (t_redirect *red = vars.redirections; red; red = red->next)
-		// 	ft_printf("op num: %d, redirection: %s\n", red->op,
-		// 		red->redirection);
 		if (vars.argc > 0)
 			process(&vars);
-		else
-			printf("\n");
 		free_split(vars.argv, vars.argc);
-		ft_free_lst(vars.redirections);
+		ft_free_red(vars.redirections);
 		free(line);
+		if (i == -2)
+			exit(1);
 	}
 	free_split(vars.env, i);
 	printf("exit\n");
