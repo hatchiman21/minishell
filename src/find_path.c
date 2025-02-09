@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 19:19:58 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 00:34:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*get_path(char **cmd, char **envp)
 	char	*path;
 	char	*tmp;
 
-	if (access(cmd[0], F_OK) == 0)
+	if (ft_strchr(cmd[0], '/') && access(cmd[0], F_OK) == 0)
 		return (ft_strdup(check_status(cmd, NULL, cmd[0])));
 	tmp = ft_strjoin("/", cmd[0]);
 	paths = get_all_paths(envp);
