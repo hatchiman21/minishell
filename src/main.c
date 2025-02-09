@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/08 23:49:41 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/08 23:53:54 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ int	main(int argc, char **argv, char **env)
 	vars.env[i] = NULL;
 	signal(SIGQUIT, &handle_sigquit);
 	signal(SIGINT, &handle_sigint);
+	vars.exit_status = 0;
 	while (1)
 	{
 		line = readline("~/minishell$ ");
