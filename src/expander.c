@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 05:19:44 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 16:06:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,19 +114,3 @@ char	*expand(char *argv, t_minishell vars)
 	}
 	return (argv);
 }
-
-// int	test_expander(int argc, char **argv, char **env)
-// {
-// 	get_pwd(env);
-// 	t_minishell	vars;
-
-// 	vars.env = env;
-// 	vars.argv = ++argv;
-// 	expand(vars.argv, vars);
-// 	int i = 0;
-// 	while (vars.argv[i])
-// 	i++;
-// 	while (i >= 0)
-// 	free(vars.argv[i--]);
-// 	return (0);
-// }

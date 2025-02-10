@@ -1,0 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input_check.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
+/*   Updated: 2025/02/10 01:09:14 by aatieh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/minishell.h"
+
+int	redirections_error_check(char *line)
+{
+	int	i;
+	int	red;
+	int	pipe;
+
+	i = 0;
+	red = 0;
+	pipe = 0;
+	while (line[i])
+	{
+		if ((line[i] == '>' || line[i] == '<' || line[i] == '|') && red)
+			return (i);
+		else if (line[i] == '|' && pipe)
+			return (i);
+		else if (line[i] != '>' && line[i] != '>' && line[i] != ' ' && red)
+			red = 0;
+		else if (line[i] != '|' && line[i] != ' ' && pipe)
+			pipe = 0;
+		else if (line[i] == '|')
+			pipe = 1;
+		else if ((line[i] == '>' && line[i + 1] == '<') || (line[i] == '<' && line[i + 1] == '>'))
+			return (i + 1);
+		else if ((line[i] == '>' || line[i] == '<') && (line[i + 1] == '>' || line[i + 1] == '<'))
+		{
+			i++;
+			red++;
+		}
+		else if (line[i] == '>' || line[i] == '<')
+			red++;
+		i++;
+	}
+	if (red || pipe)
+		return (i);
+	return (0);
+}
+
+int	first_input_check(char *line)
+{
+	int	i;
+
+	i = redirections_error_check(line);
+	if (i)
+	{
+		if (i == (int)ft_strlen(line))
+			ft_dprintf(2, "minishell: syntax error near unexpected token `newline'\n");
+		else
+			ft_dprintf(2, "minishell: syntax error near unexpected token `%c'\n", line[i]);
+	}
+	return (i);
+}

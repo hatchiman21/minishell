@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 06:56:12 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 08:49:27 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,32 @@ char	**export(char **env, char *line)
 	j = 0;
 	while (line[j] && line[j] != '=')
 		j++;
-	while (line[j] && ft_strncmp(env[i], line, j) != 0)
+	while (line[j] && env[i] && ft_strncmp(env[i], line, j) != 0)
 		i++;
 	if (line[j] && env[i])
 	{
+		free(env[i]);
+		env[i] = ft_strdup(line);
+		return (env);
+	}
+	else if (line[j] && !env[i])
+	{
 		j = 0;
 		while (env[j])
-			j++;
-		tmp = (char **)malloc(sizeof(char *) * (j + 1));
-		tmp = 0;
+				j++;
+		tmp = (char **)malloc(sizeof(char *) * (j + 2));
+		if (!tmp)
+			return (NULL);
+		j = 0;
 		while (env[j])
 		{
-			if (j == i)
-				tmp[j] = ft_strdup(line);
-			else
-				tmp[j] = ft_strdup(env[j]);
+ 		   tmp[j] = ft_strdup(env[j]); 
+ 		   free(env[j]); 
+ 		   j++;
 		}
-		while (j > 0)
-			free(env[j--]);
-		free(env);
+		tmp[j] = ft_strdup(line); 
+		tmp[j + 1] = NULL;
+		free(env); 
 		return (tmp);
 	}
 	return (env);
