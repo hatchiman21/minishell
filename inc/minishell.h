@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 15:55:43 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 17:15:20 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,5 @@ void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
-void		free_split(char **res, int size);
 
 #endif
