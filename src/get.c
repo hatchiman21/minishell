@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/10 08:40:58 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/10 08:49:27 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,12 @@ char	**export(char **env, char *line)
 		i++;
 	if (line[j] && env[i])
 	{
-		printf("here\n");
 		free(env[i]);
 		env[i] = ft_strdup(line);
 		return (env);
 	}
 	else if (line[j] && !env[i])
 	{
-		printf("here2\n");
 		j = 0;
 		while (env[j])
 				j++;
