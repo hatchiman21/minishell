@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 03:59:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 14:39:35 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:47:17 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,5 @@ int				ft_strchr_find(const char *s, int c);
 char			*get_next_line(int fd);
 
 int				pipex(int argc, char *argv[], char **envp);
-char			*get_path(char **cmd, char **envp, int fd[2]);
 
 #endif
