@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 06:54:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 17:06:13 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,20 +109,36 @@ void	remove_all_qoutes(t_minishell *vars)
 	}
 }
 
-void	print_redirections(t_redirect *red)
+void	print_redirections(t_redirect *redirections)
 {
-	int	i;
+	int			i;
+	t_redirect	*red;
 
 	i = 0;
+	red = redirections;
 	while (red)
 	{
 		printf("redirection[%d]: %s\n", i, red->redirection);
 		printf("op: %d\n", red->op);
-		red = red->next;
 		i++;
-		if (red->op != red->next->op)
+		if (red->next && red->op != red->next->op)
 			i = 0;
+		red = red->next;
 	}
+}
+
+void	print_vars(t_minishell vars)
+{
+	int	i;
+
+	i = 0;
+	printf("argc: %d\n", vars.argc);
+	while (i < vars.argc)
+	{
+		printf("argv[%d]: %s\n", i, vars.argv[i]);
+		i++;
+	}
+	print_redirections(vars.redirections);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -148,25 +164,38 @@ int	main(int argc, char **argv, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
 	vars.exit_status = 0;
+	vars.here_doc_fds = NULL;
 	while (1)
-	{	
+	{
 		line = readline("~/minishell$ ");
-		add_history(line);
 		if (!line)
 			break ;
+		vars.final_line = ft_strdup(line);
+		if (first_input_check(line))
+		{
+			free(vars.final_line);
+			free(line);
+			continue ;
+		}
 		vars.op_num = 1;
 		vars.tmp_fd = STDOUT_FILENO;
 		vars.redirections = get_redirections(line);
+		vars.here_doc_fds = prepare_here_doc(&vars);
+		add_history(vars.final_line);
+		free(vars.final_line);
 		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
+		free(line);
+		// print_vars(vars);
 		// exit1(line, vars);
 		remove_all_qoutes(&vars);
+		print_vars(vars);
 		if (vars.argc > 0)
 			process(&vars);
+		close_free_here_doc(&vars.here_doc_fds);
 		free_split(vars.argv, vars.argc);
 		ft_free_red(vars.redirections);
-		free(line);
 		if (i == -2)
 			exit(1);
 	}

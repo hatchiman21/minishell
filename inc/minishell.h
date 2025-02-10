@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/09 06:52:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 15:55:43 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <stdlib.h>
+# include <stdbool.h>
 
 typedef struct s_redirect
 {
@@ -29,17 +30,27 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }						t_redirect;
 
+typedef struct s_here_doc
+{
+	int					fd;
+	int					red_order;
+	bool				open;
+	struct s_here_doc	*next;
+}						t_here_doc;
+
 typedef struct s_minishell
 {
 	int			argc;
 	char		**argv;
 	char		**env;
 	t_redirect	*redirections;
+	char		*final_line;
 	int			exit_status;
 	int			last_id;
 	int			op_num;
 	int			pipefd[2];
 	int			tmp_fd;
+	t_here_doc	*here_doc_fds;
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);
@@ -47,6 +58,11 @@ char		*get_variable(char **env, char *line, int *j, int status);
 char		*rev_strdup(char *s, int j);
 char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
+int			first_input_check(char *line);
+void		error_msg(char *msg);
+t_here_doc	*prepare_here_doc(t_minishell *vars);
+int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
+void		close_free_here_doc(t_here_doc **here_doc);
 void		ft_free_red(t_redirect *lst);
 void		free_split(char **split, int num);
 t_redirect	*get_redirections(char *line);
