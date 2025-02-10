@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:20:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/15 21:14:36 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:40:17 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,23 @@ void	free_split(char **res, int size)
 	int	i;
 
 	i = 0;
-	while (i < size)
+	if (!res)
+		return ;
+	if (size == -1)
 	{
-		free(res[i]);
-		i++;
+		while (res[i])
+		{
+			free(res[i]);
+			i++;
+		}
+	}
+	else
+	{
+		while (i < size)
+		{
+			free(res[i]);
+			i++;
+		}
 	}
 	free(res);
 }
@@ -56,7 +69,7 @@ static char	*assign_word(char const *s, char c)
 	i = 0;
 	while (s[i] && s[i] != c)
 		i++;
-	res = (char *)malloc(sizeof(char) * (i + 1));
+	res = malloc(sizeof(char) * (i + 1));
 	if (!res)
 		return (0);
 	i = 0;
@@ -85,7 +98,7 @@ static int	assign_all(char const *s, char c, char ***res)
 			res[0][j] = assign_word(&s[i], c);
 			if (res[0][j] == NULL)
 			{
-				free_split (*res, j);
+				free_split(*res, j);
 				return (0);
 			}
 			trigger = 1;
@@ -103,10 +116,10 @@ char	**ft_split(char const *s, char c)
 	char	**res;
 	int		word_num;
 
-	word_num = count_words (s, c);
+	word_num = count_words(s, c);
 	if (!s)
 		return (NULL);
-	res = (char **)malloc (sizeof (char *) * (word_num + 1));
+	res = malloc (sizeof (char *) * (word_num + 1));
 	if (!res)
 		return (NULL);
 	if (word_num == 0)
