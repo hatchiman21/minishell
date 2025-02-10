@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/24 19:33:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/09 06:49:59 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_redirect	*assgine_redirection(char *line, int i, int op_num, int *space_num)
 	*space_num = 0;
 	redirect = malloc(sizeof(t_redirect));
 	redirect->op = op_num;
-	while(line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
+	while (line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
 		j++;
-	while(line[i + j + *space_num] && line[i + j + *space_num] == ' ')
+	while (line[i + j + *space_num] && line[i + j + *space_num] == ' ')
 		(*space_num)++;
 	while (line[i + *space_num + j] && line[i + *space_num + j] != ' ')
 		j++;
@@ -48,13 +48,13 @@ t_redirect	*assgine_redirection(char *line, int i, int op_num, int *space_num)
 
 t_redirect	*get_redirection(char *line, int i, int op_num)
 {
-	int	j;
-	int	space_num;
+	int			j;
+	int			space_num;
 	t_redirect	*redirect;
 
 	j = 0;
 	redirect = assgine_redirection(line, i, op_num, &space_num);
-	while(line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
+	while (line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
 	{
 		redirect->redirection[j] = line[i + j];
 		j++;
@@ -76,7 +76,7 @@ t_redirect	*get_redirections(char *line)
 	int			op_num;
 	t_redirect	*head;
 
-	if (!line )
+	if (!line)
 		return (NULL);
 	head = NULL;
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 14:37:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/13 05:28:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2024/12/25 21:08:49 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 int	ft_putstr_fd(char *s, int fd)
 {
-	int	len;
+	int	i;
 
-	if (!s)
-		return (0);
-	len = ft_strlen(s);
-	write(fd, s, len);
-	return (len);
+	i = 0;
+	while (s[i])
+	{
+		write (fd, &s[i], 1);
+		i++;
+	}
+	return (i);
 }
