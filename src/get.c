@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/10 08:49:27 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 03:53:19 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,76 @@ char	**export(char **env, char *line)
 		return (tmp);
 	}
 	return (env);
+}
+
+char	**unset(char **env, char *line)
+{
+	int		i;
+	int		j;
+	char	**tmp;
+
+	i = 0;
+	j = 0;
+	while (env[i] && ft_strncmp(env[i], line, ft_strlen(line)) != 0)
+		i++;
+	if (env[i])
+	{
+		while (env[j])
+			j++;
+		tmp = (char **)malloc(sizeof(char *) * j);
+		if (!tmp)
+			return (NULL);
+		j = 0;
+		while (env[j + 1])
+		{
+			if (j < i)
+				tmp[j] = ft_strdup(env[j]);
+			if (j >= i)
+				tmp[j] = ft_strdup(env[j + 1]);
+			free(env[j]);
+			j++;
+		}
+		free(env[j]);
+		tmp[j] = NULL;
+		free(env);
+		return (tmp);
+	}
+	printf("minishell: unset: `%s': not a valid identifier\n", line);
+	return (env);
+}
+
+void	my_cd(t_minishell *vars)
+{
+	char	*path;
+	char	*tmp;
+
+	if (vars->argc == 1)
+	{
+		path = getcwd(NULL, 0);
+		chdir(getenv("HOME"));
+		tmp = ft_merge("OLDPWD=", path, 0, 1);
+		vars->env = export(vars->env, tmp);
+		path = ft_merge("PWD=", getcwd(NULL, 0), 0, 1);
+		vars->env = export(vars->env, path);
+		free(path);
+		free(tmp);
+	}
+	else if (vars->argc == 2)
+	{
+		path = getcwd(NULL, 0);
+		if (chdir(vars->argv[1]) == -1)
+			printf("minishell: cd: %s: No such file or directory\n", vars->argv[1]);
+		else
+		{
+			tmp = ft_merge("OLDPWD=", path, 0, 0);
+			vars->env = export(vars->env, tmp);
+			free(tmp);
+			tmp = ft_merge("PWD=", getcwd(NULL, 0), 0, 1);
+			vars->env = export(vars->env, tmp);
+			free(tmp);
+		}
+		free(path);
+	}
+	else
+		printf("minishell: cd: too many arguments\n");
 }

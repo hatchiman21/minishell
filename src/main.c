@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/10 08:45:06 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 03:40:42 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,10 @@ int	main(int argc, char **argv, char **env)
 		remove_all_qoutes(&vars);
 		if (vars.argv[0] && vars.argv[1] && vars.argv[2] == NULL && ft_strncmp(vars.argv[0], "export", 7) == 0)
 			vars.env = export(vars.env, vars.argv[1]);
+		if (vars.argv[0] && vars.argv[1] && vars.argv[2] == NULL && ft_strncmp(vars.argv[0], "unset", 6) == 0)
+			vars.env = unset(vars.env, vars.argv[1]);
+		if (vars.argv[0] && ft_strncmp(vars.argv[0], "cd", 3) == 0)
+			my_cd(&vars);
 		if (vars.argc > 0)
 			process(&vars);
 		free_split1(vars.argv);
