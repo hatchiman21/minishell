@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 03:43:45 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 04:20:08 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <stdlib.h>
+# include <stdbool.h>
 
 typedef struct s_redirect
 {
@@ -29,17 +30,27 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }						t_redirect;
 
+typedef struct s_here_doc
+{
+	int					fd;
+	int					red_order;
+	bool				open;
+	struct s_here_doc	*next;
+}						t_here_doc;
+
 typedef struct s_minishell
 {
 	int			argc;
 	char		**argv;
 	char		**env;
 	t_redirect	*redirections;
+	char		*final_line;
 	int			exit_status;
 	int			last_id;
 	int			op_num;
 	int			pipefd[2];
 	int			tmp_fd;
+	t_here_doc	*here_doc_fds;
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);
@@ -47,6 +58,11 @@ char		*get_variable(char **env, char *line, int *j, int status);
 char		*rev_strdup(char *s, int j);
 char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
+int			first_input_check(char *line);
+void		error_msg(char *msg);
+t_here_doc	*prepare_here_doc(t_minishell *vars);
+int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
+void		close_free_here_doc(t_here_doc **here_doc);
 void		ft_free_red(t_redirect *lst);
 void		free_split(char **split, int num);
 t_redirect	*get_redirections(char *line);
@@ -68,7 +84,5 @@ void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
 void		free_split1(char **res);
 void		exit1(char *line, t_minishell vars);
-char		**unset(char **env, char *line);
-void		my_cd(t_minishell *vars);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:32:27 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/09 06:33:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:33:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,24 @@ void	ft_free_red(t_redirect *lst)
 		free(tmp->redirection);
 		free(tmp);
 	}
+}
+
+void	ft_free(t_minishell *vars)
+{
+	int	i;
+
+	i = 0;
+	if (vars->argv)
+	{
+		while (vars->argv[i])
+		{
+			free(vars->argv[i]);
+			i++;
+		}
+		free(vars->argv);
+	}
+	ft_free_red(vars->redirections);
+	free(vars->final_line);
+	close_free_here_doc(&vars->here_doc_fds);
+	free_split(vars->env, -1);
 }

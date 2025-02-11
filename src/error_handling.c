@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   error_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 14:37:38 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/25 23:50:15 by aatieh           ###   ########.fr       */
+/*   Created: 2025/02/09 23:04:41 by aatieh            #+#    #+#             */
+/*   Updated: 2025/02/10 00:40:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/libft.h"
+#include "../inc/minishell.h"
 
-int	ft_putstr_fd(char *s, int fd)
+void	error_msg(char *msg)
 {
-	int	len;
+	ft_dprintf(2, "minishell: %s\n", msg);
+	
+	exit(1);
+}
 
-	len = ft_strlen(s);
-	write (fd, s, len);
-	return (len);
+void	errors(int	error, t_minishell *vars)
+{
+	(void)error;
+	(void)vars;
+	free_split(vars->env, -1);
 }

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:43:03 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/09 06:52:02 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:39:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,7 @@ int	first_step(t_line_list **storage, int fd, int *bytes_read, char **res)
 	}
 	*bytes_read = read(fd, buff, BUFFER_SIZE);
 	if (*bytes_read == -1)
-	{
-		free (*res);
-		return (-1);
-	}
+		return (free (*res), -1);
 	ft_bzero((buff + *bytes_read), BUFFER_SIZE - *bytes_read + 1);
 	return (i);
 }
