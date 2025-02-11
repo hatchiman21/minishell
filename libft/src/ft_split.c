@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:20:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/15 21:14:36 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/10 08:46:49 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@ void	free_split(char **res, int size)
 	int	i;
 
 	i = 0;
+	while (i < size)
+	{
+		free(res[i]);
+		i++;
+	}
+	free(res);
+}
+
+
+void	free_split1(char **res)
+{
+	int	i;
+	int	size;
+
+	i = 0;
+	size = 0;
+	while (res[size])
+		size++;
 	while (i < size)
 	{
 		free(res[i]);

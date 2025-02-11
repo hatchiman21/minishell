@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 08:45:01 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 03:43:45 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,7 @@ void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
 void		free_split1(char **res);
 void		exit1(char *line, t_minishell vars);
+char		**unset(char **env, char *line);
+void		my_cd(t_minishell *vars);
 
 #endif
