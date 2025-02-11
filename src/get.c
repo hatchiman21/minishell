@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/11 03:53:19 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 07:51:12 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	exit1(char *line, t_minishell vars)
+void	exit1(char *line, t_minishell *vars)
 {
-	if (vars.argv[0] && ft_strncmp(vars.argv[0], "exit", 5) == 0)
+	if (vars->argc > 2 )
 	{
-		free_split(vars.argv, vars.argc);
-		ft_free_red(vars.redirections);
+		free_split(vars->argv, vars->argc);
+		ft_free_red(vars->redirections);
 		free(line);
 		exit(1);
 	}
@@ -139,7 +139,7 @@ char	**unset(char **env, char *line)
 		free(env);
 		return (tmp);
 	}
-	printf("minishell: unset: `%s': not a valid identifier\n", line);
+	ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n", line);
 	return (env);
 }
 
@@ -163,7 +163,7 @@ void	my_cd(t_minishell *vars)
 	{
 		path = getcwd(NULL, 0);
 		if (chdir(vars->argv[1]) == -1)
-			printf("minishell: cd: %s: No such file or directory\n", vars->argv[1]);
+			ft_dprintf(2, "minishell: cd: %s: No such file or directory\n", vars->argv[1]);
 		else
 		{
 			tmp = ft_merge("OLDPWD=", path, 0, 0);
@@ -176,5 +176,5 @@ void	my_cd(t_minishell *vars)
 		free(path);
 	}
 	else
-		printf("minishell: cd: too many arguments\n");
+		write(2, "minishell: cd: too many arguments\n", 34);
 }

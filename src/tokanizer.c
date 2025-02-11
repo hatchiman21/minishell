@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/27 02:19:10 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 10:13:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ char	**get_argv(char *line, t_minishell *vars)
 	char	**argv;
 
 	argv = malloc(sizeof(char *) * (vars->argc + 1));
+	if (!argv)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (i < vars->argc)
@@ -84,6 +86,11 @@ char	**get_argv(char *line, t_minishell *vars)
 		while (line[j] && line[j] == ' ')
 			j++;
 		argv[i] = get_token_sh(line, &j, vars);
+		if (argv[i] == NULL && line[j - 1] != '|')
+		{
+			free_split(argv, i);
+			return (NULL);
+		}
 		i++;
 	}
 	argv[i] = NULL;

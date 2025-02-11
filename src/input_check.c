@@ -6,11 +6,41 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 01:09:14 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 09:03:40 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int	redirections_validity_check(t_redirect *redirection)
+{
+	t_redirect	*red;
+	int			i;
+	int			q_flag;
+
+	red = redirection;
+	while (red)
+	{
+		i = 0;
+		q_flag = 0;
+		while (red->redirection[i] == '>' || red->redirection[i] == '<')
+			i++;
+		while (red->redirection[i])
+		{
+			if (red->redirection[i] == '"' && !q_flag)
+				q_flag = 1;
+			else if (red->redirection[i] == '\'' && !q_flag)
+				q_flag = 2;
+			else if ((red->redirection[i] == '"' && q_flag == 1) || (red->redirection[i] == '\'' && q_flag == 2))
+				q_flag = 0;
+			if (red->redirection[i] == ' ' && !q_flag)
+				return (1);
+			i++;
+		}
+		red = red->next;
+	}
+	return (0);
+}
 
 int	redirections_error_check(char *line)
 {

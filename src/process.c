@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 16:13:26 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 10:23:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,27 @@ void	free_all(char *str, char **split)
 	free(split);
 }
 
-int	child_process(char **cmd, char **envp)
+void	ft_excute(char *path, char **cmd, t_minishell *vars)
+{
+	if (!ft_strncmp(cmd[0], "cd", 3))
+		my_cd(vars);
+	// else if (!ft_strncmp(cmd[0], "export", 7))
+	// 	export(vars->env, vars->env);
+	// else if (!ft_strncmp(cmd[0], "unset", 6))
+	// 	unset(cmd, vars->env);
+	// else if (!ft_strncmp(cmd[0], "exit", 5))
+	// 	exit1(cmd, vars);
+	// else if (!ft_strncmp(cmd[0], "env", 4))
+	// 	env(vars->env);
+	// else if (!ft_strncmp(cmd[0], "pwd", 4))
+	// 	pwd();
+	else if (!ft_strncmp(cmd[0], "echo", 5))
+		ft_echo(cmd);
+	else
+		execve(path, cmd, vars->env);
+}
+
+int	child_process(char **cmd, t_minishell *vars)
 {
 	char	*path;
 
@@ -37,15 +57,15 @@ int	child_process(char **cmd, char **envp)
 	if (!cmd || !cmd[0])
 		exit(0);
 	if (cmd && cmd[0])
-		path = get_path(cmd, envp);
+		path = get_path(cmd, vars->env);
 	if (!cmd || !path)
 	{
 		free_all(path, NULL);
 		ft_dprintf(2, "minishell: dup2 failed\n");
-		exit(2);
+		exit(1);
 	}
-	execve(path, cmd, envp);
-	ft_dprintf(2, "minishell: %s: premission denied\n", cmd[0]);
+	ft_excute(path, cmd, vars);
+	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
 	free_all(path, NULL);
 	exit(126);
 }
@@ -86,9 +106,19 @@ void	open_file(t_minishell *vars, t_redirect *red, int red_order)
 		fd = get_here_doc_fd(vars->here_doc_fds, red_order);
 	else if (red->redirection[0] == '<')
 		fd = open(red->redirection + 1, O_RDONLY);
-	change_fds(vars, fd, red->op, out);
-	if (fd != -1)
-		close(fd);
+	if (fd == -1)
+	{
+		if (red->redirection[1] == '<' || red->redirection[1] == '>')
+			ft_dprintf(2, "minishell: %s: %s\n", red->redirection + 2, strerror(errno));
+		else
+			ft_dprintf(2, "minishell: %s: %s\n", red->redirection + 1, strerror(errno));
+		close_free_here_doc(&vars->here_doc_fds);
+		close(vars->pipefd[0]);
+		close(vars->pipefd[1]);
+		exit(1);
+	}
+	else
+		change_fds(vars, fd, red->op, out);
 }
 
 void	apply_redirection(t_minishell *vars, int cur_op)
@@ -131,19 +161,28 @@ void	process(t_minishell *vars)
 	{
 		if (cur_op != 0)
 			vars->tmp_fd = vars->pipefd[0];
-		pipe(vars->pipefd);
+		if (pipe(vars->pipefd) == -1)
+		{
+			ft_dprintf(2, "minishell: child pipe failed\n");
+			break ;
+		}
 		vars->last_id = fork();
 		if (!vars->last_id)
 		{
 			apply_redirection(vars, cur_op);
 			close_free_here_doc(&vars->here_doc_fds);
-			child_process(vars->argv + i, vars->env);
+			child_process(vars->argv + i, vars);
 		}
 		else
 		{
 			if (cur_op != 0)
 				close(vars->tmp_fd);
 			close(vars->pipefd[1]);
+			if (vars->last_id == -1)
+			{
+				ft_dprintf(2, "minishell: fork failed\n");
+				break ;
+			}
 			while (vars->argv[i])
 				i++;
 			if (i < vars->argc)
@@ -151,7 +190,8 @@ void	process(t_minishell *vars)
 			cur_op++;
 		}
 	}
-	close(vars->pipefd[0]);
+	if (vars->pipefd[0] != -1)
+		close(vars->pipefd[0]);
 	wait_for_all(vars);
 }
 

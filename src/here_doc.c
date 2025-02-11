@@ -6,13 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 16:25:51 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 09:57:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	here_doc_input(char *stop_sign, int fd, char **final_line)
+int	here_doc_input(char *stop_sign, int fd, char **final_line)
 {
 	char	*line;
 	int		i;
@@ -28,7 +28,19 @@ void	here_doc_input(char *stop_sign, int fd, char **final_line)
 			break ;
 		}
 		*final_line = ft_merge(*final_line, "\n", 1, 0);
+		if (!*final_line)
+		{
+			ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
+			free(line);
+			return (-1);
+		}
 		*final_line = ft_merge(*final_line, line, 1, 0);
+		if (!*final_line)
+		{
+			ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
+			free(line);
+			return (-1);
+		}
 		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
 			&& ft_strlen(line) == ft_strlen(stop_sign))
 			break ;
@@ -42,6 +54,7 @@ void	here_doc_input(char *stop_sign, int fd, char **final_line)
 	}
 	if (line)
 		free(line);
+	return (0);
 }
 
 void	here_doc_addback(t_here_doc **head, t_here_doc *new)
@@ -57,7 +70,6 @@ void	here_doc_addback(t_here_doc **head, t_here_doc *new)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	new->next = NULL;
 }
 
 t_here_doc	*prepare_here_doc(t_minishell *vars)
@@ -76,14 +88,30 @@ t_here_doc	*prepare_here_doc(t_minishell *vars)
 		if (!ft_strncmp(red->redirection, "<<", 2))
 		{
 			here_doc_node = malloc(sizeof(t_here_doc));
-			pipe(fd);
+			if (!here_doc_node)
+			{
+				close_free_here_doc(&head);
+				ft_putstr_fd("minishell: here_doc malloc failed\n", 2);
+				return (NULL);
+			}
+			here_doc_addback(&head, here_doc_node);
+			if (pipe(fd) == -1)
+			{
+				close_free_here_doc(&head);
+				ft_putstr_fd("minishell: here_doc pipe failed\n", 2);
+				return (NULL);
+			}
 			here_doc_node->fd = fd[0];
 			here_doc_node->red_order = i;
 			here_doc_node->open = true;
 			here_doc_node->next = NULL;
-			here_doc_input(red->redirection + 2, fd[1], &vars->final_line);
+			if (here_doc_input(red->redirection + 2, fd[1], &vars->final_line) == -1)
+			{
+				close(fd[1]);
+				close_free_here_doc(&head);
+				return (NULL);
+			}
 			close(fd[1]);
-			here_doc_addback(&head, here_doc_node);
 		}
 		red = red->next;
 		i++;

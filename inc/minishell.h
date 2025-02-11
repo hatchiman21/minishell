@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 04:20:08 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 08:42:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <signal.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <string.h>
+# include <errno.h>
 
 typedef struct s_redirect
 {
@@ -60,8 +62,11 @@ char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
 int			first_input_check(char *line);
 void		error_msg(char *msg);
+char		**unset(char **env, char *line);
+void		my_cd(t_minishell *vars);
 t_here_doc	*prepare_here_doc(t_minishell *vars);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
+void		ft_echo(char **argv);
 void		close_free_here_doc(t_here_doc **here_doc);
 void		ft_free_red(t_redirect *lst);
 void		free_split(char **split, int num);
@@ -83,6 +88,6 @@ void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
 void		free_split1(char **res);
-void		exit1(char *line, t_minishell vars);
+void		exit1(char *line, t_minishell *vars);
 
 #endif

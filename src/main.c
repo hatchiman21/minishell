@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/11 04:21:27 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/11 10:22:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,36 +141,67 @@ void	print_vars(t_minishell vars)
 	print_redirections(vars.redirections);
 }
 
+char	**ft_array_dup(char **array)
+{
+	int		i;
+	char	**new_array;
+
+	if (!array)
+		return (NULL);
+	i = 0;
+	while (array[i])
+		i++;
+	new_array = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!new_array)
+		return (NULL);
+	i = 0;
+	while (array[i])
+	{
+		new_array[i] = ft_strdup(array[i]);
+		if (!new_array[i])
+		{
+			free_split(new_array, i);
+			return (NULL);
+		}
+		i++;
+	}
+	new_array[i] = NULL;
+	return (new_array);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	vars;
 	char		*line;
-	int			i;
 
 	line = NULL;
-	i = 0;
 	(void)argc;
 	(void)argv;
 	if (!isatty(0))
 		return (EXIT_FAILURE);
-	while (env[i])
-		i++;
-	vars.env = (char **)malloc(sizeof(char *) * (i + 1));
-	i = -1;
-	while (env[++i])
-		vars.env[i] = ft_strdup(env[i]);
-	vars.env[i] = NULL;
+	vars.env = ft_array_dup(env);
+	if (!vars.env && env)
+	{
+		ft_putstr_fd("minishell: enviorment malloc failed\n", 2);
+		return (EXIT_FAILURE);
+	}
 	vars.exit_status = 0;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
-	vars.exit_status = 0;
-	vars.here_doc_fds = NULL;
 	while (1)
 	{
+		vars.pipefd[0] = -1;
+		vars.last_id = 0;
 		line = readline("~/minishell$ ");
 		if (!line)
 			break ;
 		vars.final_line = ft_strdup(line);
+		if (!vars.final_line)
+		{
+			ft_putstr_fd("minishell: final line malloc failed\n", 2);
+			free(line);
+			break ;
+		}
 		if (first_input_check(line))
 		{
 			free(vars.final_line);
@@ -180,28 +211,41 @@ int	main(int argc, char **argv, char **env)
 		vars.op_num = 1;
 		vars.tmp_fd = STDOUT_FILENO;
 		vars.redirections = get_redirections(line);
+		if (!vars.redirections && (ft_strchr_find(vars.final_line, '>') || ft_strchr_find(vars.final_line, '<')))
+		{
+			free(vars.final_line);
+			free(line);
+			ft_putstr_fd("minishell: redirection malloc failed\n", 2);
+			break ;
+		}
 		vars.here_doc_fds = prepare_here_doc(&vars);
+		if (!vars.here_doc_fds && ft_strnstr(vars.final_line, "<<", ft_strlen(vars.final_line)))
+		{
+			if (vars.final_line)
+				free(vars.final_line);
+			free(line);
+			ft_free_red(vars.redirections);
+			ft_putstr_fd("minishell: here doc malloc failed\n", 2);
+			break ;
+		}
 		add_history(vars.final_line);
 		free(vars.final_line);
 		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
 		free(line);
-		// print_vars(vars);
-		exit1(line, vars);
+		if (!vars.argv)
+		{
+			ft_free_red(vars.redirections);
+			ft_putstr_fd("minishell: argv malloc failed\n", 2);
+			break ;
+		}
 		remove_all_qoutes(&vars);
-		print_vars(vars);
-		if (vars.argv[0] && vars.argv[1] && vars.argv[2] == NULL && ft_strncmp(vars.argv[0], "unset", 6) == 0)
-			vars.env = unset(vars.env, vars.argv[1]);
-		if (vars.argv[0] && ft_strncmp(vars.argv[0], "cd", 3) == 0)
-			my_cd(&vars);
 		if (vars.argc > 0)
 			process(&vars);
 		close_free_here_doc(&vars.here_doc_fds);
 		free_split(vars.argv, vars.argc);
 		ft_free_red(vars.redirections);
-		if (i == -2)
-			exit(1);
 	}
 	free_split1(vars.env);
 	printf("exit\n");
