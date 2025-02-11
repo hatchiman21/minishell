@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 10:23:45 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 17:49:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,16 +88,11 @@ void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 	}
 }
 
-void	open_file(t_minishell *vars, t_redirect *red, int red_order)
+int	get_fd(t_minishell *vars, t_redirect *red, int red_order)
 {
 	int	fd;
-	int	out;
 
 	fd = -1;
-	if (red->redirection[0] == '>')
-		out = 1;
-	else
-		out = 0;
 	if (!ft_strncmp(red->redirection, ">>", 2))
 		fd = open(red->redirection + 2, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else if (red->redirection[0] == '>')
@@ -106,19 +101,34 @@ void	open_file(t_minishell *vars, t_redirect *red, int red_order)
 		fd = get_here_doc_fd(vars->here_doc_fds, red_order);
 	else if (red->redirection[0] == '<')
 		fd = open(red->redirection + 1, O_RDONLY);
+	return (fd);
+}
+
+void	open_file(t_minishell *vars, t_redirect *red, int red_order)
+{
+	int	fd;
+	int	out;
+
+	if (red->redirection[0] == '>')
+		out = 1;
+	else
+		out = 0;
+	fd = get_fd(vars, red, red_order);
 	if (fd == -1)
 	{
 		if (red->redirection[1] == '<' || red->redirection[1] == '>')
-			ft_dprintf(2, "minishell: %s: %s\n", red->redirection + 2, strerror(errno));
+			ft_dprintf(2, "minishell: %s: %s\n",
+				red->redirection + 2, strerror(errno));
 		else
-			ft_dprintf(2, "minishell: %s: %s\n", red->redirection + 1, strerror(errno));
+			ft_dprintf(2, "minishell: %s: %s\n",
+				red->redirection + 1, strerror(errno));
 		close_free_here_doc(&vars->here_doc_fds);
 		close(vars->pipefd[0]);
 		close(vars->pipefd[1]);
 		exit(1);
 	}
-	else
-		change_fds(vars, fd, red->op, out);
+	change_fds(vars, fd, red->op, out);
+	close(fd);
 }
 
 void	apply_redirection(t_minishell *vars, int cur_op)
@@ -150,6 +160,30 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 	close(vars->pipefd[0]);
 }
 
+void	process_operation(t_minishell *vars, int *i, int *cur_op)
+{
+	vars->last_id = fork();
+	if (!vars->last_id)
+	{
+		apply_redirection(vars, *cur_op);
+		close_free_here_doc(&vars->here_doc_fds);
+		child_process(vars->argv + *i, vars);
+	}
+	else
+	{
+		if (*cur_op != 0)
+			close(vars->tmp_fd);
+		close(vars->pipefd[1]);
+		if (vars->last_id == -1)
+			ft_dprintf(2, "minishell: fork failed in command %d\n", *cur_op);
+		while (vars->argv[*i])
+			(*i)++;
+		if (*i < vars->argc)
+			(*i)++;
+		(*cur_op)++;
+	}
+}
+
 void	process(t_minishell *vars)
 {
 	int	cur_op;
@@ -166,29 +200,7 @@ void	process(t_minishell *vars)
 			ft_dprintf(2, "minishell: child pipe failed\n");
 			break ;
 		}
-		vars->last_id = fork();
-		if (!vars->last_id)
-		{
-			apply_redirection(vars, cur_op);
-			close_free_here_doc(&vars->here_doc_fds);
-			child_process(vars->argv + i, vars);
-		}
-		else
-		{
-			if (cur_op != 0)
-				close(vars->tmp_fd);
-			close(vars->pipefd[1]);
-			if (vars->last_id == -1)
-			{
-				ft_dprintf(2, "minishell: fork failed\n");
-				break ;
-			}
-			while (vars->argv[i])
-				i++;
-			if (i < vars->argc)
-				i++;
-			cur_op++;
-		}
+		process_operation(vars, &i, &cur_op);
 	}
 	if (vars->pipefd[0] != -1)
 		close(vars->pipefd[0]);

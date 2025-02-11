@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/11 10:22:30 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 17:20:20 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ int	main(int argc, char **argv, char **env)
 		free_split(vars.argv, vars.argc);
 		ft_free_red(vars.redirections);
 	}
-	free_split1(vars.env);
+	free_split(vars.env, -1);
 	printf("exit\n");
 	return (0);
 }

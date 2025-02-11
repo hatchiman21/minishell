@@ -6,38 +6,46 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 09:57:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:11:19 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int	add_line(char *line, char **final_line)
+{
+	*final_line = ft_merge(*final_line, "\n", 1, 0);
+	if (!*final_line)
+	{
+		ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
+		return (-1);
+	}
+	*final_line = ft_merge(*final_line, line, 1, 0);
+	if (!*final_line)
+	{
+		ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
+		return (-1);
+	}
+	return (0);
+}
 
 int	here_doc_input(char *stop_sign, int fd, char **final_line)
 {
 	char	*line;
 	int		i;
 
-	line = readline("> ");
 	i = 0;
 	while (1)
 	{
+		line = readline("> ");
 		if (!line)
 		{
 			ft_dprintf(2,"%s %d delimited by end-of-file (wanted `%s')\n",
 				"minishell: warning: here-document at line", i, stop_sign);
 			break ;
 		}
-		*final_line = ft_merge(*final_line, "\n", 1, 0);
-		if (!*final_line)
+		if (add_line(line, final_line) == -1)
 		{
-			ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
-			free(line);
-			return (-1);
-		}
-		*final_line = ft_merge(*final_line, line, 1, 0);
-		if (!*final_line)
-		{
-			ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
 			free(line);
 			return (-1);
 		}
@@ -49,7 +57,6 @@ int	here_doc_input(char *stop_sign, int fd, char **final_line)
 		free(line);
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		line = readline("> ");
 		i++;
 	}
 	if (line)

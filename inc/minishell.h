@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 08:42:27 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 17:19:53 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ t_here_doc	*prepare_here_doc(t_minishell *vars);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		ft_echo(char **argv);
 void		close_free_here_doc(t_here_doc **here_doc);
-void		ft_free_red(t_redirect *lst);
-void		free_split(char **split, int num);
+void		*ft_free_red(t_redirect *lst);
 t_redirect	*get_redirections(char *line);
 void		redirectionadd_back(t_redirect **lst, t_redirect *new);
 int			words_count_sh(char *line);
@@ -87,7 +86,6 @@ void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
-void		free_split1(char **res);
 void		exit1(char *line, t_minishell *vars);
 
 #endif
