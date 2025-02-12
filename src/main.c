@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/12 07:39:27 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 19:45:52 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ int	main(int argc, char **argv, char **env)
 		return (EXIT_FAILURE);
 	}
 	vars.exit_status = 0;
+	vars.here_doc_fds = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
 	while (1)
