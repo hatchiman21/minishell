@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 17:49:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 05:42:53 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,35 @@ void	free_all(char *str, char **split)
 	free(split);
 }
 
-void	ft_excute(char *path, char **cmd, t_minishell *vars)
+void	ft_excute(char *path, char **cmd, t_minishell *vars, int j)
 {
+	int	i;
+
+	i = 1;
+	if (!cmd && cmd[0])
+		return ;
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		my_cd(vars);
-	// else if (!ft_strncmp(cmd[0], "export", 7))
-	// 	export(vars->env, vars->env);
-	// else if (!ft_strncmp(cmd[0], "unset", 6))
-	// 	unset(cmd, vars->env);
-	// else if (!ft_strncmp(cmd[0], "exit", 5))
-	// 	exit1(cmd, vars);
-	// else if (!ft_strncmp(cmd[0], "env", 4))
-	// 	env(vars->env);
-	// else if (!ft_strncmp(cmd[0], "pwd", 4))
-	// 	pwd();
+	else if (!ft_strncmp(cmd[0], "export", 7) && cmd[1])
+		while (cmd[i])
+			vars->env = export(vars->env, cmd[i++]);
+	else if (!ft_strncmp(cmd[0], "unset", 6) && cmd[1])
+		while (cmd[i])
+			vars->env = unset(vars->env, cmd[i++]);
+	else if (!ft_strncmp(cmd[0], "exit", 5) && !cmd[1])
+		exit1(NULL, vars);
+	else if (!ft_strncmp(cmd[0], "exit", 5) && cmd[1] && !cmd[2])
+		exit1(cmd[1], vars);
+	else if (!ft_strncmp(cmd[0], "env", 4) && !cmd[1])
+		env(vars->env);
+	else if (!ft_strncmp(cmd[0], "pwd", 4) && !cmd[1])
+		pwd();
 	else if (!ft_strncmp(cmd[0], "echo", 5))
 		ft_echo(cmd);
-	else
+	else if (j)
 		execve(path, cmd, vars->env);
+	else
+		printf("invalid command\\parameters\n");
 }
 
 int	child_process(char **cmd, t_minishell *vars)
@@ -64,7 +75,8 @@ int	child_process(char **cmd, t_minishell *vars)
 		ft_dprintf(2, "minishell: dup2 failed\n");
 		exit(1);
 	}
-	ft_excute(path, cmd, vars);
+	if (cmd)
+		ft_excute(path, cmd, vars, 1);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
 	free_all(path, NULL);
 	exit(126);
