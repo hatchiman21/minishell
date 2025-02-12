@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/12 07:36:15 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 07:40:25 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ void		sig_stay(void);
 void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
-void		exit1(char *line, t_minishell *vars);
+void		exit1(char *state, t_minishell *vars);
+void		ft_excute(char *path, char **cmd, t_minishell *vars, int j);
+void		env(char **env);
+void		pwd(void);
 
 #endif

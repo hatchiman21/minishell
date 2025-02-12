@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/12 07:36:23 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 07:39:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,8 @@ int	main(int argc, char **argv, char **env)
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
 		free(line);
+		if (vars.argv)
+			ft_excute(NULL, vars.argv, &vars, 0);
 		if (!vars.argv)
 		{
 			ft_free_red(vars.redirections);
