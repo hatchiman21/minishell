@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/11 17:20:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 07:36:23 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,18 +195,18 @@ int	main(int argc, char **argv, char **env)
 		line = readline("~/minishell$ ");
 		if (!line)
 			break ;
+		if (first_input_check(line))
+		{
+			add_history(line);
+			free(line);
+			continue ;
+		}
 		vars.final_line = ft_strdup(line);
 		if (!vars.final_line)
 		{
 			ft_putstr_fd("minishell: final line malloc failed\n", 2);
 			free(line);
 			break ;
-		}
-		if (first_input_check(line))
-		{
-			free(vars.final_line);
-			free(line);
-			continue ;
 		}
 		vars.op_num = 1;
 		vars.tmp_fd = STDOUT_FILENO;
@@ -218,7 +218,7 @@ int	main(int argc, char **argv, char **env)
 			ft_putstr_fd("minishell: redirection malloc failed\n", 2);
 			break ;
 		}
-		vars.here_doc_fds = prepare_here_doc(&vars);
+		prepare_here_doc(&vars, vars.redirections);
 		if (!vars.here_doc_fds && ft_strnstr(vars.final_line, "<<", ft_strlen(vars.final_line)))
 		{
 			if (vars.final_line)

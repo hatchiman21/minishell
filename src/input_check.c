@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 17:42:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 06:50:32 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,24 @@ int	redirections_validity_check(t_redirect *redirection)
 	return (0);
 }
 
+void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
+{
+	if (line[*i] != '>' && line[*i] != '>' && line[*i] != ' ' && (*red))
+		(*red) = 0;
+	else if ((line[*i] == '>' || line[*i] == '<')
+		&& (line[*i + 1] == '>' || line[*i + 1] == '<'))
+	{
+		(*i)++;
+		(*red)++;
+	}
+	else if (line[*i] == '>' || line[*i] == '<')
+		(*red)++;
+	else if (line[*i] != '|' && line[*i] != ' ' && (*pipe))
+		(*pipe) = 0;
+	else if (line[*i] == '|')
+		(*pipe) = 1;
+}
+
 int	redirections_error_check(char *line)
 {
 	int	i;
@@ -64,23 +82,11 @@ int	redirections_error_check(char *line)
 			return (i);
 		else if (line[i] == '|' && pipe)
 			return (i);
-		else if (line[i] != '>' && line[i] != '>' && line[i] != ' ' && red)
-			red = 0;
-		else if (line[i] != '|' && line[i] != ' ' && pipe)
-			pipe = 0;
-		else if (line[i] == '|')
-			pipe = 1;
 		else if ((line[i] == '>' && line[i + 1] == '<')
 			|| (line[i] == '<' && line[i + 1] == '>'))
 			return (i + 1);
-		else if ((line[i] == '>' || line[i] == '<')
-			&& (line[i + 1] == '>' || line[i + 1] == '<'))
-		{
-			i++;
-			red++;
-		}
-		else if (line[i] == '>' || line[i] == '<')
-			red++;
+		else
+			redirections_error_check_helper(&i, line, &red, &pipe);
 		i++;
 	}
 	if (red || pipe)

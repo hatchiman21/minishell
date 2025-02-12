@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 18:11:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 07:35:55 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ int	add_line(char *line, char **final_line)
 	return (0);
 }
 
+int	write_line(int fd, char *line, int i)
+{
+	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
+	free(line);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	i++;
+	return (i);
+}
+
 int	here_doc_input(char *stop_sign, int fd, char **final_line)
 {
 	char	*line;
@@ -40,9 +51,9 @@ int	here_doc_input(char *stop_sign, int fd, char **final_line)
 		line = readline("> ");
 		if (!line)
 		{
-			ft_dprintf(2,"%s %d delimited by end-of-file (wanted `%s')\n",
+			ft_dprintf(2, "%s %d delimited by end-of-file (wanted `%s')\n",
 				"minishell: warning: here-document at line", i, stop_sign);
-			break ;
+			return (0);
 		}
 		if (add_line(line, final_line) == -1)
 		{
@@ -52,15 +63,9 @@ int	here_doc_input(char *stop_sign, int fd, char **final_line)
 		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
 			&& ft_strlen(line) == ft_strlen(stop_sign))
 			break ;
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		i++;
+		i = write_line(fd, line, i);
 	}
-	if (line)
-		free(line);
+	free(line);
 	return (0);
 }
 
@@ -79,51 +84,61 @@ void	here_doc_addback(t_here_doc **head, t_here_doc *new)
 	tmp->next = new;
 }
 
-t_here_doc	*prepare_here_doc(t_minishell *vars)
+t_here_doc	*get_here_doc_node(int fd[2], int i,
+				t_minishell *vars, t_redirect *red)
+{
+	t_here_doc	*here_doc_node;
+
+	here_doc_node = malloc(sizeof(t_here_doc));
+	if (!here_doc_node)
+	{
+		close(fd[1]);
+		close(fd[0]);
+		ft_putstr_fd("minishell: here_doc malloc failed\n", 2);
+		return (NULL);
+	}
+	here_doc_node->fd = fd[0];
+	here_doc_node->red_order = i;
+	here_doc_node->open = true;
+	here_doc_node->next = NULL;
+	if (here_doc_input(red->redirection + 2, fd[1], &vars->final_line) == -1)
+	{
+		close(fd[1]);
+		close(fd[0]);
+		free(here_doc_node);
+		return (NULL);
+	}
+	close(fd[1]);
+	return (here_doc_node);
+}
+
+void	prepare_here_doc(t_minishell *vars, t_redirect *red)
 {
 	int			fd[2];
 	int			i;
 	t_here_doc	*here_doc_node;
-	t_here_doc	*head;
-	t_redirect	*red;
 
 	i = 0;
-	red = vars->redirections;
-	head = NULL;
-	while(red)
+	while (red && ++i)
 	{
 		if (!ft_strncmp(red->redirection, "<<", 2))
 		{
-			here_doc_node = malloc(sizeof(t_here_doc));
-			if (!here_doc_node)
-			{
-				close_free_here_doc(&head);
-				ft_putstr_fd("minishell: here_doc malloc failed\n", 2);
-				return (NULL);
-			}
-			here_doc_addback(&head, here_doc_node);
 			if (pipe(fd) == -1)
 			{
-				close_free_here_doc(&head);
+				close_free_here_doc(&vars->here_doc_fds);
 				ft_putstr_fd("minishell: here_doc pipe failed\n", 2);
-				return (NULL);
+				return ;
 			}
-			here_doc_node->fd = fd[0];
-			here_doc_node->red_order = i;
-			here_doc_node->open = true;
-			here_doc_node->next = NULL;
-			if (here_doc_input(red->redirection + 2, fd[1], &vars->final_line) == -1)
+			here_doc_node = get_here_doc_node(fd, i - 1, vars, red);
+			if (!here_doc_node)
 			{
-				close(fd[1]);
-				close_free_here_doc(&head);
-				return (NULL);
+				close_free_here_doc(&vars->here_doc_fds);
+				return ;
 			}
-			close(fd[1]);
+			here_doc_addback(&vars->here_doc_fds, here_doc_node);
 		}
 		red = red->next;
-		i++;
 	}
-	return (head);
 }
 
 int	get_here_doc_fd(t_here_doc *here_doc, int red_order)

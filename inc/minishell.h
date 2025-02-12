@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 17:19:53 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/12 07:36:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int			first_input_check(char *line);
 void		error_msg(char *msg);
 char		**unset(char **env, char *line);
 void		my_cd(t_minishell *vars);
-t_here_doc	*prepare_here_doc(t_minishell *vars);
+void		prepare_here_doc(t_minishell *vars, t_redirect *red);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		ft_echo(char **argv);
 void		close_free_here_doc(t_here_doc **here_doc);
