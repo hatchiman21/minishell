@@ -6,13 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:32:27 by aatieh            #+#    #+#             */
-/*   Updated: 2025/01/29 20:12:26 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/11 17:15:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_free_lst(t_redirect *lst)
+void	*ft_free_red(t_redirect *lst)
 {
 	t_redirect	*tmp;
 
@@ -23,4 +23,25 @@ void	ft_free_lst(t_redirect *lst)
 		free(tmp->redirection);
 		free(tmp);
 	}
+	return (NULL);
+}
+
+void	ft_free(t_minishell *vars)
+{
+	int	i;
+
+	i = 0;
+	if (vars->argv)
+	{
+		while (vars->argv[i])
+		{
+			free(vars->argv[i]);
+			i++;
+		}
+		free(vars->argv);
+	}
+	ft_free_red(vars->redirections);
+	free(vars->final_line);
+	close_free_here_doc(&vars->here_doc_fds);
+	free_split(vars->env, -1);
 }

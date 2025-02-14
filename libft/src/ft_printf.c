@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:14:06 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/25 21:08:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 13:57:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	ft_printf_helper_step(t_printf **res, t_printf *head, char *string, int i)
 	if (!(*res)->str)
 	{
 		free_printf(head);
-		write(2, "Malloc failed in ft_printf\n", 28);
 		return (-1);
 	}
 	if (string[i])
@@ -41,7 +40,6 @@ int	ft_printf_helper_step(t_printf **res, t_printf *head, char *string, int i)
 		if (!(*res)->next)
 		{
 			free_printf(head);
-			write(2, "Malloc failed in ft_printf\n", 28);
 			return (-1);
 		}
 		(*res) = (*res)->next;
@@ -61,10 +59,7 @@ t_printf	*ft_printf_helper(char *string, va_list *args, int *count)
 	head = NULL;
 	res = malloc(sizeof(t_printf));
 	if (!res)
-	{
-		write(2, "Malloc failed in ft_printf\n", 28);
 		return (NULL);
-	}
 	head = res;
 	while (string[i])
 	{
@@ -97,11 +92,8 @@ int	ft_printf(const char *string, ...)
 	final_res = ft_strjoin_printf(res, count);
 	free_printf(res);
 	if (!final_res)
-	{
-		write(2, "Malloc failed in ft_printf final step\n", 39);
-		return (0);
-	}
-	write(1, final_res, ft_strlen(final_res));
+		return (-1);
+	ft_putstr_fd(final_res, 2);
 	free(final_res);
 	return (count);
 }
@@ -120,15 +112,12 @@ int	ft_dprintf(int fd, const char *string, ...)
 	res = ft_printf_helper((char *)string, &args, &count);
 	va_end(args);
 	if (!res)
-		return (0);
+		return (-1);
 	final_res = ft_strjoin_printf(res, count);
 	free_printf(res);
 	if (!final_res)
-	{
-		write(2, "Malloc failed in ft_printf final step\n", 39);
-		return (0);
-	}
-	write(fd, final_res, ft_strlen(final_res));
+		return (-1);
+	ft_putstr_fd(final_res, fd);
 	free(final_res);
 	return (count);
 }

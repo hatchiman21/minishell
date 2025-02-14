@@ -6,97 +6,114 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/09 03:42:01 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 01:25:06 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 
-void	exit1(char *line, t_minishell vars)
+char	**export2(char **env, char *line, int i, int j)
 {
-	if (vars.argv[0] && ft_strncmp(vars.argv[0], "exit", 5) == 0)
-	{
-		free_split(vars.argv, vars.argc);
-		ft_free_lst(vars.redirections);
-		free(line);
-		exit(1);
-	}
-}
+	char	**tmp;
 
-char	*exit_status1(char *line, int *j, int exit_status)
-{
-	char	*variable;
-	char	*tmp2;
-	
-	remove_from_line(line, *j - 1, 2);
-	tmp2 = ft_merge(ft_itoa(exit_status), line + *j - 1, 1, 0);
-	line = rev_strdup(line, *j - 1);
-	variable = ft_merge(line, tmp2, 1, 1);
-	return (variable);
-}
-
-char	*get_variable(char **env, char *line, int *j, int status)
-{
-	int		var_len;
-	int		m;
-	char	*variable;
-	char	*tmp2;
-
-	var_len = 0;
-	(*j)++;
-	while (line[var_len + *j] && line[var_len + *j] != ' ' && line[var_len
-		+ *j] != '\'' && line[var_len + *j] != '"' && line[var_len + *j] != '|'
-		&& line[var_len + *j] != '$')
-		var_len++;
-	if (var_len == 1 && line[*j] == '?')
-		return(exit_status1(line, j, status));
-	m = 0;
-	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0
-			|| env[m][var_len] != '='))
-		m++;
-	(*j) -= 2;
-	remove_from_line(line, *j + 1, var_len + 1);
-	if (!env[m])
-		return (line);
-	tmp2 = ft_merge(ft_strdup(env[m] + var_len + 1), line + *j + 1, 1, 0);
-	line = rev_strdup(line, *j + 1);
-	variable = ft_merge(line, tmp2, 1, 1);
-	while (env[m][var_len++ + 1])
-		(*j)++;
-	return (variable);
-}
-
-char	**export(char **env, char *line)
-{
-	int		i;
-	int		j;
-	char 	**tmp;
-
-	i = 0;
-	j = 0;
-	while (line[j] && line[j] != '=')
-		j++;
-	while (line[j] && ft_strncmp(env[i], line, j) != 0)
-		i++;
-	if (line[j] &&  env[i])
+	if (line[j] && !env[i])
 	{
 		j = 0;
 		while (env[j])
 			j++;
-		tmp = (char **)malloc(sizeof(char *) * (j + 1));
-		tmp = 0;
+		tmp = (char **)malloc(sizeof(char *) * (j + 2));
+		if (!tmp)
+			return (env);
+		j = 0;
 		while (env[j])
 		{
-			if (j == i)
-				tmp[j] = ft_strdup(line);
-			else	
-				tmp[j] = ft_strdup(env[j]);
+			tmp[j] = ft_strdup(env[j]);
+			free(env[j]);
+			j++;
 		}
-		while (j > 0)
-			free(env[j--]);
+		tmp[j] = ft_strdup(line);
+		tmp[j + 1] = NULL;
 		free(env);
 		return (tmp);
+	}
+	if (!env[i])
+		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
+	return (env);
+}
+
+char	**export(char **env, char **line)
+{
+	int	i;
+	int	j;
+	int	t;
+
+	t = 0;
+	while (line[t])
+	{
+		i = 0;
+		j = 0;
+		while (line[t] && line[t][j] && line[t][j] != '=' && ft_isalpha(line[t][j]))
+			j++;
+		if (line[t][j] != '=')
+			j = ft_strlen(line[t]);
+		while (line[t] && line[t][j] && env[i] && ft_strncmp(env[i], line[t], j) != 0)
+			i++;
+		if (line[t][j] && env[i])
+		{
+			free(env[i]);
+			env[i] = ft_strdup(line[t]);
+		}
+		env = export2(env, line[t], i, j);
+		t++;
+	}
+	return (env);
+}
+
+char	**unset2(char **env, int i)
+{
+	int		j;
+	char	**tmp;
+
+	j = 0;
+	while (env[j])
+		j++;
+	tmp = (char **)malloc(sizeof(char *) * j);
+	if (!tmp)
+		return (NULL);
+	j = 0;
+	while (env[j + 1])
+	{
+		if (j < i)
+			tmp[j] = ft_strdup(env[j]);
+		if (j >= i)
+			tmp[j] = ft_strdup(env[j + 1]);
+		free(env[j]);
+		j++;
+	}
+	free(env[j]);
+	tmp[j] = NULL;
+	free(env);
+	return (tmp);
+}
+
+char	**unset(char **env, char **line)
+{
+	int i;
+	int t;
+
+	t = 0;
+	while (line[t])
+	{
+		i = 0;
+		while (env[i] && ft_strncmp(env[i], line[t], ft_strlen(line[t])) != 0)
+			i++;
+		if (env[i])
+			env = unset2(env, i);
+		else
+			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
+				line[t]);
+		t++;
 	}
 	return (env);
 }
