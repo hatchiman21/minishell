@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 01:03:51 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 01:46:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void		handle_sigint(int sig);
 void		remove_all_qoutes(t_minishell *vars);
 char		**ft_array_dup(char **array);
 int			word_check(char *line, int i);
+void		increase_shlvl(char **env);
 
 char		*expand(char *argv, t_minishell vars);
 char		*get_variable(char **env, char *line, int *j,

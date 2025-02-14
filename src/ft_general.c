@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 00:58:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 01:46:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	inti_set_up(t_minishell *vars, char **env)
 		ft_putstr_fd("minishell: enviorment malloc failed\n", 2);
 		exit (EXIT_FAILURE);
 	}
+	increase_shlvl(vars->env);
 	vars->exit_status = 0;
 	vars->here_doc_fds = NULL;
 	signal(SIGQUIT, SIG_IGN);
