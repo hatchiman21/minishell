@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/13 11:12:59 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 22:32:58 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,13 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 		return ;
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		my_cd(vars);
-	else if (!ft_strncmp(cmd[0], "export", 7) && cmd[1])
+	else if (!ft_strncmp(cmd[0], "export", 7))
 		while (cmd[i])
 			vars->env = export(vars->env, cmd[i++]);
-	else if (!ft_strncmp(cmd[0], "unset", 6) && cmd[1])
+	else if (!ft_strncmp(cmd[0], "unset", 6))
 		while (cmd[i])
 			vars->env = unset(vars->env, cmd[i++]);
-	else if (!ft_strncmp(cmd[0], "exit", 5) && !cmd[1])
-		exit1(NULL, vars);
-	else if (!ft_strncmp(cmd[0], "exit", 5) && cmd[1] && !cmd[2])
+	else if (!ft_strncmp(cmd[0], "exit", 5))
 		exit1(cmd[1], vars);
 	else if (!ft_strncmp(cmd[0], "env", 4) && !cmd[1])
 		env(vars->env);
@@ -65,18 +63,16 @@ int	child_process(char **cmd, t_minishell *vars)
 	path = NULL;
 	if (!cmd || !cmd[0])
 		exit(0);
-	if (cmd && cmd[0])
-		path = get_path(cmd, vars->env);
-	if (!cmd || !path)
+	path = get_path(cmd, vars->env);
+	if (!path)
 	{
-		free_all(path, NULL);
+		free(path);
 		ft_dprintf(2, "minishell: dup2 failed\n");
 		exit(1);
 	}
-	if (cmd)
-		ft_excute(path, cmd, vars);
+	ft_excute(path, cmd, vars);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
-	free_all(path, NULL);
+	free(path);
 	exit(126);
 }
 
@@ -170,9 +166,22 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 	close(vars->pipefd[0]);
 }
 
+int	not_child_process(char **cmd, t_minishell *vars)
+{
+	if (!ft_strncmp(cmd[0], "cd", 3) || !ft_strncmp(cmd[0], "export", 7) || !ft_strncmp(cmd[0], "unset", 6) || !ft_strncmp(cmd[0], "exit", 5))
+	{
+		vars->last_id = 0;
+		return (1);
+	}
+	return (0);
+}
+
 void	process_operation(t_minishell *vars, int *i, int *cur_op)
 {
-	vars->last_id = fork();
+	if (not_child_process(vars->argv + *i, vars))
+		ft_excute(NULL, vars->argv + *i, vars);
+	else
+		vars->last_id = fork();
 	if (!vars->last_id)
 	{
 		apply_redirection(vars, *cur_op);
