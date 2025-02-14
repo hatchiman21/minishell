@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/12 07:35:55 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 13:59:14 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	add_line(char *line, char **final_line)
 
 int	write_line(int fd, char *line, int i)
 {
-	write(fd, line, ft_strlen(line));
-	write(fd, "\n", 1);
+	ft_putstr_fd(line, fd);
+	ft_putchar_fd('\n', fd);
 	free(line);
 	rl_replace_line("", 0);
 	rl_on_new_line();

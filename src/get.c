@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/12 05:46:41 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/14 13:57:56 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,9 +209,9 @@ void	my_cd(t_minishell *vars)
 		if (chdir(vars->argv[1]) == -1)
         {
             if (access(vars->argv[1], X_OK) == -1)
-                printf("minishell: cd: %s: Permission denied\n", vars->argv[1]);
+                ft_dprintf(2, "minishell: cd: %s: Permission denied\n", vars->argv[1]);
             else
-                printf("minishell: cd: %s: No such file or directory\n", vars->argv[1]);
+                ft_dprintf(2, "minishell: cd: %s: No such file or directory\n", vars->argv[1]);
             free(path);
             return;
         }
@@ -227,7 +227,7 @@ void	my_cd(t_minishell *vars)
 		free(path);
 	}
 	else
-		write(2, "minishell: cd: too many arguments\n", 34);
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 }
 
 void	env(char **env)

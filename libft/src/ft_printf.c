@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:14:06 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/02 21:20:55 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 13:57:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	ft_printf(const char *string, ...)
 	free_printf(res);
 	if (!final_res)
 		return (-1);
-	write(1, final_res, ft_strlen(final_res));
+	ft_putstr_fd(final_res, 2);
 	free(final_res);
 	return (count);
 }
@@ -117,7 +117,7 @@ int	ft_dprintf(int fd, const char *string, ...)
 	free_printf(res);
 	if (!final_res)
 		return (-1);
-	write(fd, final_res, ft_strlen(final_res));
+	ft_putstr_fd(final_res, fd);
 	free(final_res);
 	return (count);
 }
