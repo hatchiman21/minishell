@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/12 07:40:25 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 13:14:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 # define MINISHELL_H
 
 # include "../libft/inc/libft.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <stdlib.h>
-# include <stdbool.h>
-# include <string.h>
 # include <errno.h>
+# include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/wait.h>
 
 typedef struct s_redirect
 {
@@ -56,7 +56,8 @@ typedef struct s_minishell
 }				t_minishell;
 
 char		*expand(char *argv, t_minishell vars);
-char		*get_variable(char **env, char *line, int *j, int status);
+char		*get_variable(char **env, char *line, int *j,
+				int status);
 char		*rev_strdup(char *s, int j);
 char		*rm_qoutes(char *line);
 char		*dup_without_qoutes(char *s, int counter);
@@ -64,10 +65,14 @@ int			first_input_check(char *line);
 void		error_msg(char *msg);
 char		**unset(char **env, char *line);
 void		my_cd(t_minishell *vars);
+int			ambiguous_redirect_check(t_redirect *red, char **env);
+int			word_end(char c);
 void		prepare_here_doc(t_minishell *vars, t_redirect *red);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		ft_echo(char **argv);
 void		close_free_here_doc(t_here_doc **here_doc);
+int			redirections_error_check(char *line);
+bool		variable_has_space(char *line, char **env);
 void		*ft_free_red(t_redirect *lst);
 t_redirect	*get_redirections(char *line);
 void		redirectionadd_back(t_redirect **lst, t_redirect *new);
@@ -87,7 +92,7 @@ void		sig_nothing(void);
 void		handle_sigquit(int sig);
 void		handle_sigint(int sig);
 void		exit1(char *state, t_minishell *vars);
-void		ft_excute(char *path, char **cmd, t_minishell *vars, int j);
+void		ft_excute(char *path, char **cmd, t_minishell *vars);
 void		env(char **env);
 void		pwd(void);
 

@@ -6,15 +6,15 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/12 19:45:52 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/13 12:36:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	new_word_start(char c)
+int	word_end(char c)
 {
-	if (c == '"' || c == ' ' || c == '\'' || c == '|')
+	if (c == '"' || c == ' ' || c == '\'' || c == '|' || c == '\0' || c == '$')
 		return (1);
 	return (0);
 }
@@ -214,11 +214,21 @@ int	main(int argc, char **argv, char **env)
 		vars.redirections = get_redirections(line);
 		if (!vars.redirections && (ft_strchr_find(vars.final_line, '>') || ft_strchr_find(vars.final_line, '<')))
 		{
+			add_history(vars.final_line);
 			free(vars.final_line);
 			free(line);
 			ft_putstr_fd("minishell: redirection malloc failed\n", 2);
 			break ;
 		}
+		if (ambiguous_redirect_check(vars.redirections, vars.env) == 1)
+		{
+			add_history(vars.final_line);
+			ft_free_red(vars.redirections);
+			free(vars.final_line);
+			free(line);
+			continue ;
+		}
+		line = expand_all(&vars, line);
 		prepare_here_doc(&vars, vars.redirections);
 		if (!vars.here_doc_fds && ft_strnstr(vars.final_line, "<<", ft_strlen(vars.final_line)))
 		{
@@ -231,12 +241,11 @@ int	main(int argc, char **argv, char **env)
 		}
 		add_history(vars.final_line);
 		free(vars.final_line);
-		line = expand_all(&vars, line);
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
 		free(line);
-		if (vars.argv)
-			ft_excute(NULL, vars.argv, &vars, 0);
+		// if (vars.argv)
+		// 	ft_excute(NULL, vars.argv, &vars, 0);
 		if (!vars.argv)
 		{
 			ft_free_red(vars.redirections);

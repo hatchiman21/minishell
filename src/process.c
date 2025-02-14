@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/12 05:42:53 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/13 11:12:59 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_all(char *str, char **split)
 	free(split);
 }
 
-void	ft_excute(char *path, char **cmd, t_minishell *vars, int j)
+void	ft_excute(char *path, char **cmd, t_minishell *vars)
 {
 	int	i;
 
@@ -54,10 +54,8 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars, int j)
 		pwd();
 	else if (!ft_strncmp(cmd[0], "echo", 5))
 		ft_echo(cmd);
-	else if (j)
-		execve(path, cmd, vars->env);
 	else
-		printf("invalid command\\parameters\n");
+		execve(path, cmd, vars->env);
 }
 
 int	child_process(char **cmd, t_minishell *vars)
@@ -76,7 +74,7 @@ int	child_process(char **cmd, t_minishell *vars)
 		exit(1);
 	}
 	if (cmd)
-		ft_excute(path, cmd, vars, 1);
+		ft_excute(path, cmd, vars);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
 	free_all(path, NULL);
 	exit(126);
