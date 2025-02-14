@@ -27,7 +27,6 @@ void	handle_sigint(int sig)
 void	sig_stay(void)
 {
 	// struct sigaction sa;
-
 	// sa.sa_handler = &handle_sigquit;
 	// sa.sa_flags = SA_RESTART;
 	// sigaction(SIGQUIT, &sa, NULL);
@@ -37,7 +36,6 @@ void	sig_stay(void)
 void	sig_nothing(void)
 {
 	// struct sigaction sa;
-
 	// sa.sa_handler = &handle_sigint;
 	// sa.sa_flags = SA_RESTART;
 	// sigaction(SIGINT, &sa, NULL);

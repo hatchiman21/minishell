@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 00:21:20 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 02:05:47 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	mod_strncmp(const char *s2, const char *s1, int y, int t)
 {
-	int		j;
+	int	j;
 
 	j = 0;
 	if (s2[0] == '-')
@@ -41,14 +41,14 @@ int	mod_strncmp(const char *s2, const char *s1, int y, int t)
 	return (0);
 }
 
-
 void	exit1(char *state, t_minishell *vars)
 {
 	if (state && mod_strncmp(state, "9223372036854775807", 0, 0))
-		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n", vars->argv[1]);
+		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n",
+			vars->argv[1]);
 	else if (vars->argc <= 2)
 	{
-		if(state)
+		if (state)
 			vars->exit_status = ft_atoi(state);
 		free_split(vars->argv, vars->argc);
 		ft_free_red(vars->redirections);
@@ -69,10 +69,11 @@ char	*exit_status1(char *line, int *j, int exit_status)
 	variable = ft_merge(line, tmp2, 1, 1);
 	return (variable);
 }
+
 int	get_var_helper(char *line, int var_len, int j)
 {
-	return (line[var_len + j] && line[var_len + j] != ' ' && line[var_len
-			+ j] != '\'' && line[var_len + j] != '"'
+	return (line[var_len + j] && line[var_len + j] != ' '
+		&& line[var_len + j] != '\'' && line[var_len + j] != '"'
 		&& line[var_len + j] != '|' && line[var_len + j] != '$');
 }
 

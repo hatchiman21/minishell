@@ -6,12 +6,11 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 01:25:06 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 02:02:50 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
 
 char	**export2(char **env, char *line, int i, int j)
 {
@@ -48,16 +47,18 @@ char	**export(char **env, char **line)
 	int	j;
 	int	t;
 
-	t = 0;
-	while (line[t])
+	t = -1;
+	while (line[++t])
 	{
 		i = 0;
 		j = 0;
-		while (line[t] && line[t][j] && line[t][j] != '=' && ft_isalpha(line[t][j]))
+		while (line[t] && line[t][j] && line[t][j] != '='
+			&& ft_isalpha(line[t][j]))
 			j++;
 		if (line[t][j] != '=')
 			j = ft_strlen(line[t]);
-		while (line[t] && line[t][j] && env[i] && ft_strncmp(env[i], line[t], j) != 0)
+		while (line[t] && line[t][j] && env[i] && ft_strncmp(env[i], line[t],
+				j) != 0)
 			i++;
 		if (line[t][j] && env[i])
 		{
@@ -65,7 +66,6 @@ char	**export(char **env, char **line)
 			env[i] = ft_strdup(line[t]);
 		}
 		env = export2(env, line[t], i, j);
-		t++;
 	}
 	return (env);
 }
@@ -99,8 +99,8 @@ char	**unset2(char **env, int i)
 
 char	**unset(char **env, char **line)
 {
-	int i;
-	int t;
+	int	i;
+	int	t;
 
 	t = 0;
 	while (line[t])

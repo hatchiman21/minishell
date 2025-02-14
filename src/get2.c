@@ -6,7 +6,7 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 01:47:59 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 02:03:09 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,20 @@ int	array_size(char **str)
 
 char	**my_cd2(char **argv, char **env, char **tmp)
 {
-	char	*path;
-	struct stat sb;
-	
+	char		*path;
+	struct stat	sb;
+
 	path = getcwd(NULL, 0);
 	if (chdir(argv[1]) == -1)
-    {
-        if (stat(argv[1], &sb) == -1)
-                ft_dprintf(2, "minishell: cd: %s: No such file or directory\n", argv[1]);
-            else
-				 ft_dprintf(2, "minishell: cd: %s: Permission denied\n", argv[1]);
-            free(path);
-            return (env);
-    	}
+	{
+		if (stat(argv[1], &sb) == -1)
+			ft_dprintf(2, "minishell: cd: %s: No such file or directory\n",
+				argv[1]);
+		else
+			ft_dprintf(2, "minishell: cd: %s: Permission denied\n", argv[1]);
+		free(path);
+		return (env);
+	}
 	else
 	{
 		tmp[0] = ft_merge("OLDPWD=", path, 0, 0);
@@ -47,7 +48,7 @@ char	**my_cd2(char **argv, char **env, char **tmp)
 		free(tmp[0]);
 	}
 	free(path);
-	return(env);
+	return (env);
 }
 
 void	my_cd(char **argv, char **env)
@@ -98,5 +99,5 @@ void	pwd(void)
 	ft_putstr_fd(path, 1);
 	ft_putstr_fd("\n", 1);
 	free(path);
-	exit (0);
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/14 21:18:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 23:39:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ char	*check_status(char **cmd, char **paths, char *path)
 			free(path);
 		free_split(paths, -1);
 		exit(126);
+	}
+	else
+	{
+		if (cmd[0] != path)
+			free(path);
+		free_split(paths, -1);
+		ft_dprintf(2, "minishell: %s: No such file or directory\n", cmd[0]);
+		exit(127);
 	}
 	return (path);
 }
@@ -72,7 +80,7 @@ char	*get_path(char **cmd, char **envp)
 
 	if (!envp)
 		return (NULL);
-	if (ft_strchr(cmd[0], '/') && access(cmd[0], F_OK) == 0)
+	if (ft_strchr(cmd[0], '/'))
 		return (ft_strdup(check_status(cmd, NULL, cmd[0])));
 	tmp = ft_strjoin("/", cmd[0]);
 	paths = get_all_paths(envp);
@@ -83,7 +91,8 @@ char	*get_path(char **cmd, char **envp)
 		return (NULL);
 	}
 	path = get_final_path(paths, tmp, cmd);
-	free_all(tmp, paths);
+	free(tmp);
+	free_split(paths, -1);
 	if (path == NULL)
 	{
 		ft_dprintf(2, "minishell: %s: command not found\n", cmd[0]);
