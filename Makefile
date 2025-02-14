@@ -4,7 +4,7 @@ OBJS_DIR = obj
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS = 	main expander change_line ft_echo ft_free redirection tokanizer \
-		get process find_path input_check error_handling here_doc redirection_checks \
+		get process find_path input_check here_doc redirection_checks \
 		manage_fds process_utils here_doc_utils ft_general qauts_utils \
 		general_utils
 
