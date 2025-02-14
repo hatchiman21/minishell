@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/14 20:55:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 23:18:27 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,8 +244,8 @@ int	main(int argc, char **argv, char **env)
 		vars.argc = words_count_sh(line);
 		vars.argv = get_argv(line, &vars);
 		free(line);
-		// if (vars.argv)
-		// 	ft_excute(NULL, vars.argv, &vars, 0);
+		//if (vars.argv)
+			//ft_excute(NULL, vars.argv, &vars, 0);
 		if (!vars.argv)
 		{
 			ft_free_red(vars.redirections);
