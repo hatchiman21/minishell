@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/14 13:58:30 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/14 18:45:29 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*expand_all(t_minishell *vars, char *line)
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	ft_putchar_fd("\n", STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
