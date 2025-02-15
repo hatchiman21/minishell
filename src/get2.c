@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 05:46:59 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 01:35:39 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,23 @@ void	my_cd(char **argv, char **env)
 	free(tmp);
 }
 
-void	env(char **env)
+void	env(char **env, char **cmd)
 {
 	int	i;
 
 	i = 0;
+	if (cmd[1])
+	{
+		ft_putstr_fd("minishell: env: arguments are not acceptable!!\n", 2);
+		exit(EXIT_FAILURE);
+	}
 	while (env[i])
 	{
 		ft_putstr_fd(env[i], 1);
-		ft_putstr_fd("\n", 1);
+		ft_putchar_fd('\n', 1);
 		i++;
 	}
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 void	pwd(void)
@@ -86,8 +91,8 @@ void	pwd(void)
 	char	*path;
 
 	path = getcwd(NULL, 0);
-	ft_putstr_fd(path, 1);
-	ft_putstr_fd("\n", 1);
+	ft_putstr_fd(path, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	free(path);
 	exit(0);
 }

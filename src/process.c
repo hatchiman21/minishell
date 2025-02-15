@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 20:53:07 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 23:38:43 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,33 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 		vars->env = unset(vars->env, cmd + 1);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
 		ft_exit(cmd, vars);
-	else if (!ft_strncmp(cmd[0], "env", 4) && !cmd[1])
-		env(vars->env);
-	else if (!ft_strncmp(cmd[0], "pwd", 4) && !cmd[1])
+	else if (!ft_strncmp(cmd[0], "env", 4))
+		env(vars->env, cmd);
+	else if (!ft_strncmp(cmd[0], "pwd", 4))
 		pwd();
 	else if (!ft_strncmp(cmd[0], "echo", 5))
 		ft_echo(cmd);
 	else
 		execve(path, cmd, vars->env);
+}
+
+int	cmd_built_in(char **cmd)
+{
+	if (!ft_strncmp(cmd[0], "cd", 3))
+		return (1);
+	if (!ft_strncmp(cmd[0], "export", 7))
+		return (1);
+	if (!ft_strncmp(cmd[0], "unset", 6))
+		return (1);
+	if (!ft_strncmp(cmd[0], "exit", 5))
+		return (1);
+	if (!ft_strncmp(cmd[0], "env", 4))
+		return (1);
+	if (!ft_strncmp(cmd[0], "pwd", 4))
+		return (1);
+	if (!ft_strncmp(cmd[0], "echo", 5))
+		return (1);
+	return (0);
 }
 
 int	child_process(char **cmd, t_minishell *vars)
@@ -41,12 +60,15 @@ int	child_process(char **cmd, t_minishell *vars)
 	path = NULL;
 	if (!cmd || !cmd[0])
 		exit(0);
-	path = get_path(cmd, vars->env);
-	if (!path)
+	if (!cmd_built_in(cmd))
 	{
-		free(path);
-		ft_dprintf(2, "minishell: dup2 failed\n");
-		exit(1);
+		path = get_path(cmd, vars->env);
+		if (!path)
+		{
+			free(path);
+			ft_dprintf(2, "minishell: dup2 failed\n");
+			exit(1);
+		}
 	}
 	ft_excute(path, cmd, vars);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);

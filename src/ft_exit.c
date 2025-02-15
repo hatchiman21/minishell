@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 05:40:24 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 23:02:09 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 23:40:49 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void	ft_exit(char **cmd, t_minishell *vars)
 		|| (cmd[1] && mod_strncmp(cmd[1], "9223372036854775807", 0)))
 	{
 		vars->exit_status = 2;
-		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n", cmd[1]);
+		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n",
+			cmd[1]);
 	}
 	else if (array_size(cmd) > 2)
 	{

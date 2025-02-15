@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 21:03:23 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 01:32:47 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ typedef struct s_here_doc
 	bool				open;
 	struct s_here_doc	*next;
 }						t_here_doc;
+
+
 
 typedef struct s_minishell
 {
@@ -112,7 +114,7 @@ void		ft_echo(char **argv);
 void		ft_exit(char **cmd, t_minishell *vars);
 char		**unset(char **env, char **line);
 char		**export(char **env, char **line);
-void		env(char **env);
+void		env(char **env, char **cmd);
 void		pwd(void);
 
 #endif
