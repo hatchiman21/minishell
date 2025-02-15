@@ -71,11 +71,12 @@ void	ft_exit(char **cmd, t_minishell *vars)
 	vars->exit_status = 0;
 	if (vars->op_num == 1)
 		printf("exit\n");
-	if ((array_size(cmd) >= 2 && !all_digits(cmd[1]))
-		|| (cmd[1] && mod_strncmp(cmd[1], "9223372036854775807", 0)))
+	if ((array_size(cmd) >= 2 && !all_digits(cmd[1])) || (cmd[1]
+			&& mod_strncmp(cmd[1], "9223372036854775807", 0)))
 	{
 		vars->exit_status = 2;
-		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n", cmd[1]);
+		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n",
+			cmd[1]);
 	}
 	else if (array_size(cmd) > 2)
 	{

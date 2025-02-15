@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 05:46:59 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 01:33:38 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,50 @@ void	my_cd(char **argv, char **env)
 	free(tmp);
 }
 
-void	env(char **env)
+char	**unset2(char **env, int i)
 {
-	int	i;
+	int		j;
+	char	**tmp;
 
-	i = 0;
-	while (env[i])
+	j = 0;
+	while (env[j])
+		j++;
+	tmp = (char **)malloc(sizeof(char *) * j);
+	if (!tmp)
+		return (NULL);
+	j = 0;
+	while (env[j + 1])
 	{
-		ft_putstr_fd(env[i], 1);
-		ft_putstr_fd("\n", 1);
-		i++;
+		if (j < i)
+			tmp[j] = ft_strdup(env[j]);
+		if (j >= i)
+			tmp[j] = ft_strdup(env[j + 1]);
+		free(env[j]);
+		j++;
 	}
-	exit(0);
+	free(env[j]);
+	tmp[j] = NULL;
+	free(env);
+	return (tmp);
 }
 
-void	pwd(void)
+char	**unset(char **env, char **line)
 {
-	char	*path;
+	int	i;
+	int	t;
 
-	path = getcwd(NULL, 0);
-	ft_putstr_fd(path, 1);
-	ft_putstr_fd("\n", 1);
-	free(path);
-	exit(0);
+	t = 0;
+	while (line[t])
+	{
+		i = 0;
+		while (env[i] && ft_strncmp(env[i], line[t], ft_strlen(line[t])) != 0)
+			i++;
+		if (env[i])
+			env = unset2(env, i);
+		else
+			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
+				line[t]);
+		t++;
+	}
+	return (env);
 }

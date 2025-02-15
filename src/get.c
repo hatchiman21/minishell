@@ -6,11 +6,52 @@
 /*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 02:02:50 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/16 01:36:45 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	print_sorted(char **sorted, int len)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+
+	i = -1;
+	while (++i < len - 1)
+	{
+		j = -1;
+		while (++j < len - i - 1)
+		{
+			if (ft_strncmp(sorted[j], sorted[j + 1], ft_strlen(sorted[j])) > 0)
+			{
+				tmp = sorted[j];
+				sorted[j] = sorted[j + 1];
+				sorted[j + 1] = tmp;
+			}
+		}
+	}
+	i = 0;
+	while (i < len)
+		printf("declare -x %s\n", sorted[i++]);
+	free(sorted);
+}
+
+void	export3(char **env, int len)
+{
+	int		i;
+	char	**sorted;
+
+	sorted = (char **)malloc(sizeof(char *) * (len + 1));
+	if (!sorted)
+		return ;
+	i = -1;
+	while (++i < len)
+		sorted[i] = env[i];
+	sorted[len] = NULL;
+	print_sorted(sorted, len);
+}
 
 char	**export2(char **env, char *line, int i, int j)
 {
@@ -66,54 +107,6 @@ char	**export(char **env, char **line)
 			env[i] = ft_strdup(line[t]);
 		}
 		env = export2(env, line[t], i, j);
-	}
-	return (env);
-}
-
-char	**unset2(char **env, int i)
-{
-	int		j;
-	char	**tmp;
-
-	j = 0;
-	while (env[j])
-		j++;
-	tmp = (char **)malloc(sizeof(char *) * j);
-	if (!tmp)
-		return (NULL);
-	j = 0;
-	while (env[j + 1])
-	{
-		if (j < i)
-			tmp[j] = ft_strdup(env[j]);
-		if (j >= i)
-			tmp[j] = ft_strdup(env[j + 1]);
-		free(env[j]);
-		j++;
-	}
-	free(env[j]);
-	tmp[j] = NULL;
-	free(env);
-	return (tmp);
-}
-
-char	**unset(char **env, char **line)
-{
-	int	i;
-	int	t;
-
-	t = 0;
-	while (line[t])
-	{
-		i = 0;
-		while (env[i] && ft_strncmp(env[i], line[t], ft_strlen(line[t])) != 0)
-			i++;
-		if (env[i])
-			env = unset2(env, i);
-		else
-			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
-				line[t]);
-		t++;
 	}
 	return (env);
 }
