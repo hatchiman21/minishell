@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 07:02:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 18:52:31 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 		close(vars->tmp_fd);
 	}
 	close(vars->pipefd[1]);
-	close(vars->pipefd[0]);
+	// close(vars->pipefd[0]);
 }
 
 void	process_operation(t_minishell *vars, int *i, int *cur_op)
@@ -94,6 +94,7 @@ void	process_operation(t_minishell *vars, int *i, int *cur_op)
 	{
 		close(vars->std_in);
 		close(vars->std_out);
+		close(vars->pipefd[0]);
 		close_free_here_doc(&vars->here_doc_fds);
 		child_process(vars->argv + *i, vars);
 	}
@@ -121,6 +122,10 @@ void	process(t_minishell *vars)
 	i = 0;
 	while (cur_op < vars->op_num)
 	{
+		if (dup2(vars->std_in, STDIN_FILENO) == -1)
+			ft_dprintf(2, "minishell: 1st stdin dup2 failed\n");
+		if (dup2(vars->std_out, STDOUT_FILENO) == -1)
+			ft_dprintf(2, "minishell: 1st stdout dup2 failed\n");
 		if (cur_op != 0)
 			vars->tmp_fd = vars->pipefd[0];
 		if (pipe(vars->pipefd) == -1)
@@ -129,8 +134,10 @@ void	process(t_minishell *vars)
 			break;
 		}
 		process_operation(vars, &i, &cur_op);
-		dup2(vars->std_in, STDIN_FILENO);
-		dup2(vars->std_out, STDOUT_FILENO);
+		if (dup2(vars->std_in, STDIN_FILENO) == -1)
+			ft_dprintf(2, "minishell: 2nd stdin dup2 failed\n");
+		if (dup2(vars->std_out, STDOUT_FILENO) == -1)
+			ft_dprintf(2, "minishell: 2nd stdout dup2 failed\n");
 	}
 	if (vars->pipefd[0] != -1)
 		close(vars->pipefd[0]);
