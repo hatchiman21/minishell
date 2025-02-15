@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 02:03:09 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 05:46:59 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	array_size(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
 
 char	**my_cd2(char **argv, char **env, char **tmp)
 {

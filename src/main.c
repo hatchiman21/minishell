@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/15 01:56:30 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/15 06:11:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	main(int argc, char **argv, char **env)
 		if (error_check == -1)
 			break ;
 	}
+	close(vars.std_in);
+	close(vars.std_out);
 	free_split(vars.env, -1);
 	printf("exit\n");
 	return (0);

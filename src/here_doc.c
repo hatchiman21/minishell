@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/14 23:53:07 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 06:28:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,7 @@ int	get_here_doc_fd(t_here_doc *here_doc, int red_order)
 	while (tmp)
 	{
 		if (tmp->red_order == red_order)
-		{
-			tmp->open = false;
 			return (tmp->fd);
-		}
 		tmp = tmp->next;
 	}
 	return (-1);

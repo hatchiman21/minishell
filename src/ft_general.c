@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 01:46:09 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 06:28:32 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	inti_set_up(t_minishell *vars, char **env)
 	vars->here_doc_fds = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
+	vars->std_in = dup(STDIN_FILENO);
+	vars->std_out = dup(STDOUT_FILENO);
 }
 
 char	*expand_all(t_minishell *vars, char *line)
