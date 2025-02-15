@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 06:27:05 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 21:03:23 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ char		**ft_array_dup(char **array);
 int			word_check(char *line, int i);
 void		increase_shlvl(char **env);
 int			array_size(char **array);
+void		close_fds(int *fd);
 
 char		*expand(char *argv, t_minishell vars);
 char		*get_variable(char **env, char *line, int *j,
@@ -104,6 +105,7 @@ void		remove_from_line(char *line, int i, int j);
 
 void		wait_for_all(t_minishell *vars);
 void		*ft_free_red(t_redirect *lst);
+void		ft_free(t_minishell *vars);
 
 void		my_cd(char **argv, char **env);
 void		ft_echo(char **argv);

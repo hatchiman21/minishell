@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:32:27 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 06:28:28 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 21:04:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,9 @@ void	*ft_free_red(t_redirect *lst)
 
 void	ft_free(t_minishell *vars)
 {
-	int	i;
-
-	i = 0;
-	if (vars->argv)
-	{
-		while (vars->argv[i])
-		{
-			free(vars->argv[i]);
-			i++;
-		}
-		free(vars->argv);
-	}
+	free_split(vars->argv, vars->argc);
 	ft_free_red(vars->redirections);
-	free(vars->final_line);
+	close_fds((int [4]){vars->std_in, vars->std_out, vars->pipefd[0], -1});
 	close_free_here_doc(&vars->here_doc_fds);
 	free_split(vars->env, -1);
 }

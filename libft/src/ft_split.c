@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:20:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 17:18:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 21:08:18 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	free_split(char **res, int size)
 	{
 		while (i < size)
 		{
-			free(res[i]);
+			if (res[i])
+				free(res[i]);
 			i++;
 		}
 	}

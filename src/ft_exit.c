@@ -6,22 +6,19 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 05:40:24 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 06:28:23 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 23:02:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int mod_strncmp(const char *s2, const char *s1, int y, int t)
+int	mod_strncmp(const char *s2, const char *s1, int t)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	if (s2[0] == '-')
-	{
-		s2++;
-		y++;
-	}
+		return (0);
 	while (s1[j])
 		j++;
 	while (s2[t])
@@ -33,9 +30,9 @@ int mod_strncmp(const char *s2, const char *s1, int y, int t)
 	t = -1;
 	while (s2[++t])
 	{
-		if (((unsigned char)s2[t] - (unsigned char)s1[t]) > y)
+		if (((unsigned char)s2[t] - (unsigned char)s1[t]) > 0)
 			return (1);
-		else if (((unsigned char)s2[t] - (unsigned char)s1[t]) < y)
+		else if (((unsigned char)s2[t] - (unsigned char)s1[t]) < 0)
 			return (0);
 	}
 	return (0);
@@ -58,6 +55,8 @@ int	all_digits(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (1);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -69,26 +68,25 @@ int	all_digits(char *str)
 
 void	ft_exit(char **cmd, t_minishell *vars)
 {
-	if (cmd[1] && mod_strncmp(cmd[1], "9223372036854775807", 0, 0))
-		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n",
-				   vars->argv[1]);
-	else if (array_size(cmd) <= 2)
+	vars->exit_status = 0;
+	if (vars->op_num == 1)
+		printf("exit\n");
+	if ((array_size(cmd) >= 2 && !all_digits(cmd[1]))
+		|| (cmd[1] && mod_strncmp(cmd[1], "9223372036854775807", 0)))
 	{
-		vars->exit_status = 0;
-		if (cmd[1])
-			vars->exit_status = ft_atoi(cmd[1]);
-		if (vars->argc <= 2 || !all_digits(cmd[1]))
-		{
-			free_split(vars->argv, vars->argc);
-			close_free_here_doc(&vars->here_doc_fds);
-			ft_free_red(vars->redirections);
-			free_split(vars->env, -1);
-			close(vars->pipefd[1]);
-			close(vars->pipefd[0]);
-			printf("exit\n");
-			exit(vars->exit_status);
-		}
+		vars->exit_status = 2;
+		ft_dprintf(2, "minishell: exit: %s: numeric argument required\n", cmd[1]);
 	}
-	else
+	else if (array_size(cmd) > 2)
+	{
+		vars->exit_status = 1;
 		ft_dprintf(2, "minishell: exit: too many arguments\n");
+	}
+	if (!vars->exit_status && cmd[1])
+		vars->exit_status = ft_atoi(cmd[1]) % 256;
+	if (vars->op_num == 1)
+	{
+		ft_free(vars);
+		exit(vars->exit_status);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 00:15:57 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 22:35:24 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ bool	variable_has_space(char *line, char **env)
 	int	variable_len;
 	int	n;
 
-	printf("line: %s\n", line);
 	variable_len = 0;
 	n = 0;
 	while (!word_end(line[variable_len]))

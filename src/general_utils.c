@@ -6,11 +6,20 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:02:20 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 05:41:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 20:47:16 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	close_fds(int *fd)
+{
+	int	i;
+
+	i = 0;
+	while (fd[i] != -1)
+		close(fd[i++]);
+}
 
 int	word_end(char c)
 {

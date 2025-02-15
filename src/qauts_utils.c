@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   qoutes_handling.c                                  :+:      :+:    :+:   */
+/*   qauts_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:56:50 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 00:59:56 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/15 21:09:34 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,14 @@ void	remove_all_qoutes(t_minishell *vars)
 
 	i = 0;
 	red = vars->redirections;
-	while (vars->argv[i])
+	while (i < vars->argc)
 	{
-		tmp = rm_qoutes(vars->argv[i]);
-		free(vars->argv[i]);
-		vars->argv[i] = tmp;
+		if (vars->argv[i])
+		{
+			tmp = rm_qoutes(vars->argv[i]);
+			free(vars->argv[i]);
+			vars->argv[i] = tmp;
+		}
 		i++;
 	}
 	while (red)
