@@ -6,20 +6,22 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 00:48:06 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 05:23:14 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+int	g_ctrl_c = 0;
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	rl_replace_line("", 0);
-	write(STDIN_FILENO, "", 1);
+	ft_putchar_fd('\n', STDIN_FILENO);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
+	g_ctrl_c = 1;
 }
 
 // void	print_redirections(t_redirect *redirections)
@@ -72,6 +74,7 @@ int	redirections(char **line, t_minishell *vars)
 		ft_free_red(vars->redirections);
 		free(vars->final_line);
 		free(*line);
+		vars->exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -85,9 +88,10 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	inti_set_up(&vars, env);
+	inti_set_up(&vars, env, &g_ctrl_c);
 	while (true)
 	{
+		g_ctrl_c = 0;
 		error_check = first_step(&line, &vars);
 		if (error_check == 0)
 			error_check = redirections(&line, &vars);

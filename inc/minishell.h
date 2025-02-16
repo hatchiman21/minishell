@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 03:11:50 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 06:22:20 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 
 typedef struct s_redirect
 {
@@ -55,13 +56,14 @@ typedef struct s_minishell
 	int			tmp_fd;
 	int			std_in;
 	int			std_out;
+	int			*ctrl_c;
 	t_here_doc	*here_doc_fds;
 }				t_minishell;
 
 int			here_doc_set(char *line, t_minishell *vars);
 int			first_step(char **line, t_minishell *vars);
 int			final_step(char **line, t_minishell *vars);
-void		inti_set_up(t_minishell *vars, char **env);
+void		inti_set_up(t_minishell *vars, char **env, int *ctrl_c);
 char		*expand_all(t_minishell *vars, char *line);
 
 void		handle_sigint(int sig);
@@ -72,7 +74,7 @@ void		increase_shlvl(char **env);
 int			array_size(char **array);
 void		close_fds(int *fd);
 
-char		*expand(char *argv, t_minishell vars);
+char		*expand(char *line, t_minishell vars);
 char		*get_variable(char **env, char *line, int *j,
 				int status);
 char		*rev_strdup(char *s, int j);
@@ -91,10 +93,10 @@ int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		close_free_here_doc(t_here_doc **here_doc);
 
 char		*get_path(char **cmd, char **envp);
-void		open_file(t_minishell *vars, t_redirect *red,
+int			open_file(t_minishell *vars, t_redirect *red,
 				int red_order);
 int			not_child_process(char **cmd, t_minishell *vars);
-void		process(t_minishell *vars);
+int			process(t_minishell *vars);
 
 int			word_end(char c);
 t_redirect	*get_redirections(char *line);

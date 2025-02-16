@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 01:32:55 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 06:44:23 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	here_doc_set(char *line, t_minishell *vars)
 {
+	vars->ctrl_c[0] = 0;
 	prepare_here_doc(vars, vars->redirections);
 	if (!vars->here_doc_fds
 		&& ft_strnstr(vars->final_line, "<<", ft_strlen(vars->final_line)))
@@ -27,19 +28,30 @@ int	here_doc_set(char *line, t_minishell *vars)
 	}
 	add_history(vars->final_line);
 	free(vars->final_line);
+	if (vars->ctrl_c[0])
+	{
+		free(line);
+		close_free_here_doc(&vars->here_doc_fds);
+		ft_free_red(vars->redirections);
+		return (1);
+	}
 	return (0);
 }
 
 int	first_step(char **line, t_minishell *vars)
 {
 	vars->op_num = 1;
+	vars->tmp_fd = -1;
 	*line = readline("~/minishell$ ");
 	if (!*line)
 		return (-1);
+	if (vars->ctrl_c[0])
+		vars->exit_status = 130;
 	if (first_input_check(*line))
 	{
 		add_history(*line);
 		free(*line);
+		vars->exit_status = 2;
 		return (1);
 	}
 	vars->final_line = ft_strdup(*line);
@@ -65,30 +77,55 @@ int	final_step(char **line, t_minishell *vars)
 		return (-1);
 	}
 	remove_all_qoutes(vars);
-	process(vars);
+	if (process(vars) == -1)
+	{
+		free_split(vars->argv, vars->argc);
+		ft_free_red(vars->redirections);
+		return (-1);
+	}
+	wait_for_all(vars);
 	close_free_here_doc(&vars->here_doc_fds);
 	free_split(vars->argv, vars->argc);
 	ft_free_red(vars->redirections);
 	return (0);
 }
 
-void	inti_set_up(t_minishell *vars, char **env)
+void	inti_vars(t_minishell *vars, int *ctrl_c)
+{
+	vars->exit_status = 0;
+	vars->here_doc_fds = NULL;
+	vars->ctrl_c = ctrl_c;
+	vars->redirections = NULL;
+	vars->last_id = 0;
+	vars->tmp_fd = -1;
+	vars->pipefd[0] = -1;
+	vars->pipefd[1] = -1;
+	vars->std_in = dup(STDIN_FILENO);
+	vars->std_out = dup(STDOUT_FILENO);
+	if (vars->std_in == -1 || vars->std_out == -1)
+	{
+		ft_dprintf(2, "minishell: dup failed\n");
+		if (vars->std_in != -1)
+			close(vars->std_in);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	inti_set_up(t_minishell *vars, char **env, int *ctrl_c)
 {
 	if (!isatty(0))
 		exit (EXIT_FAILURE);
+	inti_vars(vars, ctrl_c);
 	vars->env = ft_array_dup(env);
 	if (!vars->env && env)
 	{
+		close_fds((int [3]){vars->std_in, vars->std_out, -1});
 		ft_putstr_fd("minishell: enviorment malloc failed\n", 2);
 		exit (EXIT_FAILURE);
 	}
 	increase_shlvl(vars->env);
-	vars->exit_status = 0;
-	vars->here_doc_fds = NULL;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &handle_sigint);
-	vars->std_in = dup(STDIN_FILENO);
-	vars->std_out = dup(STDOUT_FILENO);
 }
 
 char	*expand_all(t_minishell *vars, char *line)
@@ -97,6 +134,11 @@ char	*expand_all(t_minishell *vars, char *line)
 
 	red = vars->redirections;
 	line = expand(line, *vars);
+	if (!line)
+	{
+		ft_putstr_fd("minishell: line malloc failed\n", 2);
+		return (NULL);
+	}
 	while (red)
 	{
 		red->redirection = expand(red->redirection, *vars);

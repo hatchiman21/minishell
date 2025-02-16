@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 03:11:17 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 06:43:52 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,26 +59,30 @@ int	child_process(char **cmd, t_minishell *vars)
 	exit(126);
 }
 
-void	apply_redirection(t_minishell *vars, int cur_op)
+t_redirect	*get_op_red(t_redirect *red, int op)
+{
+	while (red && red->op < op)
+		red = red->next;
+	return (red);
+}
+
+int	apply_redirection(t_minishell *vars, int cur_op)
 {
 	t_redirect	*red;
 	int			red_order;
 
-	red = vars->redirections;
 	red_order = 0;
-	while (red && red->op < cur_op)
-	{
-		red_order++;
-		red = red->next;
-	}
+	red = get_op_red(vars->redirections, cur_op);
 	while (red && red->op == cur_op)
 	{
-		open_file(vars, red, red_order);
+		if (open_file(vars, red, red_order) == -1)
+			return (0);
 		red_order++;
 		red = red->next;
 	}
 	if (cur_op != vars->op_num - 1)
-		dup2(vars->pipefd[1], STDOUT_FILENO);
+		if (dup2(vars->pipefd[1], STDOUT_FILENO) == -1)
+			ft_dprintf(2, "minishell: pipe dup2 failed\n");
 	if (cur_op != 0)
 	{
 		if (dup2(vars->tmp_fd, STDIN_FILENO) == -1)
@@ -86,15 +90,28 @@ void	apply_redirection(t_minishell *vars, int cur_op)
 		close(vars->tmp_fd);
 	}
 	close(vars->pipefd[1]);
+	return (1);
+}
+
+void	process_step(t_minishell *vars, int *cur_op, int *i)
+{
+	int	red_success;
+
+	red_success = apply_redirection(vars, *cur_op);
+	if (red_success && not_child_process(vars->argv + *i, vars))
+		ft_excute(NULL, vars->argv + *i, vars);
+	else if (red_success)
+		vars->last_id = fork();
+	else
+	{
+		vars->exit_status = 1;
+		vars->last_id = -2;
+	}
 }
 
 void	process_operation(t_minishell *vars, int *i, int *cur_op)
 {
-	apply_redirection(vars, *cur_op);
-	if (not_child_process(vars->argv + *i, vars))
-		ft_excute(NULL, vars->argv + *i, vars);
-	else
-		vars->last_id = fork();
+	process_step(vars, cur_op, i);
 	if (!vars->last_id)
 	{
 		close_fds((int [4]){vars->std_in, vars->std_out, vars->pipefd[0], -1});
@@ -116,29 +133,40 @@ void	process_operation(t_minishell *vars, int *i, int *cur_op)
 	}
 }
 
-void	process(t_minishell *vars)
+int	intial_red(t_minishell *vars, int *cur_op)
+{
+	if (*cur_op != 0)
+		vars->tmp_fd = vars->pipefd[0];
+	if (pipe(vars->pipefd) == -1)
+	{
+		ft_dprintf(2, "minishell: child pipe failed\n");
+		*cur_op = -1;
+		return (-1);
+	}
+	return (0);
+}
+
+int	process(t_minishell *vars)
 {
 	int	cur_op;
 	int	i;
 
 	cur_op = 0;
 	i = 0;
-	while (cur_op < vars->op_num)
+	while (cur_op < vars->op_num && cur_op != -1)
 	{
-		if (cur_op != 0)
-			vars->tmp_fd = vars->pipefd[0];
-		if (pipe(vars->pipefd) == -1)
+		process_operation(vars, &i, &cur_op);
+		if (intial_red(vars, &cur_op) == -1)
+			break ;
+		if (dup2(vars->std_in, STDIN_FILENO) == -1
+			|| dup2(vars->std_out, STDOUT_FILENO) == -1)
 		{
-			ft_dprintf(2, "minishell: child pipe failed\n");
+			cur_op = -1;
+			ft_dprintf(2, "minishell: dup2 failed\n");
 			break ;
 		}
-		process_operation(vars, &i, &cur_op);
-		if (dup2(vars->std_in, STDIN_FILENO) == -1)
-			ft_dprintf(2, "minishell: stdin dup2 failed\n");
-		if (dup2(vars->std_out, STDOUT_FILENO) == -1)
-			ft_dprintf(2, "minishell: stdout dup2 failed\n");
 	}
 	if (vars->pipefd[0] != -1)
 		close(vars->pipefd[0]);
-	wait_for_all(vars);
+	return (cur_op);
 }

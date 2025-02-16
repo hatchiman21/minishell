@@ -6,20 +6,23 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 01:51:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 05:55:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*exit_status1(char *line, int *j, int exit_status)
+char	*get_exit_status(char *line, int *j, int exit_status)
 {
 	char	*variable;
+	char	*tmp;
 	char	*tmp2;
 
 	remove_from_line(line, *j - 1, 2);
-	tmp2 = ft_merge(ft_itoa(exit_status), line + *j - 1, 1, 0);
-	line = rev_strdup(line, *j - 1);
+	tmp = ft_itoa(exit_status);
+	tmp2 = ft_merge(tmp, line + *j - 1, 1, 0);
+	tmp = rev_strdup(line, *j - 1);
+	line = tmp;
 	variable = ft_merge(line, tmp2, 1, 1);
 	return (variable);
 }
@@ -43,7 +46,7 @@ char	*get_variable(char **env, char *line, int *j, int status)
 	while (get_var_helper(line, var_len, *j))
 		var_len++;
 	if (var_len == 1 && line[*j] == '?')
-		return (exit_status1(line, j, status));
+		return (get_exit_status(line, j, status));
 	m = 0;
 	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0
 			|| env[m][var_len] != '='))

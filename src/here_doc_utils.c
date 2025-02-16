@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:52:07 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 06:29:05 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 05:03:57 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,8 @@ void	here_doc_addback(t_here_doc **head, t_here_doc *new)
 int	write_line(int fd, char *line, int i)
 {
 	ft_putstr_fd(line, fd);
-	ft_putchar_fd('\n', fd);
 	free(line);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	i++;
-	return (i);
+	return (i + 1);
 }
 
 int	add_line(char *line, char **final_line)

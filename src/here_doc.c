@@ -6,13 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 03:09:27 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 05:16:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	here_doc_input(char *stop_sign, int fd, char **final_line)
+int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 {
 	char	*line;
 	int		i;
@@ -20,20 +20,18 @@ int	here_doc_input(char *stop_sign, int fd, char **final_line)
 	i = 0;
 	while (1)
 	{
-		line = readline("> ");
+		ft_putstr_fd("> ", STDOUT_FILENO);
+		line = get_next_line(STDIN_FILENO);
+		if (vars->ctrl_c[0])
+			break ;
 		if (!line)
 		{
-			ft_dprintf(2, "%s %d delimited by end-of-file (wanted `%s')\n",
+			ft_dprintf(2, "\n%s %d delimited by end-of-file (wanted `%s')\n",
 				"minishell: warning: here-document at line", i, stop_sign);
 			return (0);
 		}
-		if (add_line(line, final_line) == -1)
-		{
-			free(line);
-			return (-1);
-		}
-		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign))
-			&& ft_strlen(line) == ft_strlen(stop_sign))
+		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign) - 1)
+			&& ft_strlen(line) == ft_strlen(stop_sign) + 1)
 			break ;
 		i = write_line(fd, line, i);
 	}
@@ -58,7 +56,7 @@ t_here_doc	*get_here_doc_node(int fd[2], int i,
 	here_doc_node->red_order = i;
 	here_doc_node->open = true;
 	here_doc_node->next = NULL;
-	if (here_doc_input(red->redirection + 2, fd[1], &vars->final_line) == -1)
+	if (here_doc_input(red->redirection + 2, fd[1], vars) == -1)
 	{
 		close(fd[1]);
 		close(fd[0]);
@@ -78,7 +76,7 @@ void	prepare_here_doc(t_minishell *vars, t_redirect *red)
 	i = 0;
 	while (red && ++i)
 	{
-		if (!ft_strncmp(red->redirection, "<<", 2))
+		if (!ft_strncmp(red->redirection, "<<", 2) && !vars->ctrl_c[0])
 		{
 			if (pipe(fd) == -1)
 			{

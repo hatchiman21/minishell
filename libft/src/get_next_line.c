@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:43:03 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/10 14:39:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 04:21:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_line_list	*find_buffer(int fd, t_line_list **storage, t_line_list *tmp)
 	return (tmp);
 }
 
-int	first_step(t_line_list **storage, int fd, int *bytes_read, char **res)
+int	gnl_first_step(t_line_list **storage, int fd, int *bytes_read, char **res)
 {
 	int			i;
 	char		*buff;
@@ -109,7 +109,7 @@ char	*check_buffer(int fd, t_line_list *current, char *res,
 	bytes_read = BUFFER_SIZE;
 	while (i == 0)
 	{
-		i = first_step(storage, fd, &bytes_read, &res);
+		i = gnl_first_step(storage, fd, &bytes_read, &res);
 		if (i == -1)
 			return (NULL);
 		if ((bytes_read == 0 && !ft_strlen(buff)))

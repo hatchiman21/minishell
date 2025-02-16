@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:48:40 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 06:28:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 06:39:29 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,27 @@
 
 void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 {
+	int	error;
+
+	if (fd == -1)
+		return ;
+	error = 0;
 	if (out == 1)
 	{
 		if (cur_op != vars->op_num - 1)
-			dup2(fd, vars->pipefd[1]);
+			error += dup2(fd, vars->pipefd[1]);
 		else
-			dup2(fd, STDOUT_FILENO);
+			error += dup2(fd, STDOUT_FILENO);
 	}
 	else
 	{
 		if (cur_op != 0)
-			dup2(fd, vars->tmp_fd);
+			error += dup2(fd, vars->tmp_fd);
 		else
-			dup2(fd, STDIN_FILENO);
+			error += dup2(fd, STDIN_FILENO);
 	}
+	if (error == -1)
+		ft_putstr_fd("minishell: dup2 failed\n", 2);
 }
 
 int	get_fd(t_minishell *vars, t_redirect *red, int red_order)
@@ -46,7 +53,7 @@ int	get_fd(t_minishell *vars, t_redirect *red, int red_order)
 	return (fd);
 }
 
-void	open_file(t_minishell *vars, t_redirect *red, int red_order)
+int	open_file(t_minishell *vars, t_redirect *red, int red_order)
 {
 	int	fd;
 	int	out;
@@ -64,11 +71,9 @@ void	open_file(t_minishell *vars, t_redirect *red, int red_order)
 		else
 			ft_dprintf(2, "minishell: %s: %s\n",
 				red->redirection + 1, strerror(errno));
-		close_free_here_doc(&vars->here_doc_fds);
-		close(vars->pipefd[0]);
-		close(vars->pipefd[1]);
-		exit(1);
 	}
 	change_fds(vars, fd, red->op, out);
-	close(fd);
+	if (fd != -1)
+		close(fd);
+	return (fd);
 }
