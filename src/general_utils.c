@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:02:20 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 20:47:16 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 03:11:33 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,23 @@ char	**ft_array_dup(char **array)
 	}
 	new_array[i] = NULL;
 	return (new_array);
+}
+
+int	cmd_built_in(char **cmd)
+{
+	if (!ft_strncmp(cmd[0], "cd", 3))
+		return (1);
+	if (!ft_strncmp(cmd[0], "export", 7))
+		return (1);
+	if (!ft_strncmp(cmd[0], "unset", 6))
+		return (1);
+	if (!ft_strncmp(cmd[0], "exit", 5))
+		return (1);
+	if (!ft_strncmp(cmd[0], "env", 4))
+		return (1);
+	if (!ft_strncmp(cmd[0], "pwd", 4))
+		return (1);
+	if (!ft_strncmp(cmd[0], "echo", 5))
+		return (1);
+	return (0);
 }

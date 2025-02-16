@@ -6,25 +6,21 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 01:35:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 02:15:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	**my_cd2(char **argv, char **env, char **tmp)
+char	**my_cd2(char **argv, char **env, char **tmp, t_minishell *vars)
 {
 	char		*path;
-	struct stat	sb;
 
 	path = getcwd(NULL, 0);
-	if (chdir(argv[1]) == -1)
+	if (chdir(argv[1]) != 0)
 	{
-		if (stat(argv[1], &sb) == -1)
-			ft_dprintf(2, "minishell: cd: %s: No such file or directory\n",
-				argv[1]);
-		else
-			ft_dprintf(2, "minishell: cd: %s: Permission denied\n", argv[1]);
+		ft_dprintf(2, "minishell: cd: %s: %s\n", argv[1], strerror(errno));
+		vars->exit_status = 1;
 		free(path);
 		return (env);
 	}
@@ -41,14 +37,14 @@ char	**my_cd2(char **argv, char **env, char **tmp)
 	return (env);
 }
 
-void	my_cd(char **argv, char **env)
+void	my_cd(char **argv, char **env, t_minishell *vars)
 {
 	char	*path;
 	char	**tmp;
 
 	tmp = (char **)malloc(2 * sizeof(char *));
-	tmp[0] = NULL;
 	tmp[1] = NULL;
+	vars->exit_status = 0;
 	if (array_size(argv) == 1)
 	{
 		path = getcwd(NULL, 0);
@@ -61,38 +57,57 @@ void	my_cd(char **argv, char **env)
 		free(tmp[0]);
 	}
 	else if (array_size(argv) == 2)
-		env = my_cd2(argv, env, tmp);
+		env = my_cd2(argv, env, tmp, vars);
 	else
+	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		vars->exit_status = 1;
+	}
 	free(tmp);
 }
 
-void	env(char **env, char **cmd)
+char	**unset2(char **env, int i)
 {
-	int	i;
+	int		j;
+	char	**tmp;
 
-	i = 0;
-	if (cmd[1])
+	j = 0;
+	while (env[j])
+		j++;
+	tmp = (char **)malloc(sizeof(char *) * j);
+	if (!tmp)
+		return (NULL);
+	j = 0;
+	while (env[j + 1])
 	{
-		ft_putstr_fd("minishell: env: arguments are not acceptable!!\n", 2);
-		exit(EXIT_FAILURE);
+		if (j < i)
+			tmp[j] = ft_strdup(env[j]);
+		if (j >= i)
+			tmp[j] = ft_strdup(env[j + 1]);
+		free(env[j]);
+		j++;
 	}
-	while (env[i])
-	{
-		ft_putstr_fd(env[i], 1);
-		ft_putchar_fd('\n', 1);
-		i++;
-	}
-	exit(EXIT_SUCCESS);
+	free(env[j]);
+	tmp[j] = NULL;
+	free(env);
+	return (tmp);
 }
 
-void	pwd(void)
+char	**unset(char **env, char **line, t_minishell *vars)
 {
-	char	*path;
+	int	i;
+	int	t;
 
-	path = getcwd(NULL, 0);
-	ft_putstr_fd(path, STDOUT_FILENO);
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	free(path);
-	exit(0);
+	t = 0;
+	vars->exit_status = 0;
+	while (line[t])
+	{
+		i = 0;
+		while (env[i] && ft_strncmp(env[i], line[t], ft_strlen(line[t])) != 0)
+			i++;
+		if (env[i])
+			env = unset2(env, i);
+		t++;
+	}
+	return (env);
 }

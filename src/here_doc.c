@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 00:37:03 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 03:09:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	here_doc_input(char *stop_sign, int fd, char **final_line)
 	while (1)
 	{
 		line = readline("> ");
-		ft_putstr_fd("aasdasdasd\n", 2);
 		if (!line)
 		{
 			ft_dprintf(2, "%s %d delimited by end-of-file (wanted `%s')\n",

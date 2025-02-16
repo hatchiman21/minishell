@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 01:32:47 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/16 03:11:50 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ typedef struct s_here_doc
 	bool				open;
 	struct s_here_doc	*next;
 }						t_here_doc;
-
-
 
 typedef struct s_minishell
 {
@@ -104,16 +102,18 @@ bool		variable_has_space(char *line, char **env);
 int			redirections_error_check(char *line);
 int			ambiguous_redirect_check(t_redirect *red, char **env);
 void		remove_from_line(char *line, int i, int j);
+int			cmd_built_in(char **cmd);
 
 void		wait_for_all(t_minishell *vars);
 void		*ft_free_red(t_redirect *lst);
 void		ft_free(t_minishell *vars);
 
-void		my_cd(char **argv, char **env);
+void		my_cd(char **argv, char **env, t_minishell *vars);
 void		ft_echo(char **argv);
 void		ft_exit(char **cmd, t_minishell *vars);
-char		**unset(char **env, char **line);
+char		**unset(char **env, char **line, t_minishell *vars);
 char		**export(char **env, char **line);
+void		export3(char **env, t_minishell *vars, int len);
 void		env(char **env, char **cmd);
 void		pwd(void);
 

@@ -54,9 +54,8 @@ char	*expand(char *argv, t_minishell vars)
 		}
 		if (argv[j] == '$' && q_flag == -1)
 			argv = get_variable(vars.env, argv, &j, vars.exit_status);
-		if (j >= (int)ft_strlen(argv))
+		if (j++ >= (int)ft_strlen(argv))
 			break ;
-		j++;
 	}
 	return (argv);
 }
