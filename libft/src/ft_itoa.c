@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 14:34:40 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/25 21:08:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 05:00:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static int	allocation(long int n, char **res, int base)
 	int			i;
 
 	i = 1;
-	n = n;
 	if (n < 0)
 	{
 		i++;

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 06:44:23 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 07:23:03 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	here_doc_set(char *line, t_minishell *vars)
 		ft_putstr_fd("minishell: here doc malloc failed\n", 2);
 		return (-1);
 	}
-	add_history(vars->final_line);
 	free(vars->final_line);
 	if (vars->ctrl_c[0])
 	{
@@ -42,14 +41,17 @@ int	first_step(char **line, t_minishell *vars)
 {
 	vars->op_num = 1;
 	vars->tmp_fd = -1;
-	*line = readline("~/minishell$ ");
+	if (!vars->ctrl_c[0])
+		*line = readline("~/minishell$ ");
+	else
+		*line = vars->line;
 	if (!*line)
 		return (-1);
 	if (vars->ctrl_c[0])
 		vars->exit_status = 130;
+	add_history(*line);
 	if (first_input_check(*line))
 	{
-		add_history(*line);
 		free(*line);
 		vars->exit_status = 2;
 		return (1);
@@ -100,6 +102,7 @@ void	inti_vars(t_minishell *vars, int *ctrl_c)
 	vars->tmp_fd = -1;
 	vars->pipefd[0] = -1;
 	vars->pipefd[1] = -1;
+	vars->line = NULL;
 	vars->std_in = dup(STDIN_FILENO);
 	vars->std_out = dup(STDOUT_FILENO);
 	if (vars->std_in == -1 || vars->std_out == -1)

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 05:23:14 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 07:17:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	redirections(char **line, t_minishell *vars)
 	if (!vars->redirections && (ft_strchr_find(vars->final_line, '>')
 			|| ft_strchr_find(vars->final_line, '<')))
 	{
-		add_history(vars->final_line);
 		free(vars->final_line);
 		free(*line);
 		ft_putstr_fd("minishell: redirection malloc failed\n", 2);
@@ -70,7 +69,6 @@ int	redirections(char **line, t_minishell *vars)
 	}
 	if (ambiguous_redirect_check(vars->redirections, vars->env) == 1)
 	{
-		add_history(vars->final_line);
 		ft_free_red(vars->redirections);
 		free(vars->final_line);
 		free(*line);
@@ -91,8 +89,8 @@ int	main(int argc, char **argv, char **env)
 	inti_set_up(&vars, env, &g_ctrl_c);
 	while (true)
 	{
-		g_ctrl_c = 0;
 		error_check = first_step(&line, &vars);
+		g_ctrl_c = 0;
 		if (error_check == 0)
 			error_check = redirections(&line, &vars);
 		if (error_check == 0)

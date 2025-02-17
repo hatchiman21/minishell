@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 05:16:45 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 07:22:33 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,30 @@
 
 int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 {
-	char	*line;
 	int		i;
 
 	i = 0;
 	while (1)
 	{
-		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
+		ft_putstr_fd("> ", 1);
+		vars->line = get_next_line(STDIN_FILENO);
 		if (vars->ctrl_c[0])
 			break ;
-		if (!line)
+		if (!vars->line)
 		{
 			ft_dprintf(2, "\n%s %d delimited by end-of-file (wanted `%s')\n",
 				"minishell: warning: here-document at line", i, stop_sign);
 			return (0);
 		}
-		if (!ft_strncmp(line, stop_sign, ft_strlen(stop_sign) - 1)
-			&& ft_strlen(line) == ft_strlen(stop_sign) + 1)
+		if (!ft_strncmp(vars->line, stop_sign, ft_strlen(stop_sign) - 1)
+			&& ft_strlen(vars->line) == ft_strlen(stop_sign) + 1)
 			break ;
-		i = write_line(fd, line, i);
+		i = write_line(fd, vars->line, i);
 	}
-	free(line);
+	if (!vars->ctrl_c[0])
+		free(vars->line);
+	else if (vars->line)
+		remove_from_line(vars->line, ft_strlen(vars->line) - 1, 1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 06:22:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 07:11:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_minishell
 	char		**argv;
 	char		**env;
 	t_redirect	*redirections;
+	char		*line;
 	char		*final_line;
 	int			exit_status;
 	int			last_id;

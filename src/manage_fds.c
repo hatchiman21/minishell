@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:48:40 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 06:39:29 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 05:07:02 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@ int	open_file(t_minishell *vars, t_redirect *red, int red_order)
 			ft_dprintf(2, "minishell: %s: %s\n",
 				red->redirection + 1, strerror(errno));
 	}
-	change_fds(vars, fd, red->op, out);
 	if (fd != -1)
+	{
+		change_fds(vars, fd, red->op, out);
 		close(fd);
+	}
 	return (fd);
 }

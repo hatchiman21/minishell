@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 06:43:52 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/17 05:10:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,14 +155,14 @@ int	process(t_minishell *vars)
 	i = 0;
 	while (cur_op < vars->op_num && cur_op != -1)
 	{
-		process_operation(vars, &i, &cur_op);
 		if (intial_red(vars, &cur_op) == -1)
 			break ;
+		process_operation(vars, &i, &cur_op);
 		if (dup2(vars->std_in, STDIN_FILENO) == -1
 			|| dup2(vars->std_out, STDOUT_FILENO) == -1)
 		{
-			cur_op = -1;
 			ft_dprintf(2, "minishell: dup2 failed\n");
+			cur_op = -1;
 			break ;
 		}
 	}
