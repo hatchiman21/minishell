@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/14 23:39:15 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 18:54:28 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,30 @@ char	*check_status(char **cmd, char **paths, char *path)
 	return (path);
 }
 
-char	**get_all_paths(char **envp)
+char	**get_all_paths(char **envp, char *tmp)
 {
 	int		i;
-	char	**path;
+	char	**paths;
 
 	i = 0;
+	if (!tmp)
+	{
+		ft_putstr_fd("minishell: malloc failed\n", 2);
+		exit(1);
+	}
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	if (!envp[i])
-		return (NULL);
-	path = ft_split(envp[i] + 5, ':');
-	return (path);
+		paths = ft_split("", ':');
+	else
+		paths = ft_split(envp[i] + 5, ':');
+	if (!paths)
+	{
+		free(tmp);
+		ft_putstr_fd("minishell: malloc failed\n", 2);
+		exit(1);
+	}
+	return (paths);
 }
 
 char	*get_final_path(char **paths, char *tmp, char **cmd)
@@ -54,7 +66,7 @@ char	*get_final_path(char **paths, char *tmp, char **cmd)
 	char	*path;
 	char	**tmp_path;
 
-	if (!paths || !tmp)
+	if (!paths[0])
 		return (NULL);
 	tmp_path = paths;
 	path = NULL;
@@ -83,13 +95,7 @@ char	*get_path(char **cmd, char **envp)
 	if (ft_strchr(cmd[0], '/'))
 		return (ft_strdup(check_status(cmd, NULL, cmd[0])));
 	tmp = ft_strjoin("/", cmd[0]);
-	paths = get_all_paths(envp);
-	if (!paths || !tmp)
-	{
-		if (tmp)
-			free(tmp);
-		return (NULL);
-	}
+	paths = get_all_paths(envp, tmp);
 	path = get_final_path(paths, tmp, cmd);
 	free(tmp);
 	free_split(paths, -1);

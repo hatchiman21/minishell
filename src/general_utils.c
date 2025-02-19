@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:02:20 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 03:11:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 22:05:25 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,19 @@ int	word_end(char c)
 int	word_check(char *line, int i)
 {
 	int	j;
+	int	i_init;
 
 	j = 0;
-	if (line[i] && line[i] == '"')
+	while (line[i + j] && line[i + j] != ' ' && line[i + j] != '|')
 	{
-		while (line[i + j + 1] && line[i + j + 1] != '"')
-			j++;
-		if (!line[i + j + 1])
-			exit(1);
-		j += 2;
-	}
-	if (line[i + j] && line[i + j] == '\'')
-	{
-		while (line[i + j + 1] && line[i + j + 1] != '\'')
-			j++;
-		if (!line[i + j + 1])
-			exit(1);
-		j += 2;
-	}
-	while (line[i + j] && line[i + j] != '\'' && line[i + j] != '"' && line[i
-			+ j] != ' ' && line[i + j] != '|')
+		if (line[i + j] == '\'' || line[i + j] == '"')
+		{
+			i_init = i;
+			skip_qouted_line(line, &i_init);
+			j += i_init - i;
+		}
 		j++;
+	}
 	return (j);
 }
 

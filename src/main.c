@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/17 07:17:09 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 21:52:17 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,43 +24,59 @@ void	handle_sigint(int sig)
 	g_ctrl_c = 1;
 }
 
-// void	print_redirections(t_redirect *redirections)
-// {
-// 	int			i;
-// 	t_redirect	*red;
+void	print_redirections(t_redirect *redirections)
+{
+	int			i;
+	t_redirect	*red;
 
-// 	i = 0;
-// 	red = redirections;
-// 	while (red)
-// 	{
-// 		printf("redirection[%d]: %s\n", i, red->redirection);
-// 		printf("op: %d\n", red->op);
-// 		i++;
-// 		if (red->next && red->op != red->next->op)
-// 			i = 0;
-// 		red = red->next;
-// 	}
-// }
+	i = 0;
+	red = redirections;
+	while (red)
+	{
+		printf("redirection[%d]: %s\n", i, red->redirection);
+		printf("op: %d\n", red->op);
+		i++;
+		if (red->next && red->op != red->next->op)
+			i = 0;
+		red = red->next;
+	}
+}
 
-// void	print_vars(t_minishell vars)
-// {
-// 	int	i;
+void	print_vars(t_minishell vars)
+{
+	int	i;
 
-// 	i = 0;
-// 	printf("argc: %d\n", vars.argc);
-// 	while (i < vars.argc)
-// 	{
-// 		printf("argv[%d]: %s\n", i, vars.argv[i]);
-// 		i++;
-// 	}
-// 	print_redirections(vars.redirections);
-// }
+	i = 0;
+	printf("argc: %d\n", vars.argc);
+	while (i < vars.argc)
+	{
+		printf("argv[%d]: %s\n", i, vars.argv[i]);
+		i++;
+	}
+	// print_redirections(vars.redirections);
+}
+
+int	redirection_error(char *final_line, t_redirect *red)
+{
+	int	i;
+
+	i = 0;
+	if (red)
+		return (0);
+	while (final_line[i])
+	{
+		skip_qouted_line(final_line, &i);
+		if (final_line[i] == '>' || final_line[i] == '<')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 int	redirections(char **line, t_minishell *vars)
 {
 	vars->redirections = get_redirections(*line);
-	if (!vars->redirections && (ft_strchr_find(vars->final_line, '>')
-			|| ft_strchr_find(vars->final_line, '<')))
+	if (redirection_error(vars->final_line, vars->redirections))
 	{
 		free(vars->final_line);
 		free(*line);
@@ -93,6 +109,7 @@ int	main(int argc, char **argv, char **env)
 		g_ctrl_c = 0;
 		if (error_check == 0)
 			error_check = redirections(&line, &vars);
+		// print_redirections(vars.redirections);
 		if (error_check == 0)
 			error_check = here_doc_set(line, &vars);
 		if (error_check == 0)

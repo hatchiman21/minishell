@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 03:00:22 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/18 19:53:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,36 +54,36 @@ void	export3(char **env, t_minishell *vars, int len)
 	print_sorted(sorted, len);
 }
 
-char	**export2(char **env, char *line, int i, int j)
+char	**export2(char **env, char *line, int *i, t_minishell *vars)
 {
 	char	**tmp;
 
-	if (line[j] && !env[i])
+	vars->exit_status = 0;
+	if (line[i[1]] && !env[i[0]])
 	{
-		j = 0;
-		while (env[j])
-			j++;
-		tmp = (char **)malloc(sizeof(char *) * (j + 2));
+		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
 			return (env);
-		j = 0;
-		while (env[j])
+		i[1] = 0;
+		while (env[i[1]])
 		{
-			tmp[j] = ft_strdup(env[j]);
-			free(env[j]);
-			j++;
+			tmp[i[1]] = ft_strdup(env[i[1]]);
+			free(env[i[1]]);
+			i[1]++;
 		}
-		tmp[j] = ft_strdup(line);
-		tmp[j + 1] = NULL;
+		tmp[i[1]] = ft_strdup(line);
+		tmp[i[1] + 1] = NULL;
 		free(env);
 		return (tmp);
 	}
-	if (!env[i])
+	if (!env[i[0]])
 		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
+	if (!env[i[0]])
+		vars->exit_status = 1;
 	return (env);
 }
 
-char	**export(char **env, char **line)
+char	**export(char **env, char **line, t_minishell *vars)
 {
 	int	i;
 	int	j;
@@ -107,7 +107,7 @@ char	**export(char **env, char **line)
 			free(env[i]);
 			env[i] = ft_strdup(line[t]);
 		}
-		env = export2(env, line[t], i, j);
+		env = export2(env, line[t], (int []){i, j}, vars);
 	}
 	return (env);
 }

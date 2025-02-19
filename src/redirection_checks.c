@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 22:35:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 21:48:41 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,19 @@ void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
 		(*pipe) = 1;
 }
 
+void	skip_qouted_line(char *line, int *i)
+{
+	char	quote;
+
+	if (line[*i] == '\'' || line[*i] == '"')
+		quote = line[*i];
+	else
+		return ;
+	(*i)++;
+	while (line[*i] != quote)
+		(*i)++;
+}
+
 int	redirections_error_check(char *line)
 {
 	int	i;
@@ -104,12 +117,13 @@ int	redirections_error_check(char *line)
 	pipe = 0;
 	while (line[i])
 	{
+		skip_qouted_line(line, &i);
 		if ((line[i] == '>' || line[i] == '<' || line[i] == '|') && red)
 			return (i);
 		else if (line[i] == '|' && pipe)
 			return (i);
-		else if ((line[i] == '>' && line[i + 1] == '<')
-			|| (line[i] == '<' && line[i + 1] == '>'))
+		else if (((line[i] == '>' && line[i + 1] == '<')
+			|| (line[i] == '<' && line[i + 1] == '>')))
 			return (i + 1);
 		else
 			redirections_error_check_helper(&i, line, &red, &pipe);

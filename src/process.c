@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/17 05:10:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 21:28:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 	else if (!ft_strncmp(cmd[0], "export", 7) && !cmd[1])
 		export3(vars->env, vars, array_size(vars->env));
 	else if (!ft_strncmp(cmd[0], "export", 7))
-		vars->env = export(vars->env, cmd + 1);
+		vars->env = export(vars->env, cmd + 1, vars);
 	else if (!ft_strncmp(cmd[0], "unset", 6))
 		vars->env = unset(vars->env, cmd + 1, vars);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
@@ -44,15 +44,7 @@ int	child_process(char **cmd, t_minishell *vars)
 	if (!cmd || !cmd[0])
 		exit(0);
 	if (!cmd_built_in(cmd))
-	{
 		path = get_path(cmd, vars->env);
-		if (!path)
-		{
-			free(path);
-			ft_dprintf(2, "minishell: dup2 failed\n");
-			exit(1);
-		}
-	}
 	ft_excute(path, cmd, vars);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
 	free(path);
@@ -161,7 +153,7 @@ int	process(t_minishell *vars)
 		if (dup2(vars->std_in, STDIN_FILENO) == -1
 			|| dup2(vars->std_out, STDOUT_FILENO) == -1)
 		{
-			ft_dprintf(2, "minishell: dup2 failed\n");
+			ft_putstr_fd("minishell: dup2 failed\n", 2);
 			cur_op = -1;
 			break ;
 		}

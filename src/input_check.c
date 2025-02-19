@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 05:21:52 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/19 21:37:13 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ int	first_input_check(char *line)
 {
 	int	i;
 
+	i = quotes_check(line);
+	if (i)
+		return (i);
 	i = redirections_error_check(line);
 	if (i)
 	{
@@ -52,8 +55,6 @@ int	first_input_check(char *line)
 			ft_dprintf(2, "minishell: %s`%c'\n",
 				"syntax error near unexpected token ", line[i]);
 	}
-	if (!i)
-		i = quotes_check(line);
 	return (i);
 }
 
