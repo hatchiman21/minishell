@@ -6,19 +6,17 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:30:51 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/11 08:15:37 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:20:48 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_echo(char **argv)
+int	handle_n_option(char **argv)
 {
 	int	i;
 	int	j;
-	int	n;
 
-	n = 0;
 	j = 1;
 	while (argv[j] && argv[j][0] == '-')
 	{
@@ -29,14 +27,26 @@ void	ft_echo(char **argv)
 			break ;
 		j++;
 	}
+	return (j);
+}
+
+int	ft_echo(char **argv)
+{
+	int	j;
+	int	n;
+
+	n = 0;
+	j = handle_n_option(argv);
 	n = j - 1;
 	while (argv[j])
 	{
-		ft_putstr_fd(argv[j++], 1);
+		if (argv[j][0])
+			ft_putstr_fd(argv[j], 1);
+		j++;
 		if (argv[j])
 			ft_putchar_fd(' ', 1);
 	}
 	if (!n)
 		ft_putstr_fd("\n", 1);
-	exit(0);
+	return (0);
 }

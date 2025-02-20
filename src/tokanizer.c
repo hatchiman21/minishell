@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:57:43 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 19:32:56 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ int	words_count_sh(char *line)
 
 char	*get_token_sh(char *line, int *j, t_minishell *vars)
 {
-	int	flag_q;
 	int	i;
 
-	flag_q = 0;
 	i = *j;
 	if (line[*j] == '|')
 	{
@@ -54,15 +52,9 @@ char	*get_token_sh(char *line, int *j, t_minishell *vars)
 		(*j)++;
 		return (NULL);
 	}
-	while (line[*j] && !(line[*j] == ' ' && !flag_q))
+	while (line[*j] && !(line[*j] == ' '))
 	{
-		if ((line[*j] == '\'' && flag_q == 1) || (line[*j] == '"'
-				&& flag_q == 2))
-			flag_q = 0;
-		else if (line[*j] == '\'' && !flag_q)
-			flag_q = 1;
-		else if (line[*j] == '"' && !flag_q)
-			flag_q = 2;
+		skip_qouted_line(line, j);
 		(*j)++;
 		if (line[*j] == '|')
 			break ;

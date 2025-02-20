@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:28:35 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:22:46 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 	else if (!ft_strncmp(cmd[0], "exit", 5))
 		ft_exit(cmd, vars);
 	else if (!ft_strncmp(cmd[0], "env", 4))
-		env(vars->env, cmd);
+		vars->exit_status = env(vars->env, cmd);
 	else if (!ft_strncmp(cmd[0], "pwd", 4))
-		pwd();
+		vars->exit_status = pwd();
 	else if (!ft_strncmp(cmd[0], "echo", 5))
-		ft_echo(cmd);
+		vars->exit_status = ft_echo(cmd);
 	else
 		execve(path, cmd, vars->env);
 }

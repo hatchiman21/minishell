@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/19 21:52:17 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:20:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	print_vars(t_minishell vars)
 		printf("argv[%d]: %s\n", i, vars.argv[i]);
 		i++;
 	}
-	// print_redirections(vars.redirections);
+	print_redirections(vars.redirections);
 }
 
 int	redirection_error(char *final_line, t_redirect *red)
@@ -109,7 +109,6 @@ int	main(int argc, char **argv, char **env)
 		g_ctrl_c = 0;
 		if (error_check == 0)
 			error_check = redirections(&line, &vars);
-		// print_redirections(vars.redirections);
 		if (error_check == 0)
 			error_check = here_doc_set(line, &vars);
 		if (error_check == 0)

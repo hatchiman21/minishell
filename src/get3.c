@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 05:55:45 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:22:31 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*get_variable(char **env, char *line, int *j, int status)
 	return (variable);
 }
 
-void	env(char **env, char **cmd)
+int	env(char **env, char **cmd)
 {
 	int	i;
 
@@ -79,10 +79,10 @@ void	env(char **env, char **cmd)
 		ft_putstr_fd("\n", 1);
 		i++;
 	}
-	exit(0);
+	return (0);
 }
 
-void	pwd(void)
+int	pwd(void)
 {
 	char	*path;
 
@@ -90,5 +90,5 @@ void	pwd(void)
 	ft_putstr_fd(path, 1);
 	ft_putstr_fd("\n", 1);
 	free(path);
-	exit(0);
+	return (0);
 }

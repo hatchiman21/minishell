@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:56:16 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 21:57:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	here_doc_error_check(char *line, t_here_doc *here_doc_fds)
 	while (line[i])
 	{
 		skip_qouted_line(line, &i);
-		if (line[i] == '<' || line[i + 1] == '<')
+		if (line[i] == '<' && line[i + 1] == '<')
 			return (1);
 		i++;
 	}

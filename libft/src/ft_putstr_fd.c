@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 14:37:38 by aatieh            #+#    #+#             */
-/*   Updated: 2024/12/25 23:50:15 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:00:14 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	ft_putstr_fd(char *s, int fd)
 {
 	int	len;
 
+	if (!s)
+		return (0);
 	len = ft_strlen(s);
 	write (fd, s, len);
 	return (len);

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:48:40 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/17 05:07:02 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/20 22:18:52 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	change_fds(t_minishell *vars, int fd, int cur_op, int out)
 		else
 			error += dup2(fd, STDIN_FILENO);
 	}
-	if (error == -1)
+	if (error < 0)
 		ft_putstr_fd("minishell: dup2 failed\n", 2);
 }
 
@@ -72,10 +72,8 @@ int	open_file(t_minishell *vars, t_redirect *red, int red_order)
 			ft_dprintf(2, "minishell: %s: %s\n",
 				red->redirection + 1, strerror(errno));
 	}
+	change_fds(vars, fd, red->op, out);
 	if (fd != -1)
-	{
-		change_fds(vars, fd, red->op, out);
 		close(fd);
-	}
 	return (fd);
 }
