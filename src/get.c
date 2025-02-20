@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/18 19:53:51 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 02:32:52 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,8 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 		free(env);
 		return (tmp);
 	}
-	if (!env[i[0]])
-		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
-	if (!env[i[0]])
-		vars->exit_status = 1;
+	ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
+	vars->exit_status = 1;
 	return (env);
 }
 
@@ -95,7 +93,7 @@ char	**export(char **env, char **line, t_minishell *vars)
 		i = 0;
 		j = 0;
 		while (line[t] && line[t][j] && line[t][j] != '='
-			&& ft_isalpha(line[t][j]))
+			&& (ft_isalpha(line[t][j]) || ft_isdigit(line[t][i])))
 			j++;
 		if (line[t][j] != '=')
 			j = ft_strlen(line[t]);

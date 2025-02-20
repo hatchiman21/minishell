@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/20 22:22:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 02:01:13 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	get_var_helper(char *line, int var_len, int j)
 {
 	return (line[var_len + j] && line[var_len + j] != ' ' && line[var_len
 			+ j] != '\'' && line[var_len + j] != '"' && line[var_len + j] != '|'
-		&& line[var_len + j] != '$');
+		&& line[var_len + j] != '$' && line[var_len + j] == '?');
 }
 
 char	*get_variable(char **env, char *line, int *j, int status)

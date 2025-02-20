@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/16 05:52:54 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 01:37:39 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ char	*rev_strdup(char *s, int j)
 	return (res);
 }
 
+int	expander_helper(char *line, int q_flag, int j)
+{
+	return (line[j] == '$' && line[j + 1] != ' ' && q_flag == -1
+		&& line[j + 1] != '\'' && line[j + 1] != '|');
+}
+
 char	*expand(char *line, t_minishell vars)
 {
 	int	j;
@@ -52,7 +58,7 @@ char	*expand(char *line, t_minishell vars)
 			q_flag *= -1;
 			j++;
 		}
-		if (line[j] == '$' && q_flag == -1)
+		if (expander_helper(line, q_flag, j))
 			line = get_variable(vars.env, line, &j, vars.exit_status);
 		if (j++ >= (int)ft_strlen(line))
 			break ;
