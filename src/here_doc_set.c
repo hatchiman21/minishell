@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:55:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 14:55:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 20:18:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	here_doc_error_check(char *line, t_here_doc *here_doc_fds)
 
 int	here_doc_set(char *line, t_minishell *vars)
 {
-	vars->ctrl_c[0] = 0;
+	g_ctrl_c = 0;
 	prepare_here_doc(vars, vars->redirections);
 	if (here_doc_error_check(vars->final_line, vars->here_doc_fds))
 	{
@@ -45,7 +45,7 @@ int	here_doc_set(char *line, t_minishell *vars)
 		return (-1);
 	}
 	free(vars->final_line);
-	if (vars->ctrl_c[0])
+	if (g_ctrl_c)
 	{
 		free(line);
 		close_free_here_doc(&vars->here_doc_fds);

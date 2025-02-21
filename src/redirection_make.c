@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 15:48:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 21:34:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_redirect	*assgine_redirection(char *line, int i, int op_num, int *space_num)
 			|| line[i + j + *space_num] == '\t'))
 		(*space_num)++;
 	j = redirectiont_text_end(line, i + *space_num, j);
-	redirect->redirection = malloc(sizeof(char) * j + 1);
+	redirect->redirection = malloc(sizeof(char) * j + 2);
 	if (!redirect->redirection)
 	{
 		free(redirect);
@@ -92,13 +92,14 @@ t_redirect	*get_redirection(char *line, int i, int op_num)
 		redirect->redirection[j] = line[i + j];
 		j++;
 	}
+	redirect->redirection[j] = '7';
 	end = redirectiont_text_end(line, i + space_num, j);
 	while (j < end)
 	{
-		redirect->redirection[j] = line[i + j + space_num];
+		redirect->redirection[j + 1] = line[i + j + space_num];
 		j++;
 	}
-	redirect->redirection[j] = '\0';
+	redirect->redirection[j + 1] = '\0';
 	redirect->next = NULL;
 	remove_from_line(line, i, space_num + j);
 	return (redirect);

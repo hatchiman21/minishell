@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 15:45:09 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 21:38:54 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,37 +83,10 @@ int	ambiguous_check(char *line, char **env)
 	return (0);
 }
 
-char	*remove_edge_spaces(char *line)
-{
-	int	i;
-	int	j;
-
-	i = ft_strlen(line) - 1;
-	while (i >= 0
-		&& (line[i] == ' ' || line[i] == '\t'))
-	{
-		line[i] = '\0';
-		i--;
-	}
-	i = 0;
-	j = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	while (line[i])
-	{
-		line[j] = line[i];
-		i++;
-		j++;
-	}
-	line[j] = '\0';
-	return (line);
-}
-
 int	ambiguous_redirect_check(t_redirect *red, char **env)
 {
 	while (red)
 	{
-		red->redirection = remove_edge_spaces(red->redirection);
 		if (ambiguous_check(red->redirection, env))
 			return (1);
 		red = red->next;

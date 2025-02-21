@@ -6,16 +6,43 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 15:46:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 21:51:37 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+char	*remove_edge_spaces(char *line)
+{
+	int	i;
+	int	j;
+
+	i = ft_strlen(line) - 1;
+	while (i >= 0
+		&& (line[i] == ' ' || line[i] == '\t'))
+	{
+		line[i] = '\0';
+		i--;
+	}
+	i = 0;
+	j = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	while (line[i])
+	{
+		line[j] = line[i];
+		i++;
+		j++;
+	}
+	line[j] = '\0';
+	return (line);
+}
+
 bool	variable_has_space(char *line, char **env)
 {
-	int	variable_len;
-	int	n;
+	int		variable_len;
+	int		n;
+	char	*tmp;
 
 	variable_len = 0;
 	n = 0;
@@ -29,7 +56,8 @@ bool	variable_has_space(char *line, char **env)
 	}
 	if (!env[n])
 		return (false);
-	if (ft_strchr(env[n], ' '))
+	tmp = remove_edge_spaces(ft_strchr(env[n], '=') + 1);
+	if (!tmp[0] || ft_strchr(tmp, ' '))
 	{
 		line[variable_len] = '\0';
 		ft_dprintf(2, "minishell: %s: ambiguous redirect\n", line - 1);

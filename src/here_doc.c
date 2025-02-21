@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/17 07:22:33 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 20:18:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 	{
 		ft_putstr_fd("> ", 1);
 		vars->line = get_next_line(STDIN_FILENO);
-		if (vars->ctrl_c[0])
+		if (g_ctrl_c)
 			break ;
 		if (!vars->line)
 		{
@@ -34,7 +34,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 			break ;
 		i = write_line(fd, vars->line, i);
 	}
-	if (!vars->ctrl_c[0])
+	if (!g_ctrl_c)
 		free(vars->line);
 	else if (vars->line)
 		remove_from_line(vars->line, ft_strlen(vars->line) - 1, 1);
@@ -78,7 +78,7 @@ void	prepare_here_doc(t_minishell *vars, t_redirect *red)
 	i = 0;
 	while (red && ++i)
 	{
-		if (!ft_strncmp(red->redirection, "<<", 2) && !vars->ctrl_c[0])
+		if (!ft_strncmp(red->redirection, "<<", 2) && !g_ctrl_c)
 		{
 			if (pipe(fd) == -1)
 			{

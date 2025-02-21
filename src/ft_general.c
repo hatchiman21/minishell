@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 17:14:03 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 21:31:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ int	first_step(char **line, t_minishell *vars)
 {
 	vars->op_num = 1;
 	vars->tmp_fd = -1;
-	if (!vars->ctrl_c[0])
+	if (!g_ctrl_c)
 		*line = readline("~/minishell$ ");
 	else
 		*line = vars->line;
 	if (!*line)
 		return (-1);
-	if (vars->ctrl_c[0])
+	if (g_ctrl_c)
 		vars->exit_status = 130;
 	add_history(*line);
 	if (first_input_check(*line))
@@ -41,11 +41,40 @@ int	first_step(char **line, t_minishell *vars)
 	return (0);
 }
 
+void print_redirections(t_redirect *red)
+{
+	while (red)
+	{
+		ft_putstr_fd("redirection: ", 1);
+		ft_putstr_fd(red->redirection, 1);
+		ft_putchar_fd('\n', 1);
+		ft_putstr_fd("op: ", 1);
+		ft_putnbr_fd(red->op, 1);
+		ft_putchar_fd('\n', 1);
+		red = red->next;
+	}
+}
+
+void	print_vars(t_minishell *vars)
+{
+	int	i;
+
+	i = 0;
+	while (i < vars->argc)
+	{
+		ft_putstr_fd(vars->argv[i], 1);
+		ft_putchar_fd('\n', 1);
+		i++;
+	}
+	print_redirections(vars->redirections);
+}
+
 int	final_step(char **line, t_minishell *vars)
 {
 	*line = expand_all(vars, *line);
 	vars->argc = words_count_sh(*line);
 	vars->argv = get_argv(*line, vars);
+	// print_vars(vars);
 	free(*line);
 	if (!vars->argv)
 	{
@@ -54,6 +83,7 @@ int	final_step(char **line, t_minishell *vars)
 		return (-1);
 	}
 	remove_all_qoutes(vars);
+	// print_vars(vars);
 	if (process(vars) == -1)
 	{
 		free_split(vars->argv, vars->argc);
@@ -67,11 +97,10 @@ int	final_step(char **line, t_minishell *vars)
 	return (0);
 }
 
-void	inti_vars(t_minishell *vars, int *ctrl_c)
+void	inti_vars(t_minishell *vars)
 {
 	vars->exit_status = 0;
 	vars->here_doc_fds = NULL;
-	vars->ctrl_c = ctrl_c;
 	vars->redirections = NULL;
 	vars->last_id = 0;
 	vars->tmp_fd = -1;
@@ -89,11 +118,11 @@ void	inti_vars(t_minishell *vars, int *ctrl_c)
 	}
 }
 
-void	inti_set_up(t_minishell *vars, char **env, int *ctrl_c)
+void	inti_set_up(t_minishell *vars, char **env)
 {
 	if (!isatty(0))
 		exit (EXIT_FAILURE);
-	inti_vars(vars, ctrl_c);
+	inti_vars(vars);
 	vars->env = ft_array_dup(env);
 	if (!vars->env && env)
 	{

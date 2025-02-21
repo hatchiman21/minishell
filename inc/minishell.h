@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 19:20:25 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 20:28:22 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
+
+extern int	g_ctrl_c;
 
 typedef struct s_redirect
 {
@@ -57,14 +59,13 @@ typedef struct s_minishell
 	int			tmp_fd;
 	int			std_in;
 	int			std_out;
-	int			*ctrl_c;
 	t_here_doc	*here_doc_fds;
 }				t_minishell;
 
 int			here_doc_set(char *line, t_minishell *vars);
 int			first_step(char **line, t_minishell *vars);
 int			final_step(char **line, t_minishell *vars);
-void		inti_set_up(t_minishell *vars, char **env, int *ctrl_c);
+void		inti_set_up(t_minishell *vars, char **env);
 char		*expand_all(t_minishell *vars, char *line);
 
 void		handle_sigint(int sig);
