@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:48:41 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 15:46:19 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,6 @@ bool	variable_has_space(char *line, char **env)
 	return (false);
 }
 
-int	ft_calculate_flag(t_redirect *red, int i, int q_flag)
-{
-	if (red->redirection[i] == '"' && !q_flag)
-		q_flag = 1;
-	else if (red->redirection[i] == '\'' && !q_flag)
-		q_flag = 2;
-	else if ((red->redirection[i] == '"' && q_flag == 1)
-		|| (red->redirection[i] == '\'' && q_flag == 2))
-		q_flag = 0;
-	return (q_flag);
-}
-
 int	redirections_validity_check(t_redirect *redirection)
 {
 	t_redirect	*red;
@@ -66,7 +54,8 @@ int	redirections_validity_check(t_redirect *redirection)
 		while (red->redirection[i])
 		{
 			q_flag = ft_calculate_flag(red, i, q_flag);
-			if (red->redirection[i] == ' ' && !q_flag)
+			if (!q_flag
+				&& (red->redirection[i] == ' ' || red->redirection[i] == '\t'))
 				return (1);
 			i++;
 		}
@@ -77,7 +66,8 @@ int	redirections_validity_check(t_redirect *redirection)
 
 void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
 {
-	if (line[*i] != '>' && line[*i] != '>' && line[*i] != ' ' && (*red))
+	if (line[*i] != '>' && line[*i] != '>' && line[*i] != ' '
+		&& line[*i] != '\t' && (*red))
 		(*red) = 0;
 	else if ((line[*i] == '>' || line[*i] == '<')
 		&& (line[*i + 1] == '>' || line[*i + 1] == '<'))
@@ -87,7 +77,7 @@ void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
 	}
 	else if (line[*i] == '>' || line[*i] == '<')
 		(*red)++;
-	else if (line[*i] != '|' && line[*i] != ' ' && (*pipe))
+	else if (line[*i] != '|' && line[*i] != ' ' && line[*i] != '\t' && (*pipe))
 		(*pipe) = 0;
 	else if (line[*i] == '|')
 		(*pipe) = 1;
@@ -97,12 +87,12 @@ void	skip_qouted_line(char *line, int *i)
 {
 	char	quote;
 
-	if (line[*i] == '\'' || line[*i] == '"')
+	if (line[*i] && (line[*i] == '\'' || line[*i] == '"'))
 		quote = line[*i];
 	else
 		return ;
 	(*i)++;
-	while (line[*i] != quote)
+	while (line[*i] && line[*i] != quote)
 		(*i)++;
 }
 
@@ -123,7 +113,7 @@ int	redirections_error_check(char *line)
 		else if (line[i] == '|' && pipe)
 			return (i);
 		else if (((line[i] == '>' && line[i + 1] == '<')
-			|| (line[i] == '<' && line[i + 1] == '>')))
+				|| (line[i] == '<' && line[i + 1] == '>')))
 			return (i + 1);
 		else
 			redirections_error_check_helper(&i, line, &red, &pipe);

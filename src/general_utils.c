@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:02:20 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/20 19:30:40 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 17:20:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	close_fds(int *fd)
 
 int	word_end(char c)
 {
-	if (c == '"' || c == ' ' || c == '\'' || c == '|' || c == '\0' || c == '$')
+	if (c == '"' || c == ' ' || c == '\t' || c == '\''
+		|| c == '|' || c == '\0' || c == '$')
 		return (1);
 	return (0);
 }
@@ -34,13 +35,14 @@ int	word_check(char *line, int i)
 	int	i_init;
 
 	j = 0;
-	while (line[i + j] && line[i + j] != ' ' && line[i + j] != '|')
+	while (line[i + j] && line[i + j] != ' '
+		&& line[i + j] != '\t' && line[i + j] != '|')
 	{
 		if (line[i + j] == '\'' || line[i + j] == '"')
 		{
-			i_init = i;
+			i_init = i + j;
 			skip_qouted_line(line, &i_init);
-			j += i_init - i;
+			j = i_init - i;
 		}
 		j++;
 	}

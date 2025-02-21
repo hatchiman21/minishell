@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 05:40:24 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/20 20:32:09 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 14:50:41 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	mod_strncmp(const char *s2, int t)
 {
-	int	j;
+	int		j;
 	char	s1[20];
 
 	j = 0;
@@ -91,11 +91,11 @@ void	ft_exit(char **cmd, t_minishell *vars)
 	if (vars->op_num == 1)
 		printf("exit\n");
 	if (array_size(cmd) >= 2 && (!all_digits(cmd[1])
-		|| mod_strncmp(cmd[1], 0)))
+			|| mod_strncmp(cmd[1], 0)))
 	{
 		vars->exit_status = 2;
 		num_error = ft_dprintf(2, "minishell: exit: %s: %s\n",
-			cmd[1], "numeric argument required");
+				cmd[1], "numeric argument required");
 	}
 	else if (array_size(cmd) > 2)
 	{

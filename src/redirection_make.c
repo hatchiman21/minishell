@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   redirection_make.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:50:48 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 15:48:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ int	redirectiont_text_end(char *line, int i, int j)
 	q_flag = 0;
 	while (line[i + j])
 	{
-		if (!q_flag && (line[i + j] == ' ' || line[i + j] == '|'
-				|| line[i + j] == '<' || line[i + j] == '>'))
+		if (!q_flag && (line[i + j] == ' ' || line[i + j] == '\t'
+				|| line[i + j] == '|' || line[i + j] == '<'
+				|| line[i + j] == '>'))
 			break ;
 		else if (line[i + j] == '\'' && !q_flag)
 			q_flag = 1;
@@ -62,7 +63,8 @@ t_redirect	*assgine_redirection(char *line, int i, int op_num, int *space_num)
 	redirect->op = op_num;
 	while (line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
 		j++;
-	while (line[i + j + *space_num] && line[i + j + *space_num] == ' ')
+	while (line[i + j + *space_num] && (line[i + j + *space_num] == ' '
+			|| line[i + j + *space_num] == '\t'))
 		(*space_num)++;
 	j = redirectiont_text_end(line, i + *space_num, j);
 	redirect->redirection = malloc(sizeof(char) * j + 1);

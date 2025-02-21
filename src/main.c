@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/20 22:20:08 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 14:54:31 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,6 @@ void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 	g_ctrl_c = 1;
-}
-
-void	print_redirections(t_redirect *redirections)
-{
-	int			i;
-	t_redirect	*red;
-
-	i = 0;
-	red = redirections;
-	while (red)
-	{
-		printf("redirection[%d]: %s\n", i, red->redirection);
-		printf("op: %d\n", red->op);
-		i++;
-		if (red->next && red->op != red->next->op)
-			i = 0;
-		red = red->next;
-	}
-}
-
-void	print_vars(t_minishell vars)
-{
-	int	i;
-
-	i = 0;
-	printf("argc: %d\n", vars.argc);
-	while (i < vars.argc)
-	{
-		printf("argv[%d]: %s\n", i, vars.argv[i]);
-		i++;
-	}
-	print_redirections(vars.redirections);
 }
 
 int	redirection_error(char *final_line, t_redirect *red)

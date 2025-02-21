@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 01:37:39 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:46:54 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,24 @@ char	*rev_strdup(char *s, int j)
 int	expander_helper(char *line, int q_flag, int j)
 {
 	return (line[j] == '$' && line[j + 1] != ' ' && q_flag == -1
-		&& line[j + 1] != '\'' && line[j + 1] != '|');
+		&& line[j + 1] != '\'' && line[j + 1] != '|'
+		&& line[j + 1] != '\t');
 }
 
 char	*expand(char *line, t_minishell vars)
 {
 	int	j;
 	int	q_flag;
-	int	q2_flag;
 
 	j = 0;
 	q_flag = -1;
-	q2_flag = 1;
 	while (line[j])
 	{
-		if (line[j] == '"' && q_flag == -1)
-		{
-			q2_flag *= -1;
-			j++;
-		}
-		if (line[j] == '\'' && q2_flag == 1)
-		{
+		if (line[j] == '\'' && q_flag == -1)
+			skip_qouted_line(line, &j);
+		if (line[j] == '"')
 			q_flag *= -1;
-			j++;
-		}
-		if (expander_helper(line, q_flag, j))
+		if (line[j] == '$' && line[j + 1] && line[j + 1] != '|' && line[j + 1] != ' ' && line[j + 1] != '\t')
 			line = get_variable(vars.env, line, &j, vars.exit_status);
 		if (j++ >= (int)ft_strlen(line))
 			break ;

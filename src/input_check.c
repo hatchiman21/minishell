@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 21:37:13 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 15:45:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,15 @@ char	*remove_edge_spaces(char *line)
 	int	j;
 
 	i = ft_strlen(line) - 1;
-	while (i >= 0 && line[i] == ' ')
+	while (i >= 0
+		&& (line[i] == ' ' || line[i] == '\t'))
 	{
 		line[i] = '\0';
 		i--;
 	}
 	i = 0;
 	j = 0;
-	while (line[i] == ' ')
+	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	while (line[i])
 	{

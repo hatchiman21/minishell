@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get3.c                                             :+:      :+:    :+:   */
+/*   built_ins2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 02:01:13 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:54:23 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@ char	*get_exit_status(char *line, int *j, int exit_status)
 	char	*variable;
 	char	*tmp;
 	char	*tmp2;
+	int		len;
 
 	remove_from_line(line, *j - 1, 2);
 	tmp = ft_itoa(exit_status);
+	len = ft_strlen(tmp);
 	tmp2 = ft_merge(tmp, line + *j - 1, 1, 0);
 	tmp = rev_strdup(line, *j - 1);
 	line = tmp;
+	(*j) += len - 2;
 	variable = ft_merge(line, tmp2, 1, 1);
 	return (variable);
 }
@@ -31,7 +34,7 @@ int	get_var_helper(char *line, int var_len, int j)
 {
 	return (line[var_len + j] && line[var_len + j] != ' ' && line[var_len
 			+ j] != '\'' && line[var_len + j] != '"' && line[var_len + j] != '|'
-		&& line[var_len + j] != '$' && line[var_len + j] == '?');
+		&& line[var_len + j] != '$' && line[var_len + j] != '\t');
 }
 
 char	*get_variable(char **env, char *line, int *j, int status)
@@ -43,10 +46,10 @@ char	*get_variable(char **env, char *line, int *j, int status)
 
 	var_len = 0;
 	(*j)++;
+	if (line[*j] == '?')
+		return (get_exit_status(line, j, status));
 	while (get_var_helper(line, var_len, *j))
 		var_len++;
-	if (var_len == 1 && line[*j] == '?')
-		return (get_exit_status(line, j, status));
 	m = 0;
 	while (env[m] && (ft_strncmp(env[m], line + *j, var_len) != 0
 			|| env[m][var_len] != '='))
