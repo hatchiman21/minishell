@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 02:01:13 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:48:23 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,16 @@ char	*get_exit_status(char *line, int *j, int exit_status)
 	return (variable);
 }
 
-int	get_var_helper(char *line, int var_len, int j)
+int	get_var_helper(char *line, int *var_len, int j)
 {
-	return (line[var_len + j] && line[var_len + j] != ' ' && line[var_len
-			+ j] != '\'' && line[var_len + j] != '"' && line[var_len + j] != '|'
-		&& line[var_len + j] != '$' && line[var_len + j] == '?');
+	if (line[j] == '?')
+	{
+		(*var_len)++;
+		return (0);
+	}
+	return (line[*var_len + j] && line[*var_len + j] != ' ' && line[*var_len
+			+ j] != '\'' && line[*var_len + j] != '"' && line[*var_len + j] != '|'
+		&& line[*var_len + j] != '$');
 }
 
 char	*get_variable(char **env, char *line, int *j, int status)
@@ -43,7 +48,7 @@ char	*get_variable(char **env, char *line, int *j, int status)
 
 	var_len = 0;
 	(*j)++;
-	while (get_var_helper(line, var_len, *j))
+	while (get_var_helper(line, &var_len, *j))
 		var_len++;
 	if (var_len == 1 && line[*j] == '?')
 		return (get_exit_status(line, j, status));

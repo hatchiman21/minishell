@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 01:37:39 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:12:21 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ char	*rev_strdup(char *s, int j)
 
 int	expander_helper(char *line, int q_flag, int j)
 {
-	return (line[j] == '$' && line[j + 1] != ' ' && q_flag == -1
-		&& line[j + 1] != '\'' && line[j + 1] != '|');
+	if (!line[j + 1])
+		return (0);
+	return (line[j] == '$' && line[j + 1] && line[j + 1] != ' '
+		&& q_flag == -1 && line[j + 1] != '\'' && line[j + 1] != '|');
 }
 
 char	*expand(char *line, t_minishell vars)

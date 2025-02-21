@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 02:32:52 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:43:27 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 	char	**tmp;
 
 	vars->exit_status = 0;
-	if (line[i[1]] && !env[i[0]])
+	if (i[0] != -1 && line[i[1]] && !env[i[0]])
 	{
 		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
@@ -76,8 +76,10 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 		free(env);
 		return (tmp);
 	}
-	ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
-	vars->exit_status = 1;
+	if (i[0] != -1)
+		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
+	if (i[0] != -1)
+		vars->exit_status = 1;
 	return (env);
 }
 
@@ -104,6 +106,7 @@ char	**export(char **env, char **line, t_minishell *vars)
 		{
 			free(env[i]);
 			env[i] = ft_strdup(line[t]);
+			i = -1;
 		}
 		env = export2(env, line[t], (int []){i, j}, vars);
 	}
