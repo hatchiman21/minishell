@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 18:46:54 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 19:43:16 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ char	*expand(char *line, t_minishell vars)
 			skip_qouted_line(line, &j);
 		if (line[j] == '"')
 			q_flag *= -1;
-		if (line[j] == '$' && line[j + 1] && line[j + 1] != '|' && line[j + 1] != ' ' && line[j + 1] != '\t')
+		if (line[j] == '$' && line[j + 1] && line[j + 1] != '|'
+			&& line[j + 1] != ' ' && line[j + 1] != '\t'
+			&& !(q_flag == 1 && (line[j + 1] == '\'' || line[j + 1] == '"')))
 			line = get_variable(vars.env, line, &j, vars.exit_status);
 		if (j++ >= (int)ft_strlen(line))
 			break ;

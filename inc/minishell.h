@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 14:57:42 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 19:20:25 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void		my_cd(char **argv, char **env, t_minishell *vars);
 int			ft_echo(char **argv);
 void		ft_exit(char **cmd, t_minishell *vars);
 char		**unset(char **env, char **line, t_minishell *vars);
-char		**export(char **env, char **line, t_minishell *vars);
+char		**export(char **env, char **line, t_minishell *vars, int t);	
 void		export3(char **env, t_minishell *vars, int len);
 int			env(char **env, char **cmd);
 int			pwd(void);
