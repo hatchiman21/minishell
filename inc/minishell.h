@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/20 22:22:37 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 16:52:53 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void		my_cd(char **argv, char **env, t_minishell *vars);
 int			ft_echo(char **argv);
 void		ft_exit(char **cmd, t_minishell *vars);
 char		**unset(char **env, char **line, t_minishell *vars);
-char		**export(char **env, char **line, t_minishell *vars);	
+char		**export(char **env, char **line, t_minishell *vars, int t);	
 void		export3(char **env, t_minishell *vars, int len);
 int			env(char **env, char **cmd);
 int			pwd(void);

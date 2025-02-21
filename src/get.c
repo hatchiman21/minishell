@@ -6,7 +6,7 @@
 /*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 16:43:27 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/21 16:52:13 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,11 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 	return (env);
 }
 
-char	**export(char **env, char **line, t_minishell *vars)
+char	**export(char **env, char **line, t_minishell *vars, int t)
 {
 	int	i;
 	int	j;
-	int	t;
-
-	t = -1;
+	
 	while (line[++t])
 	{
 		i = 0;

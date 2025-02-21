@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/20 22:22:46 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 16:56:13 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 	else if (!ft_strncmp(cmd[0], "export", 7) && !cmd[1])
 		export3(vars->env, vars, array_size(vars->env));
 	else if (!ft_strncmp(cmd[0], "export", 7))
-		vars->env = export(vars->env, cmd + 1, vars);
+		vars->env = export(vars->env, cmd + 1, vars, -1);
 	else if (!ft_strncmp(cmd[0], "unset", 6))
 		vars->env = unset(vars->env, cmd + 1, vars);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
