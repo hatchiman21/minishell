@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   change_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:33:33 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 17:12:22 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 01:49:23 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	*ft_merge(char *s1, char *s2, int free_s1, int free_s2)
 		free(s1);
 	if (free_s2)
 		free(s2);
+	if (!tmp)
+		exit(1);
 	return (tmp);
 }
 

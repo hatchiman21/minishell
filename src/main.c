@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 22:07:27 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 00:02:17 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	g_ctrl_c = 0;
+int		g_ctrl_c = 0;
 
 void	handle_sigint(int sig)
 {
@@ -51,14 +51,6 @@ int	redirections(char **line, t_minishell *vars)
 		ft_putstr_fd("minishell: redirection malloc failed\n", 2);
 		return (-1);
 	}
-	// if (ambiguous_redirect_check(vars->redirections, vars->env) == 1)
-	// {
-	// 	ft_free_red(vars->redirections);
-	// 	free(vars->final_line);
-	// 	free(*line);
-	// 	vars->exit_status = 1;
-	// 	return (1);
-	// }
 	return (0);
 }
 

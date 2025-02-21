@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 04:41:37 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:43:16 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 00:32:53 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*rev_strdup(char *s, int j)
+char	*rev_strdup(char *s, int j, t_minishell *vars)
 {
 	char	*res;
 	int		i;
 
 	res = (char *)malloc(sizeof(char) * (j + 1));
-	if (res == NULL)
-		return (NULL);
+	if (!res)
+		ft_exit((char *[]){"exit", "1", NULL}, vars);
 	i = 0;
 	while (i < j)
 	{
@@ -54,7 +54,7 @@ char	*expand(char *line, t_minishell vars)
 		if (line[j] == '$' && line[j + 1] && line[j + 1] != '|'
 			&& line[j + 1] != ' ' && line[j + 1] != '\t'
 			&& !(q_flag == 1 && (line[j + 1] == '\'' || line[j + 1] == '"')))
-			line = get_variable(vars.env, line, &j, vars.exit_status);
+			line = get_variable(&vars, line, &j);
 		if (j++ >= (int)ft_strlen(line))
 			break ;
 	}

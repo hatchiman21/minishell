@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_make.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 21:34:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 00:52:25 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ t_redirect	*get_redirections(char *line)
 		if ((line[i] == '>' || line[i] == '<'))
 		{
 			tmp = get_redirection(line, i--, op_num);
+			redirectionadd_back(&head, tmp);
 			if (!tmp)
 				return (ft_free_red(head));
-			redirectionadd_back(&head, tmp);
 		}
 		else if (line[i] == '|')
 			op_num++;
