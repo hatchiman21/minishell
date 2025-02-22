@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 02:21:30 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:50:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_here_doc	*get_here_doc_node(int fd[2], int i,
 	here_doc_node->red_order = i;
 	here_doc_node->open = true;
 	here_doc_node->next = NULL;
-	if (here_doc_input(red->redirection + 3, fd[1], vars) == -1)
+	if (here_doc_input(red->content + 3, fd[1], vars) == -1)
 	{
 		close(fd[1]);
 		close(fd[0]);
@@ -78,7 +78,7 @@ void	prepare_here_doc(t_minishell *vars, t_redirect *red)
 	i = 0;
 	while (red && ++i)
 	{
-		if (!ft_strncmp(red->redirection, "<<", 2) && !g_ctrl_c)
+		if (!ft_strncmp(red->content, "<<", 2) && !g_ctrl_c)
 		{
 			if (pipe(fd) == -1)
 			{

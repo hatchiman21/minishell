@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_make.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 00:52:25 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/22 15:50:00 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ t_redirect	*assgine_redirection(char *line, int i, int op_num, int *space_num)
 			|| line[i + j + *space_num] == '\t'))
 		(*space_num)++;
 	j = redirectiont_text_end(line, i + *space_num, j);
-	redirect->redirection = malloc(sizeof(char) * j + 2);
-	if (!redirect->redirection)
+	redirect->content = malloc(sizeof(char) * j + 2);
+	if (!redirect->content)
 	{
 		free(redirect);
 		return (NULL);
@@ -89,17 +89,17 @@ t_redirect	*get_redirection(char *line, int i, int op_num)
 		return (NULL);
 	while (line[i + j] && (line[i + j] == '<' || line[i + j] == '>'))
 	{
-		redirect->redirection[j] = line[i + j];
+		redirect->content[j] = line[i + j];
 		j++;
 	}
-	redirect->redirection[j] = '7';
+	redirect->content[j] = '7';
 	end = redirectiont_text_end(line, i + space_num, j);
 	while (j < end)
 	{
-		redirect->redirection[j + 1] = line[i + j + space_num];
+		redirect->content[j + 1] = line[i + j + space_num];
 		j++;
 	}
-	redirect->redirection[j + 1] = '\0';
+	redirect->content[j + 1] = '\0';
 	redirect->next = NULL;
 	remove_from_line(line, i, space_num + j);
 	return (redirect);

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:16:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:56:31 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,3 @@ int	ambiguous_check(char *line)
 	}
 	return (0);
 }
-
-// int	ambiguous_redirect_check(t_redirect *red)
-// {
-// 	while (red)
-// 	{
-// 		if (ambiguous_check(red->redirection))
-// 			return (1);
-// 		red = red->next;
-// 	}
-// 	return (0);
-// }

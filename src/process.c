@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:31:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:45:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	process(t_minishell *vars)
 	i = 0;
 	while (cur_op < vars->op_num && cur_op != -1)
 	{
+		g_ctrl_c = 2;
 		if (intial_red(vars, &cur_op) == -1)
 			break ;
 		process_operation(vars, &i, &cur_op);

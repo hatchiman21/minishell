@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:52:02 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:19:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:56:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,6 @@ char	*remove_edge_spaces(char *line)
 	return (line);
 }
 
-// int	ft_calculate_flag(t_redirect *red, int i, int q_flag)
-// {
-// 	if (red->redirection[i] == '"' && !q_flag)
-// 		q_flag = 1;
-// 	else if (red->redirection[i] == '\'' && !q_flag)
-// 		q_flag = 2;
-// 	else if ((red->redirection[i] == '"' && q_flag == 1)
-// 		|| (red->redirection[i] == '\'' && q_flag == 2))
-// 		q_flag = 0;
-// 	return (q_flag);
-// }
-
 t_redirect	*get_op_red(t_redirect *red, int op)
 {
 	while (red && red->op < op)
@@ -76,8 +64,9 @@ int	apply_redirection(t_minishell *vars, int cur_op)
 	red = get_op_red(vars->redirections, cur_op);
 	while (red && red->op == cur_op)
 	{
-		red->redirection = remove_edge_spaces(red->redirection);
-		if (ambiguous_check(red->redirection) || !skip_red_sign(red->redirection) || open_file(vars, red, red_order) == -1)
+		red->content = remove_edge_spaces(red->content);
+		if (ambiguous_check(red->content) || !skip_red_sign(red->content)
+			|| open_file(vars, red, red_order) == -1)
 			return (0);
 		red_order++;
 		red = red->next;

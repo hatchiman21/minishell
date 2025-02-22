@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:32:26 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:56:25 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,34 +40,6 @@ int	first_step(char **line, t_minishell *vars)
 	}
 	return (0);
 }
-
-// void	print_redirections(t_redirect *red)
-// {
-// 	while (red)
-// 	{
-// 		ft_putstr_fd("redirection: ", 1);
-// 		ft_putstr_fd(red->redirection, 1);
-// 		ft_putchar_fd('\n', 1);
-// 		ft_putstr_fd("op: ", 1);
-// 		ft_putnbr_fd(red->op, 1);
-// 		ft_putchar_fd('\n', 1);
-// 		red = red->next;
-// 	}
-// }
-
-// void	print_vars(t_minishell *vars)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < vars->argc)
-// 	{
-// 		ft_putstr_fd(vars->argv[i], 1);
-// 		ft_putchar_fd('\n', 1);
-// 		i++;
-// 	}
-// 	print_redirections(vars->redirections);
-// }
 
 int	final_step(char **line, t_minishell *vars)
 {
@@ -124,7 +96,7 @@ void	inti_set_up(t_minishell *vars, char **env)
 	vars->env = ft_array_dup(env);
 	if (!vars->env && env)
 	{
-		close_fds((int[3]){vars->std_in, vars->std_out, -1});
+		close_fds((int [3]){vars->std_in, vars->std_out, -1});
 		ft_putstr_fd("minishell: enviorment malloc failed\n", 2);
 		exit(EXIT_FAILURE);
 	}
@@ -146,7 +118,7 @@ char	*expand_all(t_minishell *vars, char *line)
 	}
 	while (red)
 	{
-		red->redirection = expand(red->redirection, *vars);
+		red->content = expand(red->content, *vars);
 		red = red->next;
 	}
 	return (line);
