@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:33:33 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 17:12:22 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 01:38:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	remove_from_line(char *line, int i, int j)
 	if (!line || !line[i])
 		return ;
 	len = ft_strlen(line);
-	while (line[i + m + j])
+	while (i + m + j < len && line[i + m + j])
 	{
 		line[i + m] = line[i + m + j];
 		m++;

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 21:38:54 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:16:20 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,38 +58,37 @@ int	first_input_check(char *line)
 	return (i);
 }
 
-int	ambiguous_check(char *line, char **env)
+int	ambiguous_check(char *line)
 {
 	int	i;
-	int	q_flag;
+	int	n;
+	int	space_found;
 
-	i = 0;
-	q_flag = 0;
-	while (line[i] == '>' || line[i] == '<')
-		i++;
+	i = skip_red_sign(line);
+	n = i;
+	space_found = 0;
 	while (line[i])
 	{
-		if (line[i] == '"' && !q_flag)
-			q_flag = 1;
-		else if (line[i] == '\'' && !q_flag)
-			q_flag = 2;
-		else if ((line[i] == '"' && q_flag == 1)
-			|| (line[i] == '\'' && q_flag == 2))
-			q_flag = 0;
-		if (line[i] == '$' && !q_flag && variable_has_space(line + i + 1, env))
+		skip_qouted_line(line, &i);
+		if (line[i] != ' ' && line[i] != '\t' && space_found)
+		{
+			ft_dprintf(2, "minishell: %s: ambiguous redirect\n", line + n);
 			return (1);
+		}
+		if (!space_found && (line[i] == ' ' || line[i] == '\t'))
+			space_found = 1;
 		i++;
 	}
 	return (0);
 }
 
-int	ambiguous_redirect_check(t_redirect *red, char **env)
-{
-	while (red)
-	{
-		if (ambiguous_check(red->redirection, env))
-			return (1);
-		red = red->next;
-	}
-	return (0);
-}
+// int	ambiguous_redirect_check(t_redirect *red)
+// {
+// 	while (red)
+// 	{
+// 		if (ambiguous_check(red->redirection))
+// 			return (1);
+// 		red = red->next;
+// 	}
+// 	return (0);
+// }

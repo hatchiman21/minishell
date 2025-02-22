@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 20:28:22 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:19:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,15 @@ int			process(t_minishell *vars);
 int			intial_red(t_minishell *vars, int *cur_op);
 int			apply_redirection(t_minishell *vars, int cur_op);
 int			here_doc_set(char *line, t_minishell *vars);
-int			ft_calculate_flag(t_redirect *red, int i, int q_flag);
+// int			ft_calculate_flag(t_redirect *red, int i, int q_flag);
+int			skip_red_sign(char *line);
 
 int			word_end(char c);
 t_redirect	*get_redirections(char *line);
 bool		variable_has_space(char *line, char **env);
 int			redirections_error_check(char *line);
 int			ambiguous_redirect_check(t_redirect *red, char **env);
+int			ambiguous_check(char *line);
 void		remove_from_line(char *line, int i, int j);
 int			cmd_built_in(char **cmd);
 

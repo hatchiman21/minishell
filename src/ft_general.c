@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 21:31:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 02:36:24 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ void	print_vars(t_minishell *vars)
 
 int	final_step(char **line, t_minishell *vars)
 {
+	int		error;
+
+	error = 0;
 	*line = expand_all(vars, *line);
 	vars->argc = words_count_sh(*line);
 	vars->argv = get_argv(*line, vars);
@@ -78,23 +81,20 @@ int	final_step(char **line, t_minishell *vars)
 	free(*line);
 	if (!vars->argv)
 	{
+		close_free_here_doc(&vars->here_doc_fds);
 		ft_free_red(vars->redirections);
 		ft_putstr_fd("minishell: argv malloc failed\n", 2);
 		return (-1);
 	}
 	remove_all_qoutes(vars);
 	// print_vars(vars);
-	if (process(vars) == -1)
-	{
-		free_split(vars->argv, vars->argc);
-		ft_free_red(vars->redirections);
-		return (-1);
-	}
+	error = process(vars);
 	wait_for_all(vars);
+	g_ctrl_c = 0;
 	close_free_here_doc(&vars->here_doc_fds);
 	free_split(vars->argv, vars->argc);
 	ft_free_red(vars->redirections);
-	return (0);
+	return (error);
 }
 
 void	inti_vars(t_minishell *vars)

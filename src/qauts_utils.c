@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:56:50 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 21:33:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 02:41:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,51 +44,33 @@ char	*dup_without_qoutes(char *s, int counter)
 char	*rm_qoutes(char *line)
 {
 	int	i;
-	int	q_flag;
-	int	counter;
+	int	j;
 
 	i = 0;
-	q_flag = 0;
-	counter = 0;
 	while (line[i])
 	{
-		if ((line[i] == '\'' && q_flag == 1) || (line[i] == '"' && q_flag == 2))
-			q_flag = 0;
-		else if (line[i] == '\'' && q_flag != 2)
-			q_flag = 1;
-		else if (line[i] == '"' && !q_flag)
-			q_flag = 2;
-		if ((line[i] == '\'' && q_flag != 2) || (line[i] == '"' && q_flag != 1))
-			counter--;
-		counter++;
+		if (line[i] == '\'' || line[i] == '"')
+		{
+			j = i;
+			skip_qouted_line(line, &i);
+			remove_from_line(line, i, 1);
+			remove_from_line(line, j, 1);
+			i -= 2;
+		}
 		i++;
 	}
-	return (dup_without_qoutes(line, counter));
+	return (line);
 }
 
 void	remove_all_qoutes(t_minishell *vars)
 {
-	int			i;
-	t_redirect	*red;
-	char		*tmp;
+	int	i;
 
 	i = 0;
-	red = vars->redirections;
 	while (i < vars->argc)
 	{
 		if (vars->argv[i])
-		{
-			tmp = rm_qoutes(vars->argv[i]);
-			free(vars->argv[i]);
-			vars->argv[i] = tmp;
-		}
+			vars->argv[i] = rm_qoutes(vars->argv[i]);
 		i++;
-	}
-	while (red)
-	{
-		tmp = rm_qoutes(red->redirection);
-		free(red->redirection);
-		red->redirection = tmp;
-		red = red->next;
 	}
 }

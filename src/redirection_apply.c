@@ -6,29 +6,65 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:52:02 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 14:57:20 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:19:24 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_calculate_flag(t_redirect *red, int i, int q_flag)
+char	*remove_edge_spaces(char *line)
 {
-	if (red->redirection[i] == '"' && !q_flag)
-		q_flag = 1;
-	else if (red->redirection[i] == '\'' && !q_flag)
-		q_flag = 2;
-	else if ((red->redirection[i] == '"' && q_flag == 1)
-		|| (red->redirection[i] == '\'' && q_flag == 2))
-		q_flag = 0;
-	return (q_flag);
+	int	i;
+	int	j;
+
+	i = ft_strlen(line) - 1;
+	while (i >= 0
+		&& (line[i] == ' ' || line[i] == '\t'))
+	{
+		line[i] = '\0';
+		i--;
+	}
+	i = skip_red_sign(line);
+	j = i;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	while (line[i])
+	{
+		line[j] = line[i];
+		i++;
+		j++;
+	}
+	line[j] = '\0';
+	return (line);
 }
+
+// int	ft_calculate_flag(t_redirect *red, int i, int q_flag)
+// {
+// 	if (red->redirection[i] == '"' && !q_flag)
+// 		q_flag = 1;
+// 	else if (red->redirection[i] == '\'' && !q_flag)
+// 		q_flag = 2;
+// 	else if ((red->redirection[i] == '"' && q_flag == 1)
+// 		|| (red->redirection[i] == '\'' && q_flag == 2))
+// 		q_flag = 0;
+// 	return (q_flag);
+// }
 
 t_redirect	*get_op_red(t_redirect *red, int op)
 {
 	while (red && red->op < op)
 		red = red->next;
 	return (red);
+}
+
+int	skip_red_sign(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] == '>' || line[i] == '<')
+		i++;
+	return (i + 1);
 }
 
 int	apply_redirection(t_minishell *vars, int cur_op)
@@ -40,7 +76,8 @@ int	apply_redirection(t_minishell *vars, int cur_op)
 	red = get_op_red(vars->redirections, cur_op);
 	while (red && red->op == cur_op)
 	{
-		if (open_file(vars, red, red_order) == -1)
+		red->redirection = remove_edge_spaces(red->redirection);
+		if (ambiguous_check(red->redirection) || !skip_red_sign(red->redirection) || open_file(vars, red, red_order) == -1)
 			return (0);
 		red_order++;
 		red = red->next;
