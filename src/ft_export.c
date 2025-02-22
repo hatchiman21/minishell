@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 23:42:49 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/22 19:14:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ void	export3(char **env, t_minishell *vars, int len)
 	vars->exit_status = 0;
 	sorted = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!sorted)
-	{
-		free(sorted);
 		ft_exit((char *[]){"exit", "1", NULL}, vars);
-	}
 	i = -1;
 	while (++i < len)
 		sorted[i] = env[i];
@@ -62,26 +59,22 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 	char	**tmp;
 
 	vars->exit_status = 0;
-	if (i[0] != -1 && line[i[1]] && !env[i[0]])
+	if (i[1] != -1 && i[0] != -1 && !env[i[0]])
 	{
 		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
 			ft_exit((char *[]){"exit", "1", NULL}, vars);
-		i[1] = 0;
-		while (env[i[1]])
-		{
-			tmp[i[1]] = ft_strdup(env[i[1]]);
-			free(env[i[1]]);
-			i[1]++;
-		}
+		i[1] = -1;
+		while (env[++i[1]])
+			tmp[i[1]] = env[i[1]];
 		tmp[i[1]] = ft_strdup(line);
 		tmp[i[1] + 1] = NULL;
 		free(env);
 		return (tmp);
 	}
-	if (i[0] != -1)
+	if (i[0] != -1 || i[1] == -1)
 		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
-	if (i[0] != -1)
+	if (i[0] != -1 || i[1] == -1)
 		vars->exit_status = 1;
 	return (env);
 }
@@ -96,14 +89,15 @@ char	**export(char **env, char **line, t_minishell *vars, int t)
 		i = 0;
 		j = 0;
 		while (line[t] && line[t][j] && line[t][j] != '='
-			&& (ft_isalpha(line[t][j]) || ft_isdigit(line[t][j])))
+			&& ft_isalnum(line[t][j]))
 			j++;
-		if (line[t][j] != '=' || line[t][0] == '=' || ft_isdigit(line[t][0]))
-			j = ft_strlen(line[t]);
-		while (line[t] && line[t][j] && env[i] && ft_strncmp(env[i], line[t],
-				j) != 0)
+		if (line[t][0] == '=' || ft_isdigit(line[t][0])
+			|| (line[t][j] != '=' && line[t][j]))
+			j = -1;
+		while (j != -1 && line[t] && env[i]
+				&& (ft_strncmp(env[i], line[t], j) != 0))
 			i++;
-		if (line[t][j] && env[i])
+		if (j != -1 && env[i])
 		{
 			free(env[i]);
 			env[i] = ft_strdup(line[t]);
