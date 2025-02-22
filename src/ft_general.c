@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:25 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:46:28 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	final_step(char **line, t_minishell *vars)
 	free(*line);
 	if (!vars->argv)
 	{
-		ft_free_red(vars->redirections);
+		ft_free_red(&vars->redirections);
 		close_free_here_doc(&vars->here_doc_fds);
 		ft_putstr_fd("minishell: argv malloc failed\n", 2);
 		return (-1);
@@ -62,8 +62,8 @@ int	final_step(char **line, t_minishell *vars)
 	wait_for_all(vars);
 	g_ctrl_c = 0;
 	close_free_here_doc(&vars->here_doc_fds);
-	free_split(vars->argv, vars->argc);
-	ft_free_red(vars->redirections);
+	free_split(&vars->argv, vars->argc);
+	ft_free_red(&vars->redirections);
 	return (error);
 }
 
@@ -77,6 +77,11 @@ void	inti_vars(t_minishell *vars)
 	vars->pipefd[0] = -1;
 	vars->pipefd[1] = -1;
 	vars->line = NULL;
+	vars->final_line = NULL;
+	vars->argv = NULL;
+	vars->argc = 0;
+	vars->op_num = 1;
+	vars->env = NULL;
 	vars->std_in = dup(STDIN_FILENO);
 	vars->std_out = dup(STDOUT_FILENO);
 	if (vars->std_in == -1 || vars->std_out == -1)

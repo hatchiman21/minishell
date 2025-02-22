@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/22 15:51:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:43:13 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	close(vars.std_in);
 	close(vars.std_out);
-	free_split(vars.env, -1);
+	free_split(&vars.env, -1);
 	printf("exit\n");
 	return (0);
 }

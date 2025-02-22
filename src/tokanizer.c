@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 03:18:42 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/21 15:52:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:43:17 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	**get_argv(char *line, t_minishell *vars)
 		argv[i] = get_token_sh(line, &j, vars);
 		if (argv[i] == NULL && line[j - 1] != '|')
 		{
-			free_split(argv, i);
+			free_split(&argv, i);
 			return (NULL);
 		}
 		i++;

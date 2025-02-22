@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:33:33 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:30:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:34:06 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_merge(char *s1, char *s2, int free_s1, int free_s2)
 	if (free_s2)
 		free(s2);
 	if (!tmp)
-		exit(1);
+		ft_exit((char *[]){"exit", "1", NULL}, NULL);
 	return (tmp);
 }
 

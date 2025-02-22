@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/22 19:14:15 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:48:19 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	export3(char **env, t_minishell *vars, int len)
 	vars->exit_status = 0;
 	sorted = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!sorted)
-		ft_exit((char *[]){"exit", "1", NULL}, vars);
+		cmd_error_handling(vars);
 	i = -1;
 	while (++i < len)
 		sorted[i] = env[i];
@@ -63,11 +63,15 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 	{
 		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
-			ft_exit((char *[]){"exit", "1", NULL}, vars);
+			cmd_error_handling(vars);
 		i[1] = -1;
 		while (env[++i[1]])
 			tmp[i[1]] = env[i[1]];
 		tmp[i[1]] = ft_strdup(line);
+		if (!tmp[i[1]])
+			free(tmp);
+		if (!tmp)
+			cmd_error_handling(vars);
 		tmp[i[1] + 1] = NULL;
 		free(env);
 		return (tmp);
@@ -95,7 +99,7 @@ char	**export(char **env, char **line, t_minishell *vars, int t)
 			|| (line[t][j] != '=' && line[t][j]))
 			j = -1;
 		while (j != -1 && line[t] && env[i]
-				&& (ft_strncmp(env[i], line[t], j) != 0))
+			&& (ft_strncmp(env[i], line[t], j) != 0))
 			i++;
 		if (j != -1 && env[i])
 		{

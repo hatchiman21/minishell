@@ -6,24 +6,24 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:20:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 21:08:18 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:42:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
 
-void	free_split(char **res, int size)
+void	free_split(char ***res, int size)
 {
 	int	i;
 
 	i = 0;
-	if (!res)
+	if (!(*res))
 		return ;
 	if (size == -1)
 	{
-		while (res[i])
+		while ((*res)[i])
 		{
-			free(res[i]);
+			free((*res)[i]);
 			i++;
 		}
 	}
@@ -31,12 +31,13 @@ void	free_split(char **res, int size)
 	{
 		while (i < size)
 		{
-			if (res[i])
-				free(res[i]);
+			if ((*res)[i])
+				free((*res)[i]);
 			i++;
 		}
 	}
-	free(res);
+	free((*res));
+	*res = NULL;
 }
 
 static int	count_words(char const *s, char c)
@@ -99,7 +100,7 @@ static int	assign_all(char const *s, char c, char ***res)
 			res[0][j] = assign_word(&s[i], c);
 			if (res[0][j] == NULL)
 			{
-				free_split(*res, j);
+				free_split(res, j);
 				return (0);
 			}
 			trigger = 1;

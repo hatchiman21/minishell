@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/19 18:54:28 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:42:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ char	*check_status(char **cmd, char **paths, char *path)
 		ft_dprintf(2, "minishell: %s: Permission denied\n", cmd[0]);
 		if (cmd[0] != path)
 			free(path);
-		free_split(paths, -1);
+		free_split(&paths, -1);
 		exit(126);
 	}
 	else
 	{
 		if (cmd[0] != path)
 			free(path);
-		free_split(paths, -1);
+		free_split(&paths, -1);
 		ft_dprintf(2, "minishell: %s: No such file or directory\n", cmd[0]);
 		exit(127);
 	}
@@ -98,7 +98,7 @@ char	*get_path(char **cmd, char **envp)
 	paths = get_all_paths(envp, tmp);
 	path = get_final_path(paths, tmp, cmd);
 	free(tmp);
-	free_split(paths, -1);
+	free_split(&paths, -1);
 	if (path == NULL)
 	{
 		ft_dprintf(2, "minishell: %s: command not found\n", cmd[0]);

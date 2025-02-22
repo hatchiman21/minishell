@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:02:20 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 00:01:17 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/22 20:43:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	**ft_array_dup(char **array)
 		new_array[i] = ft_strdup(array[i]);
 		if (!new_array[i])
 		{
-			free_split(new_array, i);
+			free_split(&new_array, i);
 			return (NULL);
 		}
 		i++;

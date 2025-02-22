@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:29:46 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:50:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:39:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ t_redirect	*get_redirections(char *line)
 			tmp = get_redirection(line, i--, op_num);
 			redirectionadd_back(&head, tmp);
 			if (!tmp)
-				return (ft_free_red(head));
+				return (ft_free_red(&head));
 		}
 		else if (line[i] == '|')
 			op_num++;

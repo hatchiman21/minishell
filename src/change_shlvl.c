@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 01:45:45 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/15 01:46:11 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:42:40 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ void	increase_shlvl(char **env)
 	if (!new_shlvl)
 	{
 		ft_putstr_fd("minishell: SHLVL malloc failed\n", 2);
-		free_split(env, -1);
+		free_split(&env, -1);
 		exit (EXIT_FAILURE);
 	}
 	new_shlvl = ft_merge("SHLVL=", new_shlvl, 0, 1);
 	if (!new_shlvl)
 	{
 		ft_putstr_fd("minishell: SHLVL malloc failed\n", 2);
-		free_split(env, -1);
+		free_split(&env, -1);
 		exit (EXIT_FAILURE);
 	}
 	free(env[i]);

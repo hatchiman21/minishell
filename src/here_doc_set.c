@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:55:16 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:51:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 20:39:28 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	here_doc_set(char *line, t_minishell *vars)
 		if (vars->final_line)
 			free(vars->final_line);
 		free(line);
-		ft_free_red(vars->redirections);
+		ft_free_red(&vars->redirections);
 		ft_putstr_fd("minishell: here doc malloc failed\n", 2);
 		return (-1);
 	}
@@ -49,7 +49,7 @@ int	here_doc_set(char *line, t_minishell *vars)
 	{
 		free(line);
 		close_free_here_doc(&vars->here_doc_fds);
-		ft_free_red(vars->redirections);
+		ft_free_red(&vars->redirections);
 		return (1);
 	}
 	return (0);
