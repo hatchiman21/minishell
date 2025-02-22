@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 02:47:49 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:31:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_excute(char *path, char **cmd, t_minishell *vars)
 {
 	if (!cmd && cmd[0])
 		return ;
+	vars->exit_status = 0;
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		my_cd(cmd, vars->env, vars);
 	else if (!ft_strncmp(cmd[0], "export", 7) && !cmd[1])

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 02:36:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:32:26 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,33 +41,33 @@ int	first_step(char **line, t_minishell *vars)
 	return (0);
 }
 
-void print_redirections(t_redirect *red)
-{
-	while (red)
-	{
-		ft_putstr_fd("redirection: ", 1);
-		ft_putstr_fd(red->redirection, 1);
-		ft_putchar_fd('\n', 1);
-		ft_putstr_fd("op: ", 1);
-		ft_putnbr_fd(red->op, 1);
-		ft_putchar_fd('\n', 1);
-		red = red->next;
-	}
-}
+// void	print_redirections(t_redirect *red)
+// {
+// 	while (red)
+// 	{
+// 		ft_putstr_fd("redirection: ", 1);
+// 		ft_putstr_fd(red->redirection, 1);
+// 		ft_putchar_fd('\n', 1);
+// 		ft_putstr_fd("op: ", 1);
+// 		ft_putnbr_fd(red->op, 1);
+// 		ft_putchar_fd('\n', 1);
+// 		red = red->next;
+// 	}
+// }
 
-void	print_vars(t_minishell *vars)
-{
-	int	i;
+// void	print_vars(t_minishell *vars)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < vars->argc)
-	{
-		ft_putstr_fd(vars->argv[i], 1);
-		ft_putchar_fd('\n', 1);
-		i++;
-	}
-	print_redirections(vars->redirections);
-}
+// 	i = 0;
+// 	while (i < vars->argc)
+// 	{
+// 		ft_putstr_fd(vars->argv[i], 1);
+// 		ft_putchar_fd('\n', 1);
+// 		i++;
+// 	}
+// 	print_redirections(vars->redirections);
+// }
 
 int	final_step(char **line, t_minishell *vars)
 {
@@ -77,17 +77,15 @@ int	final_step(char **line, t_minishell *vars)
 	*line = expand_all(vars, *line);
 	vars->argc = words_count_sh(*line);
 	vars->argv = get_argv(*line, vars);
-	// print_vars(vars);
 	free(*line);
 	if (!vars->argv)
 	{
-		close_free_here_doc(&vars->here_doc_fds);
 		ft_free_red(vars->redirections);
+		close_free_here_doc(&vars->here_doc_fds);
 		ft_putstr_fd("minishell: argv malloc failed\n", 2);
 		return (-1);
 	}
 	remove_all_qoutes(vars);
-	// print_vars(vars);
 	error = process(vars);
 	wait_for_all(vars);
 	g_ctrl_c = 0;
@@ -121,14 +119,14 @@ void	inti_vars(t_minishell *vars)
 void	inti_set_up(t_minishell *vars, char **env)
 {
 	if (!isatty(0))
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	inti_vars(vars);
 	vars->env = ft_array_dup(env);
 	if (!vars->env && env)
 	{
-		close_fds((int [3]){vars->std_in, vars->std_out, -1});
+		close_fds((int[3]){vars->std_in, vars->std_out, -1});
 		ft_putstr_fd("minishell: enviorment malloc failed\n", 2);
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	increase_shlvl(vars->env);
 	signal(SIGQUIT, SIG_IGN);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:52:07 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/16 05:03:57 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 00:41:39 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,6 @@ int	write_line(int fd, char *line, int i)
 	ft_putstr_fd(line, fd);
 	free(line);
 	return (i + 1);
-}
-
-int	add_line(char *line, char **final_line)
-{
-	*final_line = ft_merge(*final_line, "\n", 1, 0);
-	if (!*final_line)
-	{
-		ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
-		return (-1);
-	}
-	*final_line = ft_merge(*final_line, line, 1, 0);
-	if (!*final_line)
-	{
-		ft_putstr_fd("minishell: here_doc input malloc failed\n", 2);
-		return (-1);
-	}
-	return (0);
 }
 
 void	close_free_here_doc(t_here_doc **here_doc)

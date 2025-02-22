@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 03:22:13 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/22 03:30:07 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,8 @@ int			array_size(char **array);
 void		close_fds(int *fd);
 
 char		*expand(char *line, t_minishell vars);
-char		*get_variable(char **env, char *line, int *j,
-				int status);
-char		*rev_strdup(char *s, int j);
+char		*get_variable(t_minishell *vars, char *line, int *j);
+char		*rev_strdup(char *s, int j, t_minishell *vars);
 char		*rm_qoutes(char *line);
 int			first_input_check(char *line);
 int			write_line(int fd, char *line, int i);
@@ -89,7 +88,6 @@ char		*ft_merge(char *s1, char *s2, int free_s1, int free_s2);
 int			word_check(char *line, int i);
 
 void		here_doc_addback(t_here_doc **head, t_here_doc *new);
-int			add_line(char *line, char **final_line);
 void		prepare_here_doc(t_minishell *vars, t_redirect *red);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		close_free_here_doc(t_here_doc **here_doc);

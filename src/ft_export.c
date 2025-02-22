@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:43:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/21 23:42:49 by yhamdan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	export3(char **env, t_minishell *vars, int len)
 	vars->exit_status = 0;
 	sorted = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!sorted)
-		return ;
+	{
+		free(sorted);
+		ft_exit((char *[]){"exit", "1", NULL}, vars);
+	}
 	i = -1;
 	while (++i < len)
 		sorted[i] = env[i];
@@ -63,7 +66,7 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 	{
 		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
-			return (env);
+			ft_exit((char *[]){"exit", "1", NULL}, vars);
 		i[1] = 0;
 		while (env[i[1]])
 		{
@@ -93,9 +96,9 @@ char	**export(char **env, char **line, t_minishell *vars, int t)
 		i = 0;
 		j = 0;
 		while (line[t] && line[t][j] && line[t][j] != '='
-			&& (ft_isalpha(line[t][j]) || ft_isdigit(line[t][i])))
+			&& (ft_isalpha(line[t][j]) || ft_isdigit(line[t][j])))
 			j++;
-		if (line[t][j] != '=')
+		if (line[t][j] != '=' || line[t][0] == '=' || ft_isdigit(line[t][0]))
 			j = ft_strlen(line[t]);
 		while (line[t] && line[t][j] && env[i] && ft_strncmp(env[i], line[t],
 				j) != 0)
