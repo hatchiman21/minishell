@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
+/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/22 20:48:19 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/23 13:35:43 by yousef           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 {
 	char	**tmp;
 
-	vars->exit_status = 0;
-	if (i[1] != -1 && i[0] != -1 && !env[i[0]])
+	if (i[1] > -1 && i[0] != -1 && !env[i[0]])
 	{
 		tmp = malloc(sizeof(char *) * (array_size(env) + 2));
 		if (!tmp)
@@ -76,12 +75,33 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 		free(env);
 		return (tmp);
 	}
-	if (i[0] != -1 || i[1] == -1)
+	if (i[1] == -1)
 		ft_dprintf(2, "minishell: export: `%s': invalid identifier\n", line);
-	if (i[0] != -1 || i[1] == -1)
+	if (i[1] == -1)
 		vars->exit_status = 1;
 	return (env);
 }
+
+void	name_check(char *line, int *j)
+{
+	if (line[0] == '=' || ft_isdigit(line[0])) 
+	{
+		*j = -1;
+		return ;
+	}
+	while (line[*j] && line[*j] != '=')
+	{
+		if (!ft_isalnum(line[*j])) 
+		{
+			*j = -1;
+			return ;
+		}
+		(*j)++;
+	}
+	if (!line[*j])
+		*j = -2;
+}
+
 
 char	**export(char **env, char **line, t_minishell *vars, int t)
 {
@@ -92,16 +112,11 @@ char	**export(char **env, char **line, t_minishell *vars, int t)
 	{
 		i = 0;
 		j = 0;
-		while (line[t] && line[t][j] && line[t][j] != '='
-			&& ft_isalnum(line[t][j]))
-			j++;
-		if (line[t][0] == '=' || ft_isdigit(line[t][0])
-			|| (line[t][j] != '=' && line[t][j]))
-			j = -1;
-		while (j != -1 && line[t] && env[i]
-			&& (ft_strncmp(env[i], line[t], j) != 0))
+		name_check(line[t], &j);
+		while (j > -1 && line[t] && env[i]
+			&& (ft_strncmp(env[i], line[t], j + 1) != 0))
 			i++;
-		if (j != -1 && env[i])
+		if (j > -1 && env[i])
 		{
 			free(env[i]);
 			env[i] = ft_strdup(line[t]);
