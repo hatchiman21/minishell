@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/23 15:07:47 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/23 15:10:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ void	my_cd(char **argv, char **env, t_minishell *vars)
 	tmp[1] = NULL;
 	if (array_size(argv) == 1)
 	{
-		chdir(getenv("HOME"));
 		tmp[0] = ft_merge("OLDPWD=", getcwd(NULL, 0), 0, 1);
 		env = export(env, tmp, vars, -1);
 		free(tmp[0]);
+		chdir(getenv("HOME"));
 		tmp[0] = ft_merge("PWD=", getcwd(NULL, 0), 0, 1);
 		env = export(env, tmp, vars, -1);
 		free(tmp[0]);
