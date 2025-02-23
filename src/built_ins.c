@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:17:53 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/21 23:55:13 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/02/23 15:07:47 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 
 char	**my_cd2(char **argv, char **env, char **tmp, t_minishell *vars)
 {
+	*tmp = ft_merge("OLDPWD=", getcwd(NULL, 0), 0, 1);
 	if (chdir(argv[1]) != 0)
 	{
+		free(*tmp);
 		ft_dprintf(2, "minishell: cd: %s: %s\n", argv[1], strerror(errno));
 		vars->exit_status = 1;
 		return (env);
 	}
 	else
 	{
-		tmp[0] = ft_merge("OLDPWD=", getcwd(NULL, 0), 0, 1);
 		env = export(env, tmp, vars, -1);
 		free(*tmp);
-		tmp[0] = ft_merge("PWD=", getcwd(NULL, 0), 0, 1);
+		*tmp = ft_merge("PWD=", getcwd(NULL, 0), 0, 1);
 		env = export(env, tmp, vars, -1);
-		free(tmp[0]);
+		free(*tmp);
 	}
 	return (env);
 }
