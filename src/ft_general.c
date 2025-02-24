@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 20:46:28 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:42:58 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	first_step(char **line, t_minishell *vars)
 	if (g_ctrl_c)
 		vars->exit_status = 130;
 	add_history(*line);
-	if (first_input_check(*line))
+	if (first_input_check(*line, vars) != -1)
 	{
 		free(*line);
 		vars->exit_status = 2;

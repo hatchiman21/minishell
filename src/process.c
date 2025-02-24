@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:45:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:59:59 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	process_step(t_minishell *vars, int *cur_op, int *i)
 	int	red_success;
 
 	red_success = apply_redirection(vars, *cur_op);
-	if (red_success && not_child_process(vars->argv + *i, vars))
+	if (red_success && built_in_fn(vars->argv + *i, vars))
 		ft_excute(NULL, vars->argv + *i, vars);
 	else if (red_success)
 		vars->last_id = fork();

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:30:51 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/20 22:20:48 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 03:18:51 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_n_option(char **argv)
 		i = 1;
 		while (argv[j][i] == 'n')
 			i++;
-		if (argv[j][i] != '\0')
+		if (argv[j][i] != '\0' || i == 1)
 			break ;
 		j++;
 	}

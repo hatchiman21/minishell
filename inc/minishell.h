@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 20:44:37 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:57:40 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char		*expand(char *line, t_minishell vars);
 char		*get_variable(t_minishell *vars, char *line, int *j);
 char		*rev_strdup(char *s, int j, t_minishell *vars);
 char		*rm_qoutes(char *line);
-int			first_input_check(char *line);
+int			first_input_check(char *line, t_minishell *vars);
 int			write_line(int fd, char *line, int i);
 int			words_count_sh(char *line);
 char		**get_argv(char *line, t_minishell *vars);
@@ -95,7 +95,7 @@ void		close_free_here_doc(t_here_doc **here_doc);
 char		*get_path(char **cmd, char **envp);
 int			open_file(t_minishell *vars, t_redirect *red,
 				int red_order);
-int			not_child_process(char **cmd, t_minishell *vars);
+int			built_in_fn(char **cmd, t_minishell *vars);
 int			process(t_minishell *vars);
 
 int			intial_red(t_minishell *vars, int *cur_op);

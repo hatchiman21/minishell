@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:44 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:42:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,5 @@ int	redirections_error_check(char *line)
 	}
 	if (red || pipe)
 		return (i);
-	return (0);
+	return (-1);
 }

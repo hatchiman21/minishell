@@ -6,13 +6,13 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:09:18 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:52:09 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	quotes_check(char *line)
+int	quotes_check(char *line, t_minishell *vars)
 {
 	int	i;
 	int	q_flag;
@@ -32,21 +32,36 @@ int	quotes_check(char *line)
 	}
 	if (q_flag)
 	{
+		vars->exit_status = 2;
 		ft_dprintf(2, "minishell: %s\n", "syntax error: unclosed quote");
 		return (1);
 	}
-	return (0);
+	return (-1);
 }
 
-int	first_input_check(char *line)
+int	inital_pipe_check(char *line)
 {
 	int	i;
 
-	i = quotes_check(line);
-	if (i)
+	i = 0;
+	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+		i++;
+	if (line[i] != '|')
+		return (-1);
+	return (i);
+}
+
+int	first_input_check(char *line, t_minishell *vars)
+{
+	int	i;
+
+	i = quotes_check(line, vars);
+	if (i != -1)
 		return (i);
-	i = redirections_error_check(line);
-	if (i)
+	i = inital_pipe_check(line);
+	if (i == -1)
+		i = redirections_error_check(line);
+	if (i != -1)
 	{
 		if (i == (int)ft_strlen(line))
 			ft_dprintf(2, "minishell: syntax %s",
@@ -54,6 +69,7 @@ int	first_input_check(char *line)
 		else
 			ft_dprintf(2, "minishell: %s`%c'\n",
 				"syntax error near unexpected token ", line[i]);
+		vars->exit_status = 2;
 	}
 	return (i);
 }

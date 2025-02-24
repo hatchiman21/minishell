@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:48:40 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:50:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 02:47:32 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	open_file(t_minishell *vars, t_redirect *red, int red_order)
 	fd = get_fd(vars, red, red_order);
 	if (fd == -1)
 	{
-		printf("error\n");
 		if (red->content[1] == '<' || red->content[1] == '>')
 			ft_dprintf(2, "minishell: %s: %s\n",
 				red->content + 3, strerror(errno));

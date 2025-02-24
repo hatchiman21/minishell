@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 20:42:51 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/24 03:02:02 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,11 @@ char	*get_path(char **cmd, char **envp)
 
 	if (!envp)
 		return (NULL);
+	if (!cmd[0][0])
+	{
+		ft_dprintf(2, "minishell: '': command not found\n");
+		exit(127);
+	}
 	if (ft_strchr(cmd[0], '/'))
 		return (ft_strdup(check_status(cmd, NULL, cmd[0])));
 	tmp = ft_strjoin("/", cmd[0]);
