@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yousef <yousef@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/23 13:35:43 by yousef           ###   ########.fr       */
+/*   Updated: 2025/02/24 17:43:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,14 @@ char	**export2(char **env, char *line, int *i, t_minishell *vars)
 
 void	name_check(char *line, int *j)
 {
-	if (line[0] == '=' || ft_isdigit(line[0])) 
+	if (line[0] == '=' || ft_isdigit(line[0]))
 	{
 		*j = -1;
 		return ;
 	}
 	while (line[*j] && line[*j] != '=')
 	{
-		if (!ft_isalnum(line[*j])) 
+		if (!ft_isalnum(line[*j]))
 		{
 			*j = -1;
 			return ;
@@ -101,7 +101,6 @@ void	name_check(char *line, int *j)
 	if (!line[*j])
 		*j = -2;
 }
-
 
 char	**export(char **env, char **line, t_minishell *vars, int t)
 {
