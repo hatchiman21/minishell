@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/25 19:07:23 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 23:43:15 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
 		(*red)++;
 	if (line[*i] != '|' && line[*i] != ' ' && line[*i] != '\t' && (*pipe))
 		(*pipe) = 0;
-	if (line[*i] == '|')
+	else if (line[*i] == '|')
 		(*pipe) = 1;
 }
 
@@ -56,15 +56,14 @@ int	redirections_error_check(char *line)
 	while (line[i])
 	{
 		skip_qouted_line(line, &i);
+		if (line[i] == '|' && pipe)
+			return (i);
 		if ((line[i] == '>' || line[i] == '<' || line[i] == '|') && red)
 			return (i);
-		else if (line[i] == '|' && pipe)
-			return (i);
-		else if (((line[i] == '>' && line[i + 1] == '<')
+		if (((line[i] == '>' && line[i + 1] == '<')
 				|| (line[i] == '<' && line[i + 1] == '>')))
 			return (i + 1);
-		else
-			redirections_error_check_helper(&i, line, &red, &pipe);
+		redirections_error_check_helper(&i, line, &red, &pipe);
 		i++;
 	}
 	if (red || pipe)

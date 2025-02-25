@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:50:00 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 23:51:01 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ t_here_doc	*get_here_doc_node(int fd[2], int i,
 	{
 		close(fd[1]);
 		close(fd[0]);
-		ft_putstr_fd("minishell: here_doc malloc failed\n", 2);
 		return (NULL);
 	}
 	here_doc_node->fd = fd[0];

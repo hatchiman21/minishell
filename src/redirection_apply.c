@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:52:02 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 15:56:36 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 23:38:56 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,13 @@ char	*remove_edge_spaces(char *line)
 	return (line);
 }
 
-t_redirect	*get_op_red(t_redirect *red, int op)
+t_redirect	*get_op_red(t_redirect *red, int op, int *red_order)
 {
 	while (red && red->op < op)
+	{
+		(*red_order)++;
 		red = red->next;
+	}
 	return (red);
 }
 
@@ -61,7 +64,7 @@ int	apply_redirection(t_minishell *vars, int cur_op)
 	int			red_order;
 
 	red_order = 0;
-	red = get_op_red(vars->redirections, cur_op);
+	red = get_op_red(vars->redirections, cur_op, &red_order);
 	while (red && red->op == cur_op)
 	{
 		red->content = remove_edge_spaces(red->content);
