@@ -6,13 +6,15 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/22 20:43:13 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 18:05:20 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 int		g_ctrl_c = 0;
+
+// void	handle_sig
 
 void	handle_sigint(int sig)
 {

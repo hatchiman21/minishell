@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:04:53 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/24 02:42:21 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 19:07:23 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	redirections_error_check_helper(int *i, char *line, int *red, int *pipe)
 	}
 	else if (line[*i] == '>' || line[*i] == '<')
 		(*red)++;
-	else if (line[*i] != '|' && line[*i] != ' ' && line[*i] != '\t' && (*pipe))
+	if (line[*i] != '|' && line[*i] != ' ' && line[*i] != '\t' && (*pipe))
 		(*pipe) = 0;
-	else if (line[*i] == '|')
+	if (line[*i] == '|')
 		(*pipe) = 1;
 }
 

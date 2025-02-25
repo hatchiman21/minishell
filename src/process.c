@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/24 02:59:59 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 18:08:19 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ void	process_step(t_minishell *vars, int *cur_op, int *i)
 	if (red_success && built_in_fn(vars->argv + *i, vars))
 		ft_excute(NULL, vars->argv + *i, vars);
 	else if (red_success)
+	{
 		vars->last_id = fork();
+	}
 	else
 	{
 		vars->exit_status = 1;
@@ -75,6 +77,7 @@ void	process_operation(t_minishell *vars, int *i, int *cur_op)
 	{
 		close_fds((int [4]){vars->std_in, vars->std_out, vars->pipefd[0], -1});
 		close_free_here_doc(&vars->here_doc_fds);
+		signal(SIGQUIT, SIG_DFL);
 		child_process(vars->argv + *i, vars);
 	}
 	else

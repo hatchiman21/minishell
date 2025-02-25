@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:47:30 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/24 02:57:40 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/02/25 19:08:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	wait_for_all(t_minishell *vars)
 				vars->exit_status = 128 + WTERMSIG(status);
 		}
 	}
+	if (vars->exit_status == 131)
+		ft_putstr_fd("Quit (core dumped)\n", 2);
 }
 
 int	built_in_fn(char **cmd, t_minishell *vars)
