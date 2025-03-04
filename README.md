@@ -27,7 +27,6 @@ To install and run minishell, follow these steps:
    cd minishell
 
 3. Compile the source code:
-
     ```sh
     make
 
@@ -35,7 +34,6 @@ To install and run minishell, follow these steps:
 
 After compiling the project, you can start the shell by running:
 
-    ```sh
     ./minishell
 
 ## Examples
@@ -44,12 +42,10 @@ Here are a few examples of how to use the minishell:
 
 Running a basic command:
 
-    ```sh
     ls -l
 
 Using built-in commands:
 
-    ```sh
     cd /path/to/directory
     echo "Hello, world!"
 
