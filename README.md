@@ -21,3 +21,39 @@ To install and run minishell, follow these steps:
 1. Clone the repository:
    ```sh
    git clone https://github.com/hatchiman21/minishell.git
+
+2. Navigate to the project directory:
+   ```sh
+   cd minishell
+
+3. Compile the source code:
+
+    ```sh
+    make
+
+## Usage
+
+After compiling the project, you can start the shell by running:
+
+    ```sh
+    ./minishell
+
+## Examples
+
+Here are a few examples of how to use the minishell:
+
+Running a basic command:
+
+    ```sh
+    ls -l
+
+Using built-in commands:
+
+    ```sh
+    cd /path/to/directory
+    echo "Hello, world!"
+
+Chaining commands with pipes:
+
+    ```sh
+    ls -l | grep minishell
