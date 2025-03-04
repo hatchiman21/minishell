@@ -51,5 +51,4 @@ Using built-in commands:
 
 Chaining commands with pipes:
 
-    ```sh
     ls -l | grep minishell
