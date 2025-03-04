@@ -1,60 +1,23 @@
-Here's a draft README file for your repository hatchiman21/minishell:
-minishell
+# minishell
 
 This project is a simple shell implementation written in C.
-Description
 
-The minishell project aims to create a simple shell that can handle basic command execution, built-in commands, and various shell features. It is written in C and adheres to the POSIX standard.
-Features
+## Description
 
-    Execution of basic shell commands.
-    Handling of built-in commands like cd, echo, etc.
-    Support for multiple pipe commands.
-    Environment variable handling.
-    Error handling and reporting.
+Welcome to my Minishell project! As someone passionate about understanding the intricacies of Unix-like systems, I embarked on this journey to create a simple yet functional shell from scratch. This project, written in C, adheres to the POSIX standard and aims to provide a hands-on experience with command parsing, execution, and environment variable management. By developing this shell, I hope to deepen my knowledge and share my learnings with others who are also interested in the fascinating world of operating systems.
 
-Installation
+## Features
+
+- Execution of basic shell commands.
+- Handling of built-in commands like `cd`, `echo`, etc.
+- Support for multiple pipe commands.
+- Environment variable handling.
+- Error handling and reporting.
+
+## Installation
 
 To install and run minishell, follow these steps:
 
-    Clone the repository:
-    sh
-
-git clone https://github.com/hatchiman21/minishell.git
-
-Navigate to the project directory:
-sh
-
-cd minishell
-
-Compile the source code:
-sh
-
-    make
-
-Usage
-
-After compiling the project, you can start the shell by running:
-sh
-
-./minishell
-
-Examples
-
-Here are a few examples of how to use the minishell:
-
-    Running a basic command:
-    sh
-
-ls -l
-
-Using built-in commands:
-sh
-
-cd /path/to/directory
-echo "Hello, world!"
-
-Chaining commands with pipes:
-sh
-
-ls -l | grep minishell
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/hatchiman21/minishell.git
