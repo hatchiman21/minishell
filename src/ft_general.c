@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:40:38 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/25 23:55:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/06 10:35:43 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@ int	first_step(char **line, t_minishell *vars)
 {
 	vars->op_num = 1;
 	vars->tmp_fd = -1;
-	if (!g_ctrl_c)
-		*line = readline("~/minishell$ ");
-	else
-		*line = vars->line;
+	*line = readline("~/minishell$ ");
 	if (!*line)
 		return (-1);
 	if (g_ctrl_c)

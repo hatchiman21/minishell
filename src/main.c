@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:29:45 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/26 00:00:31 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/06 10:39:27 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,15 @@ void	handle_sigint(int sig)
 	(void)sig;
 	if (g_ctrl_c != 2)
 	{
-		ft_putchar_fd('\n', STDIN_FILENO);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		if (g_ctrl_c != 3)
+		{
+			ft_putchar_fd('\n', STDIN_FILENO);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		else if (g_ctrl_c == 3)
+			close(STDIN_FILENO);
 		g_ctrl_c = 1;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/25 23:51:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/06 10:38:39 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,11 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 	{
 		ft_putstr_fd("> ", 1);
 		vars->line = get_next_line(STDIN_FILENO);
-		if (g_ctrl_c)
+		if (g_ctrl_c == 1)
+		{
+			dup2(vars->std_in, STDIN_FILENO);
 			break ;
+		}
 		if (!vars->line)
 		{
 			ft_dprintf(2, "\n%s %d delimited by end-of-file (wanted `%s')\n",
@@ -34,10 +37,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 			break ;
 		i = write_line(fd, vars->line, i);
 	}
-	if (!g_ctrl_c)
-		free(vars->line);
-	else if (vars->line)
-		remove_from_line(vars->line, ft_strlen(vars->line) - 1, 1);
+	free(vars->line);
 	return (0);
 }
 
@@ -53,6 +53,7 @@ t_here_doc	*get_here_doc_node(int fd[2], int i,
 		close(fd[0]);
 		return (NULL);
 	}
+	g_ctrl_c = 3;
 	here_doc_node->fd = fd[0];
 	here_doc_node->red_order = i;
 	here_doc_node->open = true;
