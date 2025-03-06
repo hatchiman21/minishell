@@ -3,24 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/22 01:48:08 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/03/06 10:54:12 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*get_exit_status(char *line, int *j, int exit_status, t_minishell *vars)
+char	*get_special_charecter(char *line, int *j, int exit_status, t_minishell *vars)
 {
 	char	*variable;
 	char	*tmp;
 	char	*tmp2;
 	int		len;
 
+	tmp = NULL;
+	if (ft_isdigit(line[*j]))
+	{
+		if (line[*j] == '0')
+			tmp = ft_strdup("minishell");
+	}
+	else
+		tmp = ft_itoa(exit_status);
 	remove_from_line(line, *j - 1, 2);
-	tmp = ft_itoa(exit_status);
+	if (!tmp)
+		return (line);
 	len = ft_strlen(tmp);
 	tmp2 = ft_merge(tmp, line + *j - 1, 1, 0);
 	tmp = rev_strdup(line, *j - 1, vars);
@@ -47,8 +56,8 @@ char	*get_variable(t_minishell *vars, char *line, int *j)
 
 	var_len = 0;
 	(*j)++;
-	if (line[*j] == '?')
-		return (get_exit_status(line, j, vars->exit_status, vars));
+	if (line[*j] == '?' || ft_isdigit(line[*j]))
+		return (get_special_charecter(line, j, vars->exit_status, vars));
 	while (get_var_helper(line, var_len, *j))
 		var_len++;
 	m = 0;
