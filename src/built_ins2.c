@@ -6,13 +6,14 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/03/06 10:54:12 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/06 10:56:32 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*get_special_charecter(char *line, int *j, int exit_status, t_minishell *vars)
+char	*get_special_charecter(char *line, int *j,
+	int exit_status, t_minishell *vars)
 {
 	char	*variable;
 	char	*tmp;
