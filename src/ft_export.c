@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 19:37:08 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/02/24 17:43:45 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/07 18:18:21 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	name_check(char *line, int *j)
 	}
 	while (line[*j] && line[*j] != '=')
 	{
-		if (!ft_isalnum(line[*j]))
+		if (!ft_isalnum(line[*j]) && line[*j] != '_')
 		{
 			*j = -1;
 			return ;
