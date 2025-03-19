@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yhamdan <yhamdan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:52:07 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/22 00:41:39 by yhamdan          ###   ########.fr       */
+/*   Updated: 2025/03/19 06:04:47 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ void	here_doc_addback(t_here_doc **head, t_here_doc *new)
 	tmp->next = new;
 }
 
-int	write_line(int fd, char *line, int i)
+int	write_expanded_line(int fd, char *line, int i, t_minishell *vars)
 {
+	line = expand(line, *vars);
 	ft_putstr_fd(line, fd);
 	free(line);
 	return (i + 1);

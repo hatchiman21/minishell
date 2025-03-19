@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 00:19:25 by yhamdan           #+#    #+#             */
-/*   Updated: 2025/03/06 10:56:32 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/19 06:04:30 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ int	get_var_helper(char *line, int var_len, int j)
 	return (line[var_len + j] && line[var_len + j] != ' ' && line[var_len
 			+ j] != '\'' && line[var_len + j] != '"' && line[var_len + j] != '|'
 		&& line[var_len + j] != '$' && line[var_len + j] != '\t' && line[
-			var_len + j] != '=');
+			var_len + j] != '=' && line[var_len + j] != '\0'
+		&& line[var_len + j] != '<' && line[var_len + j] != '>'
+		&& line[var_len + j] != '\n');
 }
 
 char	*get_variable(t_minishell *vars, char *line, int *j)

@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/03/06 10:38:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/19 05:41:36 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 		if (!ft_strncmp(vars->line, stop_sign, ft_strlen(stop_sign) - 1)
 			&& ft_strlen(vars->line) == ft_strlen(stop_sign) + 1)
 			break ;
-		i = write_line(fd, vars->line, i);
+		i = write_expanded_line(fd, vars->line, i, vars);
 	}
 	free(vars->line);
 	return (0);
@@ -66,6 +66,8 @@ t_here_doc	*get_here_doc_node(int fd[2], int i,
 		return (NULL);
 	}
 	close(fd[1]);
+	if (g_ctrl_c == 3)
+		g_ctrl_c = 0;
 	return (here_doc_node);
 }
 

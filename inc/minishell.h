@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/25 23:42:01 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/19 05:26:04 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char		*get_variable(t_minishell *vars, char *line, int *j);
 char		*rev_strdup(char *s, int j, t_minishell *vars);
 char		*rm_qoutes(char *line);
 int			first_input_check(char *line, t_minishell *vars);
-int			write_line(int fd, char *line, int i);
+int			write_expanded_line(int fd, char *line, int i, t_minishell *vars);
 int			words_count_sh(char *line);
 char		**get_argv(char *line, t_minishell *vars);
 char		*ft_merge(char *s1, char *s2, int free_s1, int free_s2);
