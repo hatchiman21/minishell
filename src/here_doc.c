@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/03/19 05:41:36 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/19 06:26:24 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 	i = 0;
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
-		vars->line = get_next_line(STDIN_FILENO);
+		vars->line = readline("> ");
 		if (g_ctrl_c == 1)
 		{
 			dup2(vars->std_in, STDIN_FILENO);
@@ -28,12 +27,12 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 		}
 		if (!vars->line)
 		{
-			ft_dprintf(2, "\n%s %d delimited by end-of-file (wanted `%s')\n",
+			ft_dprintf(2, "%s %d delimited by end-of-file (wanted `%s')\n",
 				"minishell: warning: here-document at line", i, stop_sign);
 			return (0);
 		}
-		if (!ft_strncmp(vars->line, stop_sign, ft_strlen(stop_sign) - 1)
-			&& ft_strlen(vars->line) == ft_strlen(stop_sign) + 1)
+		if (!ft_strncmp(vars->line, stop_sign, ft_strlen(stop_sign))
+			&& ft_strlen(vars->line) == ft_strlen(stop_sign))
 			break ;
 		i = write_expanded_line(fd, vars->line, i, vars);
 	}

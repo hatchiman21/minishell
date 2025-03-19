@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 23:52:07 by aatieh            #+#    #+#             */
-/*   Updated: 2025/03/19 06:04:47 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/03/19 06:24:08 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	write_expanded_line(int fd, char *line, int i, t_minishell *vars)
 {
 	line = expand(line, *vars);
 	ft_putstr_fd(line, fd);
+	ft_putstr_fd("\n", fd);
 	free(line);
 	return (i + 1);
 }
