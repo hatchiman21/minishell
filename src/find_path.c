@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:06:10 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/24 03:02:02 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/04/26 12:06:45 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,13 @@ char	*get_final_path(char **paths, char *tmp, char **cmd)
 	return (path);
 }
 
-char	*get_path(char **cmd, char **envp)
+char	*get_path(char **cmd, char **envp, t_minishell *vars)
 {
 	char	**paths;
 	char	*path;
 	char	*tmp;
 
-	if (!envp)
+	if (!envp || built_in_fn(cmd, vars))
 		return (NULL);
 	if (!cmd[0][0])
 	{

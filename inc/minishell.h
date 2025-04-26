@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 00:32:11 by aatieh            #+#    #+#             */
-/*   Updated: 2025/03/19 05:26:04 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/04/26 12:06:35 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		prepare_here_doc(t_minishell *vars, t_redirect *red);
 int			get_here_doc_fd(t_here_doc *here_doc, int red_order);
 void		close_free_here_doc(t_here_doc **here_doc);
 
-char		*get_path(char **cmd, char **envp);
+char		*get_path(char **cmd, char **envp, t_minishell *vars);
 int			open_file(t_minishell *vars, t_redirect *red,
 				int red_order);
 int			built_in_fn(char **cmd, t_minishell *vars);

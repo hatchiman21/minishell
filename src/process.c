@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 20:47:48 by aatieh            #+#    #+#             */
-/*   Updated: 2025/02/26 00:00:39 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/04/26 12:07:14 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ int	child_process(char **cmd, t_minishell *vars)
 	if (!cmd || !cmd[0])
 		exit(0);
 	if (!cmd_built_in(cmd))
-		path = get_path(cmd, vars->env);
+		path = get_path(cmd, vars->env, vars);
 	ft_excute(path, cmd, vars);
+	if (vars->op_num > 1 && built_in_fn(cmd, vars))
+		exit(vars->exit_status);
 	ft_dprintf(2, "minishell: %s: is a directory\n", cmd[0]);
 	free(path);
 	exit(126);
@@ -57,7 +59,7 @@ void	process_step(t_minishell *vars, int *cur_op, int *i)
 	int	red_success;
 
 	red_success = apply_redirection(vars, *cur_op);
-	if (red_success && built_in_fn(vars->argv + *i, vars))
+	if (red_success && built_in_fn(vars->argv + *i, vars) && vars->op_num == 1)
 		ft_excute(NULL, vars->argv + *i, vars);
 	else if (red_success)
 	{
