@@ -6,7 +6,7 @@
 /*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:32:13 by aatieh            #+#    #+#             */
-/*   Updated: 2025/03/19 06:26:24 by aatieh           ###   ########.fr       */
+/*   Updated: 2025/05/05 17:01:19 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	here_doc_input(char *stop_sign, int fd, t_minishell *vars)
 		i = write_expanded_line(fd, vars->line, i, vars);
 	}
 	free(vars->line);
+	vars->line = NULL;
 	return (0);
 }
 
